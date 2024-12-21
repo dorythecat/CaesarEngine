@@ -1,7 +1,7 @@
 #!/bin/bash
 
-[! -d "build" ] && mkdir build
+[ ! -d "build" ] && mkdir build
 cd build
-cmake ../src
+cmake ..
 make
 cd ..
