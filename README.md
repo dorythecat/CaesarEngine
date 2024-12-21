@@ -3,3 +3,6 @@ This engine has been built from the ground up to be a similar to Paradox Game's 
 
 # Why the name?
 Both the latin word for emperor, given to not only the rulers of the Roman Empire, but also to some later historical figures of grandure. It is also the name of a character who shall reamin private :3
+
+# Compiling
+To compile the engine (in linux), execute the command `bash compile.sh`.
