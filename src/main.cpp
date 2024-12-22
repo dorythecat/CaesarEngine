@@ -3,10 +3,6 @@
 
 #include "window/window.hpp"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-  glViewport(0, 0, width, height);
-}
-
 int main() {
   Window window(800, 600, "Caesar Engine");
 
