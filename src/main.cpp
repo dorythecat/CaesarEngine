@@ -8,10 +8,10 @@
 #include "mesh/mesh.hpp"
 
 std::vector<Mesh::Vertex> vertices = {
-  Mesh::Vertex(0.5f,  0.5f, 0.0f),
-  Mesh::Vertex(0.5f, -0.5f, 0.0f),
-  Mesh::Vertex(-0.5f, -0.5f, 0.0f),
-  Mesh::Vertex(-0.5f,  0.5f, 0.0f) 
+  Mesh::Vertex(0.5f,  0.5f),
+  Mesh::Vertex(0.5f, -0.5f),
+  Mesh::Vertex(-0.5f, -0.5f),
+  Mesh::Vertex(-0.5f,  0.5f) 
 };
 std::vector<unsigned int> indices = {
   0, 1, 3,

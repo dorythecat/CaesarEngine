@@ -12,16 +12,9 @@ public:
   struct Vertex {
     float x, y, z;
 
-    Vertex() {
-      x = 0.0f;
-      y = 0.0f;
-      z = 0.0f;
-    }
-    Vertex(float x, float y, float z) {
-      this->x = x;
-      this->y = y;
-      this->z = z;
-    }
+    Vertex() : x(0.0f), y(0.0f), z(0.0f) {}
+    Vertex(float x, float y) : x(x), y(y), z(0.0f) {}
+    Vertex(float x, float y, float z) : x(x), y(y), z(z) {}
   };
 
   Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Shader shader);
