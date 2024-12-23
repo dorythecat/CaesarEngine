@@ -10,7 +10,7 @@ class Window {
 public:
   Window(int width, int height, const char* title);
   ~Window() {
-      glfwDestroyWindow(window);
+      glfwDestroyWindow(_window);
       glfwTerminate();
   }
 
@@ -20,7 +20,7 @@ public:
   }
 
   void swapBuffers() {
-      glfwSwapBuffers(window);
+      glfwSwapBuffers(_window);
   }
 
   void pollEvents() {
@@ -28,10 +28,14 @@ public:
   }
 
   bool shouldClose() {
-      return glfwWindowShouldClose(window);
+      return glfwWindowShouldClose(_window);
+  }
+
+  GLFWwindow* window() {
+      return _window;
   }
 private:
-  GLFWwindow* window;
+  GLFWwindow* _window;
 
   static void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
       glViewport(0, 0, width, height);

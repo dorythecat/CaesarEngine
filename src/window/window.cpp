@@ -14,19 +14,20 @@ Window::Window(int width, int height, const char* title) {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-  window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-  if (!window) {
+  _window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+  if (!_window) {
     std::cerr << "Failed to create window" << std::endl;
     glfwTerminate();
     exit(EXIT_FAILURE);
   }
 
-  glfwMakeContextCurrent(window);
+  glfwMakeContextCurrent(_window);
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
     std::cerr << "Failed to initialize GLAD" << std::endl;
+    glfwTerminate();
     exit(EXIT_FAILURE);
   }
 
   glViewport(0, 0, width, height);
-  glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+  glfwSetFramebufferSizeCallback(_window, framebufferSizeCallback);
 }
