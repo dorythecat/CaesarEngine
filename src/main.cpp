@@ -93,9 +93,6 @@ int main() {
     time = glfwGetTime();
     deltaTime = time - lastFrame;
     lastFrame = time;
-    window.clear(0.2f, 0.3f, 0.3f, 1.0f);
-
-    processInput(window.window());
 
     fps += (unsigned int)(1 / deltaTime);
     counter++;
@@ -105,6 +102,8 @@ int main() {
       counter = 0;
     }
 
+    window.clear(0.0f, 0.0f, 0.0f, 1.0f);
+    processInput(window.window());
     image.render();
 
     window.swapBuffers();
