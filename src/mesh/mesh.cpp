@@ -1,7 +1,53 @@
 #include "mesh.hpp"
 
+/*
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Shader shader) :
   vertices(vertices), indices(indices), shader(shader) {
+  generateMesh();
+}
+*/
+
+Mesh::Mesh(const char* mapPath, Shader shader) : shader(shader) {
+  int x, y, n;
+  unsigned char* data = stbi_load(mapPath, &x, &y, &n, 0);
+  if (!data) {
+    std::cout << "Failed to load texture" << std::endl;
+    return;
+  }
+
+  vertices.reserve(x * y * 4);
+  indices.reserve(x * y * 6);
+
+  unsigned int j = 0;
+  for (int i= 0; i < x * y * n; i += n) {
+    if (data[i] != 0) continue;
+    int m = i / n;
+    float p = (float)(m % x) / (float)x - 1.0f;
+    float q = - (float)(m / x) / (float)y;
+
+    vertices.push_back(Mesh::Vertex(p, q));
+    vertices.push_back(Mesh::Vertex(p, q - 1.0f / (float)y));
+    vertices.push_back(Mesh::Vertex(p + 1.0f / (float)x, q - 1.0f / (float)y));
+    vertices.push_back(Mesh::Vertex(p + 1.0f / (float)x, q));
+
+    indices.push_back(j);
+    indices.push_back(j + 1);
+    indices.push_back(j + 3);
+
+    indices.push_back(j + 1);
+    indices.push_back(j + 2);
+    indices.push_back(j + 3);
+
+    j += 4;
+  } stbi_image_free(data);
+
+  vertices.shrink_to_fit();
+  indices.shrink_to_fit();
+
+  generateMesh();
+}
+
+void Mesh::generateMesh() {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &EBO);
@@ -23,6 +69,6 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Shad
 void Mesh::render() {
   shader.use();
   glBindVertexArray(VAO);
-  glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, (int)indices.size(), GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
 }

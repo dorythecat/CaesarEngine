@@ -5,6 +5,8 @@
 
 #include <vector>
 
+#include <stb_image.h>
+
 #include "../shader/shader.hpp"
 
 class Mesh {
@@ -17,13 +19,15 @@ public:
     Vertex(float x, float y, float z) : x(x), y(y), z(z) {}
   };
 
-  Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Shader shader);
+  Mesh(const char* mapPath, Shader shader);
+  // Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Shader shader);
   ~Mesh() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
   }
 
+  void generateMesh();
   void render();
 
 private:
