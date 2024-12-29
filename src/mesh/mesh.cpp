@@ -7,7 +7,8 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Shad
 }
 */
 
-Mesh::Mesh(const char* mapPath, Shader shader) : shader(shader) {
+Mesh::Mesh(const char* mapPath, Shader shader, Color color) :
+  shader(shader), color(color) {
   int x, y, n;
   unsigned char* data = stbi_load(mapPath, &x, &y, &n, 0);
   if (!data) {
@@ -20,7 +21,10 @@ Mesh::Mesh(const char* mapPath, Shader shader) : shader(shader) {
 
   unsigned int j = 0;
   for (int i= 0; i < x * y * n; i += n) {
-    if (data[i] != 0) continue;
+    if ((n <= 2 && data[i] != color.r) ||
+        data[i] != color.r ||
+        data[i + 1] != color.g ||
+        data[i + 2] != color.b) continue;
     int m = i / n;
     float p = (float)(m % x) / (float)x - 1.0f;
     float q = - (float)(m / x) / (float)y;

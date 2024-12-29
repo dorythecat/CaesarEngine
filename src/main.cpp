@@ -29,7 +29,7 @@ int main() {
 
   Shader shader("res/shaders/default.vert", "res/shaders/default.frag");
 
-  Mesh image("res/test.png", shader);
+  Mesh image("res/test.png", shader, Mesh::Color(255, 0, 0));
 
   glfwSwapInterval(0);
 
