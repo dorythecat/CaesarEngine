@@ -1,5 +1,5 @@
-#ifndef MESH_HPP
-#define MESH_HPP
+#ifndef PROVINCE_HPP
+#define PROVINCE_HPP
 
 #include <glad/glad.h>
 
@@ -9,7 +9,7 @@
 
 #include "../shader/shader.hpp"
 
-class Mesh {
+class Province {
 public:
   struct Color {
     unsigned char r, g, b;
@@ -31,20 +31,21 @@ public:
     Vertex(float x, float y, float z) : x(x), y(y), z(z) {}
   };
 
-  Mesh(const char* mapPath, Shader shader, Color color = Color(1.0f, 1.0f, 1.0f));
-  ~Mesh() noexcept {
+  Province(const char* mapPath, Shader shader, Color color = Color(1.0f, 1.0f, 1.0f));
+  ~Province() noexcept {
+    // Clean up the mesh data
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
   }
 
-  Mesh(const Mesh& other) {
+  Province(const Province& other) {
     vertices = other.vertices;
     indices = other.indices;
     shader = other.shader;
     color = other.color;
 
-    generateMeshData(); // Regenerate the mesh, otherwise it won't render
+    generateMeshData(); // Regenerate the mesh data, otherwise it won't render
   }
 
   void render();
@@ -60,4 +61,4 @@ private:
   void generateMeshData();
 };
 
-#endif // MESH_HPP
+#endif // PROVINCE_HPP

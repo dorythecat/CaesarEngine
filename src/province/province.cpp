@@ -1,12 +1,12 @@
-#include "mesh.hpp"
+#include "province.hpp"
 
-Mesh::Mesh(const char* mapPath, Shader shader, Color color) :
+Province::Province(const char* mapPath, Shader shader, Color color) :
   shader(shader), color(color) {
   generateMesh(mapPath);
   generateMeshData();
 }
 
-void Mesh::generateMesh(const char* mapPath) {
+void Province::generateMesh(const char* mapPath) {
   int x, y, n;
   unsigned char* data = stbi_load(mapPath, &x, &y, &n, 0);
   if (!data) {
@@ -26,10 +26,10 @@ void Mesh::generateMesh(const char* mapPath) {
     float p = (float)(m % x) / (float)x - 1.0f;
     float q = - (float)(m / x) / (float)y;
 
-    vertices.push_back(Mesh::Vertex(p, q));
-    vertices.push_back(Mesh::Vertex(p, q - 1.0f / (float)y));
-    vertices.push_back(Mesh::Vertex(p + 1.0f / (float)x, q - 1.0f / (float)y));
-    vertices.push_back(Mesh::Vertex(p + 1.0f / (float)x, q));
+    vertices.push_back(Province::Vertex(p, q));
+    vertices.push_back(Province::Vertex(p, q - 1.0f / (float)y));
+    vertices.push_back(Province::Vertex(p + 1.0f / (float)x, q - 1.0f / (float)y));
+    vertices.push_back(Province::Vertex(p + 1.0f / (float)x, q));
 
     indices.push_back(j);
     indices.push_back(j + 1);
@@ -47,7 +47,7 @@ void Mesh::generateMesh(const char* mapPath) {
   indices.shrink_to_fit();
 }
 
-void Mesh::generateMeshData() {
+void Province::generateMeshData() {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &EBO);
@@ -77,7 +77,7 @@ void Mesh::generateMeshData() {
   glBindVertexArray(0);
 }
 
-void Mesh::render() {
+void Province::render() {
   shader.use();
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES,

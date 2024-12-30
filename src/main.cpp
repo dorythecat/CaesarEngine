@@ -11,7 +11,7 @@
 
 #include "window/window.hpp"
 #include "shader/shader.hpp"
-#include "mesh/mesh.hpp"
+#include "province/province.hpp"
 
 void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -38,7 +38,7 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  std::map<std::string, Mesh> p;
+  std::map<std::string, Province> p;
   std::string line;
   unsigned int i = 0; // Line number (mainly for debug purposes)
   std::string currentProvince = "";
@@ -73,7 +73,7 @@ int main() {
     if (color.length() > 6) { // Trim any leading whitespace
       color = color.substr(color.find_first_not_of(' '), 6);
     }
-    p.emplace(currentProvince, Mesh("res/test.png", shader, Mesh::Color(color)));
+    p.emplace(currentProvince, Province("res/test.png", shader, Province::Color(color)));
   }
 
   // This is to catch the last province, since it won't be caught by the loop
