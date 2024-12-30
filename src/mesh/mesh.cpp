@@ -1,14 +1,12 @@
 #include "mesh.hpp"
 
-/*
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Shader shader) :
-  vertices(vertices), indices(indices), shader(shader) {
-  generateMesh();
-}
-*/
-
 Mesh::Mesh(const char* mapPath, Shader shader, Color color) :
   shader(shader), color(color) {
+  generateMesh(mapPath);
+  generateMeshData();
+}
+
+void Mesh::generateMesh(const char* mapPath) {
   int x, y, n;
   unsigned char* data = stbi_load(mapPath, &x, &y, &n, 0);
   if (!data) {
@@ -21,8 +19,7 @@ Mesh::Mesh(const char* mapPath, Shader shader, Color color) :
 
   unsigned int j = 0;
   for (int i= 0; i < x * y * n; i += n) {
-    if ((n <= 2 && data[i] != color.r) ||
-        data[i] != color.r ||
+    if (data[i] != color.r ||
         data[i + 1] != color.g ||
         data[i + 2] != color.b) continue;
     int m = i / n;
@@ -48,11 +45,9 @@ Mesh::Mesh(const char* mapPath, Shader shader, Color color) :
   // Shrink to fit, so we don't waste memory
   vertices.shrink_to_fit();
   indices.shrink_to_fit();
-
-  generateMesh();
 }
 
-void Mesh::generateMesh() {
+void Mesh::generateMeshData() {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
   glGenBuffers(1, &EBO);

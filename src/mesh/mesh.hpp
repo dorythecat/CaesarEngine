@@ -44,10 +44,9 @@ public:
     shader = other.shader;
     color = other.color;
 
-    generateMesh(); // Regenerate the mesh, otherwise it won't render
+    generateMeshData(); // Regenerate the mesh, otherwise it won't render
   }
 
-  void generateMesh();
   void render();
 
 private:
@@ -56,6 +55,9 @@ private:
   std::vector<unsigned int> indices;
   Shader shader = Shader("res/shaders/default.vert", "res/shaders/default.frag");
   Color color;
+
+  void generateMesh(const char* mapPath);
+  void generateMeshData();
 };
 
 #endif // MESH_HPP
