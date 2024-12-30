@@ -1,0 +1,8 @@
+PR1:
+  color: ff0000
+
+PR2:
+  color: 00ff00
+
+PR3:
+  color: 0000ff

@@ -17,6 +17,11 @@ public:
     Color() : r(0.0f), g(0.0f), b(0.0f) {}
     Color(unsigned char grey) : r(grey), g(grey), b(grey) {}
     Color(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(b) {}
+    Color(std::string hex) {
+      r = (unsigned char)std::stoi(hex.substr(0, 2), nullptr, 16);
+      g = (unsigned char)std::stoi(hex.substr(2, 2), nullptr, 16);
+      b = (unsigned char)std::stoi(hex.substr(4, 2), nullptr, 16);
+    }
   };
   struct Vertex {
     float x, y, z;
@@ -27,11 +32,19 @@ public:
   };
 
   Mesh(const char* mapPath, Shader shader, Color color = Color(1.0f, 1.0f, 1.0f));
-  // Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, Shader shader);
-  ~Mesh() {
+  ~Mesh() noexcept {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
+  }
+
+  Mesh(const Mesh& other) {
+    vertices = other.vertices;
+    indices = other.indices;
+    shader = other.shader;
+    color = other.color;
+
+    generateMesh(); // Regenerate the mesh, otherwise it won't render
   }
 
   void generateMesh();
@@ -41,7 +54,7 @@ private:
   unsigned int VAO, VBO, EBO;
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
-  Shader shader;
+  Shader shader = Shader("res/shaders/default.vert", "res/shaders/default.frag");
   Color color;
 };
 

@@ -5,6 +5,9 @@
 #include <GLFW/glfw3.h>
 
 #include <vector>
+#include <map>
+#include <iostream>
+#include <fstream>
 
 #include "window/window.hpp"
 #include "shader/shader.hpp"
@@ -29,9 +32,56 @@ int main() {
 
   Shader shader("res/shaders/default.vert", "res/shaders/default.frag");
 
-  Mesh image("res/test.png", shader, Mesh::Color(255, 0, 0));
+  std::ifstream provinces("res/provinces.txt");
+  if (!provinces.is_open()) {
+    std::cerr << "Failed to open provinces.txt" << std::endl;
+    return EXIT_FAILURE;
+  }
 
-  glfwSwapInterval(0);
+  std::map<std::string, Mesh> p;
+  std::string line;
+  unsigned int i = 0; // Line number (mainly for debug purposes)
+  std::string currentProvince = "";
+  bool meshGenerated = true; // Needs to start at true, or it will throw a senseless error
+  while (std::getline(provinces, line)) {
+    i++;
+    // Skip empty lines, lines with only whitespaces, newlines, and comments
+    if (line.length() == 0 ||
+        line.find_first_not_of(' ') == std::string::npos ||
+        line.substr(line.find_first_not_of(' '), 1) == "\n" ||
+        line.substr(line.find_first_not_of(' '), 1) == "#") continue;
+    if (line[0] != ' ' && line[0] != '\t') { // New province, save ID
+      if (!meshGenerated) {
+        std::cerr << "ERROR: Province \"" << currentProvince << "\" lacks the \"color\" attribute, which is mandatory! A mesh will not be generated for said province!" << std::endl;
+      }
+      currentProvince = line.substr(0, line.find_first_of(':'));
+      meshGenerated = false;
+      continue;
+    }
+    line = line.substr(line.find_first_not_of(' '));
+    if (!line.contains("color:")) continue;
+    if (meshGenerated) {
+      std::cerr << "ERROR ON LINE " << i-1 << ": Mesh already generated for province: " << currentProvince << std::endl;
+      continue;
+    }
+    meshGenerated = true;
+    std::string color = line.substr(6);
+    if (color.length() < 6) { // If it's below 6 characters, it's not a valid hex color code
+      std::cerr << "Invalid color: " << color << std::endl;
+      continue;
+    }
+    if (color.length() > 6) { // Trim any leading whitespace
+      color = color.substr(color.find_first_not_of(' '), 6);
+    }
+    p.emplace(currentProvince, Mesh("res/test.png", shader, Mesh::Color(color)));
+  }
+
+  // This is to catch the last province, since it won't be caught by the loop
+  if (!meshGenerated) {
+    std::cerr << "ERROR: Province \"" << currentProvince << "\" lacks the \"color\" attribute, which is mandatory! A mesh will not be generated for said province!" << std::endl;
+   }
+
+  glfwSwapInterval(0); // Disable VSync
 
   double time, deltaTime, lastFrame = 0.0f;
   unsigned int fps = 0, counter = 0;
@@ -50,11 +100,13 @@ int main() {
 
     window.clear(0.0f, 0.0f, 0.0f, 1.0f);
     processInput(window.window());
-    image.render();
+    for (auto& m : p) {
+      m.second.render();
+    }
 
     window.swapBuffers();
     window.pollEvents();
   }
 
-  return 0;
+  return EXIT_SUCCESS;
 }
