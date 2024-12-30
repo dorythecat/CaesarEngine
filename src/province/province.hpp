@@ -31,7 +31,10 @@ public:
     Vertex(float x, float y, float z) : x(x), y(y), z(z) {}
   };
 
-  Province(const char* mapPath, Shader shader, Color color = Color(1.0f, 1.0f, 1.0f));
+  Province(const char* mapPath,
+           Shader shader,
+           Color color,
+           std::string name);
   ~Province() noexcept {
     // Clean up the mesh data
     glDeleteVertexArrays(1, &VAO);
@@ -40,6 +43,8 @@ public:
   }
 
   Province(const Province& other) {
+    name = other.name;
+
     vertices = other.vertices;
     indices = other.indices;
     shader = other.shader;
@@ -56,6 +61,7 @@ private:
   std::vector<unsigned int> indices;
   Shader shader = Shader("res/shaders/default.vert", "res/shaders/default.frag");
   Color color;
+  std::string name;
 
   void generateMesh(const char* mapPath);
   void generateMeshData();

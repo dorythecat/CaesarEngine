@@ -40,8 +40,11 @@ int main() {
   std::map<std::string, Province> p;
   std::string line;
   unsigned int i = 0; // Line number (mainly for debug purposes)
-  std::string currentProvince = "";
-  bool meshGenerated = true; // Needs to start at true, or it will throw a senseless error
+  std::string currentProvince;
+  
+  // We save all this data to generate the mesh AFTER reading all the data, so that we don't nmeed to care about the order it's presented in.
+  std::string color;
+  std::string name;
   while (std::getline(provinces, line)) {
     i++;
     // Skip empty lines, lines with only whitespaces, newlines, and comments
@@ -50,35 +53,58 @@ int main() {
         line.substr(line.find_first_not_of(' '), 1) == "\n" ||
         line.substr(line.find_first_not_of(' '), 1) == "#") continue;
     if (line[0] != ' ' && line[0] != '\t') { // New province, save ID
-      if (!meshGenerated) {
+      if (color.empty() && !currentProvince.empty()) {
         std::cerr << "ERROR: Province \"" << currentProvince << "\" lacks the \"color\" attribute, which is mandatory! A mesh will not be generated for said province!" << std::endl;
       }
+
+      // Generate the province
+      if (!currentProvince.empty()) { // Skip the first iteration
+        p.emplace(currentProvince, Province("res/test.png", shader, Province::Color(color), name));
+      
+
+      // Reset variables
+      color.clear();
+      name.clear();
+
+      // Save the new province ID
       currentProvince = line.substr(0, line.find_first_of(':'));
-      meshGenerated = false;
       continue;
     }
     line = line.substr(line.find_first_not_of(' '));
-    if (!line.contains("color:")) continue;
-    if (meshGenerated) {
-      std::cerr << "ERROR ON LINE " << i-1 << ": Mesh already generated for province: " << currentProvince << std::endl;
+    if (line.contains("color:")) {
+      if (!color.empty()) {
+        std::cerr << "ERROR ON LINE " << i - 1 << ":  \"color\" value already defined for province: " << currentProvince << std::endl;
+        continue;
+      }
+      color = line.substr(6);
+      if (color.length() < 6) { // If it's below 6 characters, it's not a valid hex color code
+        std::cerr << "ERROR ON LINE " << i - 1 << ": Invalid color code: \"" << color << "\"" << std::endl;
+        continue;
+      }
+      if (color.length() > 6) { // Trim any leading whitespace
+        color = color.substr(line.find_first_not_of(' ') + 1, 6);
+      }
       continue;
     }
-    meshGenerated = true;
-    std::string color = line.substr(6);
-    if (color.length() < 6) { // If it's below 6 characters, it's not a valid hex color code
-      std::cerr << "Invalid color: " << color << std::endl;
-      continue;
+    if (line.contains("name:")) {
+      name = line.substr(5);
+      if (name.length() < 1) {
+        std::cerr << "ERROR ON LINE " << i - 1 << ": Province name too short!" << std::endl;
+        continue;
+      }
+      if (name.length() > 32) {
+        std::cerr << "ERROR ON LINE " << i - 1 << ": Province name too long!" << std::endl;
+        continue;
+      }
     }
-    if (color.length() > 6) { // Trim any leading whitespace
-      color = color.substr(color.find_first_not_of(' '), 6);
-    }
-    p.emplace(currentProvince, Province("res/test.png", shader, Province::Color(color)));
   }
 
   // This is to catch the last province, since it won't be caught by the loop
-  if (!meshGenerated) {
+  if (color.empty()) {
     std::cerr << "ERROR: Province \"" << currentProvince << "\" lacks the \"color\" attribute, which is mandatory! A mesh will not be generated for said province!" << std::endl;
-   }
+  } else {
+    p.emplace(currentProvince, Province("res/test.png", shader, Province::Color(color), name));
+  }
 
   glfwSwapInterval(0); // Disable VSync
 

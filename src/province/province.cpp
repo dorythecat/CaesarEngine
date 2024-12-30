@@ -1,7 +1,10 @@
 #include "province.hpp"
 
-Province::Province(const char* mapPath, Shader shader, Color color) :
-  shader(shader), color(color) {
+Province::Province(const char* mapPath,
+                   Shader shader,
+                   Color color,
+                   std::string name) :
+  shader(shader), color(color), name(name) {
   generateMesh(mapPath);
   generateMeshData();
 }
