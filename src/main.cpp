@@ -60,7 +60,7 @@ int main() {
       // Generate the province
       if (!currentProvince.empty()) { // Skip the first iteration
         p.emplace(currentProvince, Province("res/test.png", shader, Province::Color(color), name));
-      
+      }
 
       // Reset variables
       color.clear();
@@ -109,19 +109,10 @@ int main() {
   glfwSwapInterval(0); // Disable VSync
 
   double time, deltaTime, lastFrame = 0.0f;
-  unsigned int fps = 0, counter = 0;
   while(!window.shouldClose()) {
     time = glfwGetTime();
     deltaTime = time - lastFrame;
     lastFrame = time;
-
-    fps += (unsigned int)(1 / deltaTime);
-    counter++;
-    if (counter == 600) {
-      std::cout << "FPS: " << fps / 600 << std::endl;
-      fps = 0;
-      counter = 0;
-    }
 
     window.clear(0.0f, 0.0f, 0.0f, 1.0f);
     processInput(window.window());
