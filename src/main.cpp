@@ -12,6 +12,8 @@
 #include "shader/shader.hpp"
 #include "province/province.hpp"
 
+std::map<std::string, Province> p;
+
 void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
@@ -26,6 +28,21 @@ void processInput(GLFWwindow *window) {
   }
 }
 
+void mouse_click_callback(GLFWwindow *window, int button, int action, int mods) {
+  if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+    x = (x / 800) * 2 - 1;
+    y = (y / 600) * -2 + 1;
+    for (auto& m : p) {
+      if (m.second.clickedOn(x, y)) {
+        std::cout << "Clicked on province: " << m.first << std::endl;
+        break;
+      }
+    }
+  }
+}
+
 int main() {
   Window window(800, 600, "Caesar Engine");
 
@@ -37,7 +54,6 @@ int main() {
     return EXIT_FAILURE;
   }
 
-  std::map<std::string, Province> p;
   std::string line;
   unsigned int i = 0; // Line number (mainly for debug purposes)
   std::string currentProvince;
@@ -107,6 +123,7 @@ int main() {
   }
 
   glfwSwapInterval(0); // Disable VSync
+  glfwSetMouseButtonCallback(window.window(), mouse_click_callback);
 
   double time, deltaTime, lastFrame = 0.0f;
   while(!window.shouldClose()) {

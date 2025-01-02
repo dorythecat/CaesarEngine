@@ -97,3 +97,14 @@ void Province::render() {
                  0);
   glBindVertexArray(0);
 }
+
+bool Province::clickedOn(double x, double y) {
+  // There's probably a better way to do this, but it handles all edge cases and everything
+  // for us, so...
+  for (unsigned int i = 0; i < vertices.size(); i += 4) {
+    Vertex v1 = vertices[i];
+    Vertex v2 = vertices[i + 2];
+    if (x >= v1.x && x <= v2.x &&
+        y >= v2.y && y <= v1.y) return true;
+  } return false;
+}

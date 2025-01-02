@@ -57,6 +57,8 @@ public:
 
   void render();
 
+  bool clickedOn(double x, double y);
+
 private:
   unsigned int VAO, VBO, EBO;
   std::vector<Vertex> vertices;
