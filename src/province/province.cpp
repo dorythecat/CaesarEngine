@@ -88,8 +88,8 @@ void Province::generateMeshData() {
   glBindVertexArray(0);
 }
 
-void Province::render() {
-  shader.use();
+void Province::render(bool useShader) {
+  if (useShader) shader.use();
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES,
                  (int)indices.size(),

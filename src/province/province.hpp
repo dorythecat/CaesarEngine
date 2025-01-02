@@ -55,7 +55,7 @@ public:
     generateMeshData(); // Regenerate the mesh data, otherwise it won't render
   }
 
-  void render();
+  void render(bool useShader = true);
 
   bool clickedOn(double x, double y);
 
