@@ -29,10 +29,10 @@ void Province::generateMesh(const char* mapPath) {
     float p = (float)(m % x) / (float)x - 1.0f;
     float q = - (float)(m / x) / (float)y;
 
-    vertices.push_back(Province::Vertex(p, q));
-    vertices.push_back(Province::Vertex(p, q - 1.0f / (float)y));
-    vertices.push_back(Province::Vertex(p + 1.0f / (float)x, q - 1.0f / (float)y));
-    vertices.push_back(Province::Vertex(p + 1.0f / (float)x, q));
+    vertices.push_back(Province::Vertex(p, q, 0.0f, color));
+    vertices.push_back(Province::Vertex(p, q - 1.0f / (float)y, 0.0f, color));
+    vertices.push_back(Province::Vertex(p + 1.0f / (float)x, q - 1.0f / (float)y, 0.0f, color));
+    vertices.push_back(Province::Vertex(p + 1.0f / (float)x, q, 0.0f, color));
 
     indices.push_back(j);
     indices.push_back(j + 1);
@@ -76,6 +76,14 @@ void Province::generateMeshData() {
                         sizeof(Vertex),
                         (void*)nullptr);
   glEnableVertexAttribArray(0);
+
+  glVertexAttribPointer(1,
+                        3,
+                        GL_UNSIGNED_BYTE,
+                        GL_FALSE,
+                        sizeof(Vertex),
+                        (void*)offsetof(Vertex, color));
+  glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
 }
