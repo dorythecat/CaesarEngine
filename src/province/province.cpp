@@ -20,7 +20,7 @@ void Province::generateMesh(const char* mapPath) {
   vertices.reserve(x * y * 4);
   indices.reserve(x * y * 6);
 
-  for (int i= 0; i < x * y * n; i += n) {
+  for (int i = 0; i < x * y * n; i += n) {
     if (data[i] != color.r ||
         data[i + 1] != color.g ||
         data[i + 2] != color.b) continue;
