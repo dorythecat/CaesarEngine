@@ -20,7 +20,6 @@ void Province::generateMesh(const char* mapPath) {
   vertices.reserve(x * y * 4);
   indices.reserve(x * y * 6);
 
-  unsigned int j = 0;
   for (int i= 0; i < x * y * n; i += n) {
     if (data[i] != color.r ||
         data[i + 1] != color.g ||
@@ -29,20 +28,7 @@ void Province::generateMesh(const char* mapPath) {
     float p = (float)(m % x) / (float)x - 1.0f;
     float q = - (float)(m / x) / (float)y;
 
-    vertices.push_back(Province::Vertex(p, q, color));
-    vertices.push_back(Province::Vertex(p, q - 1.0f / (float)y, color));
-    vertices.push_back(Province::Vertex(p + 1.0f / (float)x, q - 1.0f / (float)y, color));
-    vertices.push_back(Province::Vertex(p + 1.0f / (float)x, q, color));
-
-    indices.push_back(j);
-    indices.push_back(j + 1);
-    indices.push_back(j + 3);
-
-    indices.push_back(j + 1);
-    indices.push_back(j + 2);
-    indices.push_back(j + 3);
-
-    j += 4;
+    addQuad(p, q, p + 1.0f / x, q - 1.0f / y, color);
   } stbi_image_free(data);
 
   // Shrink to fit, so we don't waste memory
@@ -86,6 +72,21 @@ void Province::generateMeshData() {
   glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
+}
+
+void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
+  vertices.push_back(Vertex(x0, y0, c));
+  vertices.push_back(Vertex(x0, y1, c));
+  vertices.push_back(Vertex(x1, y0, c));
+  vertices.push_back(Vertex(x1, y1, c));
+
+  indices.push_back(vertices.size() - 4);
+  indices.push_back(vertices.size() - 3);
+  indices.push_back(vertices.size() - 2);
+
+  indices.push_back(vertices.size() - 1);
+  indices.push_back(vertices.size() - 2);
+  indices.push_back(vertices.size() - 3);
 }
 
 void Province::render(bool useShader) {
