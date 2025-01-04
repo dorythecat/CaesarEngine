@@ -24,9 +24,9 @@ void Province::generateMesh(const char* mapPath) {
     if (data[i] != color.r ||
         data[i + 1] != color.g ||
         data[i + 2] != color.b) continue;
-    int m = i / n;
-    float p = (float)(m % x) / (float)x - 1.0f;
-    float q = - (float)(m / x) / (float)y;
+    int x0 = i / n;
+    float p = (float)(x0 % x) / (float)x - 1.0f;
+    float q = - (float)(x0 / x) / (float)y;
 
     addQuad(p, q, p + 1.0f / x, q - 1.0f / y, color);
   } stbi_image_free(data);
