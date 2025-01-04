@@ -35,7 +35,7 @@ void mouse_click_callback(GLFWwindow *window, int button, int action, int mods) 
     x = (x / 800) * 2 - 1;
     y = (y / 600) * -2 + 1;
     for (auto& m : p) {
-      if (m.second.clickedOn(x, y)) {
+      if (m.second.clickedOn((float)x, (float)y)) {
         std::cout << "Clicked on province: " << m.first << std::endl;
         break;
       }

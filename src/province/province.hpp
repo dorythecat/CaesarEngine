@@ -56,7 +56,7 @@ public:
 
   void render(bool useShader = true);
 
-  bool clickedOn(double x, double y);
+  bool clickedOn(float x, float y);
 
 private:
   unsigned int VAO, VBO, EBO;

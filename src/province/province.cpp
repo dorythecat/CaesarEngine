@@ -24,21 +24,27 @@ void Province::generateMesh(const char* mapPath) {
     if (data[i] != color.r ||
         data[i + 1] != color.g ||
         data[i + 2] != color.b) continue;
+    float x1 = 1.0f / (float)x;
+    float y1 = -1.0f / (float)y;
+
     int xy = i / n;
-    float p = (float)(xy % x) / (float)x - 1.0f;
-    float q = - (float)(xy / x) / (float)y;
+    float p = (float)(xy % x) * x1 - 1.0f;
+    float q = (float)(xy / x) * y1;
 
     float p0 = p;
     while (data[i] == color.r &&
            data[i + 1] == color.g &&
            data[i + 2] == color.b &&
            i % (n * x) != 0) {
-      p0 += 1.0f / x;
+      p0 += x1;
       i += n;
     }
 
-    addQuad(p, q, p0, q - 1.0f / y, color);
+    addQuad(p, q, p0, q + y1, color);
   } stbi_image_free(data);
+  std::cout << "Generated mesh for " << name << std::endl;
+  std::cout << "Vertices: " << vertices.size() << std::endl;
+  std::cout << "Indices: " << indices.size() << std::endl;
 
   // Shrink to fit, so we don't waste memory
   vertices.shrink_to_fit();
@@ -89,13 +95,15 @@ void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
   vertices.push_back(Vertex(x1, y0, c));
   vertices.push_back(Vertex(x1, y1, c));
 
-  indices.push_back(vertices.size() - 4);
-  indices.push_back(vertices.size() - 3);
-  indices.push_back(vertices.size() - 2);
+  unsigned int offset = vertices.size() - 4;
 
-  indices.push_back(vertices.size() - 1);
-  indices.push_back(vertices.size() - 2);
-  indices.push_back(vertices.size() - 3);
+  indices.push_back(offset);
+  indices.push_back(offset + 1);
+  indices.push_back(offset + 2);
+
+  indices.push_back(offset + 3);
+  indices.push_back(offset + 2);
+  indices.push_back(offset + 1);
 }
 
 void Province::render(bool useShader) {
@@ -108,7 +116,7 @@ void Province::render(bool useShader) {
   glBindVertexArray(0);
 }
 
-bool Province::clickedOn(double x, double y) {
+bool Province::clickedOn(float x, float y) {
   // There's probably a better way to do this, but it handles all edge cases and everything
   // for us, so...
   for (unsigned int i = 0; i < vertices.size(); i += 4) {
