@@ -104,7 +104,7 @@ bool Province::clickedOn(double x, double y) {
   // for us, so...
   for (unsigned int i = 0; i < vertices.size(); i += 4) {
     Vertex v1 = vertices[i];
-    Vertex v2 = vertices[i + 2];
+    Vertex v2 = vertices[i + 3];
     if (x >= v1.x && x <= v2.x &&
         y >= v2.y && y <= v1.y) return true;
   } return false;
