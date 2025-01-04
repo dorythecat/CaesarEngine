@@ -20,13 +20,13 @@ void Province::generateMesh(const char* mapPath) {
   vertices.reserve(x * y * 4);
   indices.reserve(x * y * 6);
 
-  for (int i = 0; i < x * y * n; i += n) {
+  for (int i = 0; i < y * n; i += n) {
     if (data[i] != color.r ||
         data[i + 1] != color.g ||
         data[i + 2] != color.b) continue;
-    int x0 = i / n;
-    float p = (float)(x0 % x) / (float)x - 1.0f;
-    float q = - (float)(x0 / x) / (float)y;
+    int xy = i / n;
+    float p = (float)(xy % x) / (float)x - 1.0f;
+    float q = - (float)(xy / x) / (float)y;
 
     addQuad(p, q, p + 1.0f / x, q - 1.0f / y, color);
   } stbi_image_free(data);
