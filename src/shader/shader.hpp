@@ -29,7 +29,7 @@ public:
       vShaderFile.close();
       fShaderFile.close();
       
-      vertexCode   = vShaderStream.str();
+      vertexCode = vShaderStream.str();
       fragmentCode = fShaderStream.str();
     } catch (std::ifstream::failure& e) {
       std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
