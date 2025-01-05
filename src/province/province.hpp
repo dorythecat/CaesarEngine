@@ -33,7 +33,6 @@ public:
   };
 
   Province(const char* mapPath,
-           Shader shader,
            Color color,
            std::string name);
   ~Province() noexcept {
@@ -48,13 +47,12 @@ public:
 
     vertices = other.vertices;
     indices = other.indices;
-    shader = other.shader;
     color = other.color;
 
     generateMeshData(); // Regenerate the mesh data, otherwise it won't render
   }
 
-  void render(bool useShader = true);
+  void render();
 
   bool clickedOn(float x, float y);
 
@@ -62,7 +60,6 @@ private:
   unsigned int VAO, VBO, EBO;
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
-  Shader shader = Shader("res/shaders/default.vert", "res/shaders/default.frag");
   Color color;
   std::string name;
 

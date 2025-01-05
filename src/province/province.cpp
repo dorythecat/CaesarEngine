@@ -1,10 +1,9 @@
 #include "province.hpp"
 
 Province::Province(const char* mapPath,
-                   Shader shader,
                    Color color,
                    std::string name) :
-  shader(shader), color(color), name(name) {
+  color(color), name(name) {
   generateMesh(mapPath);
   generateMeshData();
 }
@@ -103,8 +102,7 @@ void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
   indices.push_back(offset + 1);
 }
 
-void Province::render(bool useShader) {
-  if (useShader) shader.use();
+void Province::render() {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES,
                  (int)indices.size(),

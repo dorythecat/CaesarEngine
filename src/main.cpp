@@ -75,7 +75,7 @@ int main() {
 
       // Generate the province
       if (!currentProvince.empty()) { // Skip the first iteration
-        p.emplace(currentProvince, Province("res/test.png", shader, Province::Color(color), name));
+        p.emplace(currentProvince, Province("res/test.png", Province::Color(color), name));
       }
 
       // Reset variables
@@ -119,7 +119,7 @@ int main() {
   if (color.empty()) {
     std::cerr << "ERROR: Province \"" << currentProvince << "\" lacks the \"color\" attribute, which is mandatory! A mesh will not be generated for said province!" << std::endl;
   } else {
-    p.emplace(currentProvince, Province("res/test.png", shader, Province::Color(color), name));
+    p.emplace(currentProvince, Province("res/test.png", Province::Color(color), name));
   }
 
   glfwSwapInterval(0); // Disable VSync
@@ -133,6 +133,7 @@ int main() {
 
     window.clear(0.0f, 0.0f, 0.0f, 1.0f);
     processInput(window.window());
+    shader.use();
     for (auto& m : p) {
       m.second.render();
     }
