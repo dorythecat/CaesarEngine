@@ -95,7 +95,7 @@ void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
   vertices.push_back(Vertex(x1, y0, c));
   vertices.push_back(Vertex(x1, y1, c));
 
-  unsigned int offset = vertices.size() - 4;
+  unsigned int offset = (unsigned int)vertices.size() - 4;
 
   indices.push_back(offset);
   indices.push_back(offset + 1);
