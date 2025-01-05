@@ -42,9 +42,6 @@ void Province::generateMesh(const char* mapPath) {
 
     addQuad(p, q, p0, q + y1, color);
   } stbi_image_free(data);
-  std::cout << "Generated mesh for " << name << std::endl;
-  std::cout << "Vertices: " << vertices.size() << std::endl;
-  std::cout << "Indices: " << indices.size() << std::endl;
 
   // Shrink to fit, so we don't waste memory
   vertices.shrink_to_fit();
