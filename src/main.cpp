@@ -142,5 +142,7 @@ int main() {
     window.pollEvents();
   }
 
+  p.clear(); // If we don't clear the map, a segmentation fault will occur on program exit
+
   return EXIT_SUCCESS;
 }
