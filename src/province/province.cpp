@@ -96,33 +96,30 @@ void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
   unsigned int v3Index = 0;
   unsigned int v4Index = 0;
 
-  if (std::find(vertices.begin(), vertices.end(), v1) == vertices.end()) {
+  v1Index = std::find(vertices.begin(), vertices.end(), v1) - vertices.begin();
+  if (v1Index == vertices.size()) {
     vertices.push_back(v1);
     v1Index = vertices.size() - 1;
-  } else {
-    v1Index = std::find(vertices.begin(), vertices.end(), v1) - vertices.begin();
   }
 
-  if (std::find(vertices.begin(), vertices.end(), v2) == vertices.end()) {
+  v2Index = std::find(vertices.begin(), vertices.end(), v2) - vertices.begin();
+  if (v2Index == vertices.size()) {
     vertices.push_back(v2);
     v2Index = vertices.size() - 1;
-  } else {
-    v2Index = std::find(vertices.begin(), vertices.end(), v2) - vertices.begin();
   }
 
-  if (std::find(vertices.begin(), vertices.end(), v3) == vertices.end()) {
+  v3Index = std::find(vertices.begin(), vertices.end(), v3) - vertices.begin();
+  if (v3Index == vertices.size()) {
     vertices.push_back(v3);
     v3Index = vertices.size() - 1;
-  } else {
-    v3Index = std::find(vertices.begin(), vertices.end(), v3) - vertices.begin();
   }
 
-  if (std::find(vertices.begin(), vertices.end(), v4) == vertices.end()) {
+  v4Index = std::find(vertices.begin(), vertices.end(), v4) - vertices.begin();
+  if (v4Index == vertices.size()) {
     vertices.push_back(v4);
     v4Index = vertices.size() - 1;
-  } else {
-    v4Index = std::find(vertices.begin(), vertices.end(), v4) - vertices.begin();
   }
+
 
   indices.push_back(v1Index);
   indices.push_back(v2Index);
