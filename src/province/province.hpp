@@ -30,6 +30,11 @@ public:
     Vertex() : x(0.0f), y(0.0f) {}
     Vertex(float x, float y) : x(x), y(y) {}
     Vertex(float x, float y, Color color) : x(x), y(y), color(color) {}
+
+    bool operator==(const Vertex& other) {
+      // We don't need to compare the color, really (in fact, it benefits us not to)
+      return x == other.x && y == other.y;
+    }
   };
 
   Province(const char* mapPath,
