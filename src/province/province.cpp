@@ -19,12 +19,12 @@ void Province::generateMesh(const char* mapPath) {
   vertices.reserve(x * y * 4);
   indices.reserve(x * y * 6);
 
+  float x1 = 1.0f / (float)x;
+  float y1 = -1.0f / (float)y;
   for (int i = 0; i < x * y * n; i += n) {
     if (data[i] != color.r ||
         data[i + 1] != color.g ||
         data[i + 2] != color.b) continue;
-    float x1 = 1.0f / (float)x;
-    float y1 = -1.0f / (float)y;
 
     int xy = i / n;
     float p = (float)(xy % x) * x1 - 1.0f;
