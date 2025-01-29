@@ -13,6 +13,7 @@
 #include "province/province.hpp"
 
 std::map<std::string, Province> p;
+float scale = 1.0f;
 
 void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -40,6 +41,16 @@ void mouse_click_callback(GLFWwindow *window, int button, int action, int mods) 
         break;
       }
     }
+  }
+}
+
+void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+  if (yoffset < 0.0) {
+    if (scale > 10.0f) return;
+    scale += 0.1f;
+  } else {
+    if (scale < 0.1f) return;
+    scale -= 0.1f;
   }
 }
 
@@ -77,6 +88,7 @@ int main() {
 
   glfwSwapInterval(0); // Disable VSync
   glfwSetMouseButtonCallback(window.window(), mouse_click_callback);
+  glfwSetScrollCallback(window.window(), scroll_callback);
 
   double time, deltaTime, lastFrame = 0.0f;
   while(!window.shouldClose()) {
@@ -86,6 +98,7 @@ int main() {
 
     window.clear(0.0f, 0.0f, 0.0f, 1.0f);
     processInput(window.window());
+    shader.setFloat("scale", scale);
     shader.use();
     for (auto& m : p) {
       m.second.render();
