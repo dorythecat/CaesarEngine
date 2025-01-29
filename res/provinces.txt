@@ -1,11 +1,5 @@
-PR1:
-  color: ff0000
-  name: Province 1
+# ID,Color,Name
 
-PR2:
-  color: 00ff00
-  name: Province 2
-
-PR3:
-  name: Province 3
-  color: 0000ff
+PR1,ff0000,Province 1
+PR2,00ff00,Province 2
+PR3,0000ff,Province 3
