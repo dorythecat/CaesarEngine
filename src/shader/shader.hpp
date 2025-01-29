@@ -35,6 +35,12 @@ public:
   void setFloat(const std::string &name, float value) const { 
         glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
   }
+  void setDouble(const std::string &name, double value) const { 
+        glUniform1d(glGetUniformLocation(ID, name.c_str()), value); 
+  }
+  void setVec2(const std::string &name, float x, float y) const { 
+        glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y); 
+  }
 
 private:
   void loadShaderCode(std::string vertexPath, std::string fragmentPath) {

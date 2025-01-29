@@ -14,6 +14,8 @@
 
 std::map<std::string, Province> p;
 float scale = 1.0f;
+float offsetX = 0.0f;
+float offsetY = 0.0f;
 
 void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -26,6 +28,22 @@ void processInput(GLFWwindow *window) {
 
   if (glfwGetKey(window, GLFW_KEY_F6) == GLFW_PRESS) {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    offsetY += 0.01f;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    offsetY -= 0.01f;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    offsetX -= 0.01f;
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    offsetX += 0.01f;
   }
 }
 
@@ -48,10 +66,10 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
   if (yoffset < 0.0) {
     if (scale > 10.0f) return;
     scale += 0.1f;
-  } else {
-    if (scale < 0.1f) return;
-    scale -= 0.1f;
+    return;
   }
+  if (scale < 0.1f) return;
+  scale -= 0.1f;
 }
 
 int main() {
@@ -99,6 +117,7 @@ int main() {
     window.clear(0.0f, 0.0f, 0.0f, 1.0f);
     processInput(window.window());
     shader.setFloat("scale", scale);
+    shader.setVec2("offset", offsetX, offsetY);
     shader.use();
     for (auto& m : p) {
       m.second.render();
