@@ -31,19 +31,19 @@ void processInput(GLFWwindow *window) {
   }
 
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    offsetY += 0.01f;
+    offsetY += 0.01f * scale;
   }
 
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-    offsetY -= 0.01f;
+    offsetY -= 0.01f * scale;
   }
 
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-    offsetX -= 0.01f;
+    offsetX -= 0.01f * scale;
   }
 
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-    offsetX += 0.01f;
+    offsetX += 0.01f * scale;
   }
 }
 
