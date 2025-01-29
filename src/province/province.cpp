@@ -91,28 +91,28 @@ void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
   Vertex v3 = Vertex(x1, y0, c);
   Vertex v4 = Vertex(x1, y1, c);
   
-  unsigned int v1Index = std::find(vertices.begin(), vertices.end(), v1) - vertices.begin();
+  unsigned int v1Index = static_cast<unsigned int>(std::find(vertices.begin(), vertices.end(), v1) - vertices.begin());
   if (v1Index == vertices.size()) {
     vertices.push_back(v1);
-    v1Index = vertices.size() - 1;
+    v1Index = static_cast<unsigned int>(vertices.size() - 1);
   }
 
-  unsigned int v2Index = std::find(vertices.begin(), vertices.end(), v2) - vertices.begin();
+  unsigned int v2Index = static_cast<unsigned int>(std::find(vertices.begin(), vertices.end(), v2) - vertices.begin());
   if (v2Index == vertices.size()) {
     vertices.push_back(v2);
-    v2Index = vertices.size() - 1;
+    v2Index = static_cast<unsigned int>(vertices.size() - 1);
   }
 
-  unsigned int v3Index = std::find(vertices.begin(), vertices.end(), v3) - vertices.begin();
+  unsigned int v3Index = static_cast<unsigned int>(std::find(vertices.begin(), vertices.end(), v3) - vertices.begin());
   if (v3Index == vertices.size()) {
     vertices.push_back(v3);
-    v3Index = vertices.size() - 1;
+    v3Index = static_cast<unsigned int>(vertices.size() - 1);
   }
 
-  unsigned int v4Index = std::find(vertices.begin(), vertices.end(), v4) - vertices.begin();
+  unsigned int v4Index = static_cast<unsigned int>(std::find(vertices.begin(), vertices.end(), v4) - vertices.begin());
   if (v4Index == vertices.size()) {
     vertices.push_back(v4);
-    v4Index = vertices.size() - 1;
+    v4Index = static_cast<unsigned int>(vertices.size() - 1);
   }
 
 
@@ -128,15 +128,14 @@ void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
 void Province::render() {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES,
-                 (int)indices.size(),
+                 static_cast<int>(indices.size()),
                  GL_UNSIGNED_INT,
                  0);
   glBindVertexArray(0);
 }
 
 bool Province::clickedOn(float x, float y) {
-  // There's probably a better way to do this, but it handles all edge cases and everything
-  // for us, so...
+  // There's probably a better way to do this, but it handles all edge cases and everything for us, so...
   for (unsigned int i = 0; i < vertices.size(); i += 4) {
     Vertex v1 = vertices[i];
     Vertex v2 = vertices[i + 3];
