@@ -86,43 +86,20 @@ void Province::generateMeshData() {
 }
 
 void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
-  Vertex v1 = Vertex(x0, y0, c);
-  Vertex v2 = Vertex(x0, y1, c);
-  Vertex v3 = Vertex(x1, y0, c);
-  Vertex v4 = Vertex(x1, y1, c);
-  
-  unsigned int v1Index = static_cast<unsigned int>(std::find(vertices.begin(), vertices.end(), v1) - vertices.begin());
-  if (v1Index == vertices.size()) {
-    vertices.push_back(v1);
-    v1Index = static_cast<unsigned int>(vertices.size() - 1);
-  }
+  unsigned int index = static_cast<unsigned int>(vertices.size());
 
-  unsigned int v2Index = static_cast<unsigned int>(std::find(vertices.begin(), vertices.end(), v2) - vertices.begin());
-  if (v2Index == vertices.size()) {
-    vertices.push_back(v2);
-    v2Index = static_cast<unsigned int>(vertices.size() - 1);
-  }
+  vertices.push_back(Vertex(x0, y0, c));
+  vertices.push_back(Vertex(x0, y1, c));
+  vertices.push_back(Vertex(x1, y0, c));
+  vertices.push_back(Vertex(x1, y1, c));
 
-  unsigned int v3Index = static_cast<unsigned int>(std::find(vertices.begin(), vertices.end(), v3) - vertices.begin());
-  if (v3Index == vertices.size()) {
-    vertices.push_back(v3);
-    v3Index = static_cast<unsigned int>(vertices.size() - 1);
-  }
+  indices.push_back(index);
+  indices.push_back(index + 1);
+  indices.push_back(index + 2);
 
-  unsigned int v4Index = static_cast<unsigned int>(std::find(vertices.begin(), vertices.end(), v4) - vertices.begin());
-  if (v4Index == vertices.size()) {
-    vertices.push_back(v4);
-    v4Index = static_cast<unsigned int>(vertices.size() - 1);
-  }
-
-
-  indices.push_back(v1Index);
-  indices.push_back(v2Index);
-  indices.push_back(v3Index);
-
-  indices.push_back(v4Index);
-  indices.push_back(v3Index);
-  indices.push_back(v2Index);
+  indices.push_back(index + 3);
+  indices.push_back(index + 2);
+  indices.push_back(index + 1);
 }
 
 void Province::render() {

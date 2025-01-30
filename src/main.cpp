@@ -31,19 +31,19 @@ void processInput(GLFWwindow *window) {
   }
 
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    offsetY += 0.01f * scale;
+    offsetY += 0.001f * scale;
   }
 
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-    offsetY -= 0.01f * scale;
+    offsetY -= 0.001f * scale;
   }
 
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-    offsetX -= 0.01f * scale;
+    offsetX -= 0.001f * scale;
   }
 
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-    offsetX += 0.01f * scale;
+    offsetX += 0.001f * scale;
   }
 }
 
@@ -51,10 +51,13 @@ void mouse_click_callback(GLFWwindow *window, int button, int action, int mods) 
   if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
     double x, y;
     glfwGetCursorPos(window, &x, &y);
-    x = (x / 800.0) * 2.0 - 1.0;
-    y = - (y / 600.0) * 2.0 + 1.0;
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    // This is to avoid conversion errors, but at some point we could change tthe system to work with double-precision floats, which would be more accurate, but memory-aggressive
+    float xf = (2.0f * static_cast<float>(x) / static_cast<float>(width) - 1.0f) * scale + offsetX;
+    float yf = (1.0f - 2.0f * static_cast<float>(y) / static_cast<float>(height)) * scale + offsetY;
     for (auto& m : p) {
-      if (m.second.clickedOn((float)x, (float)y)) {
+      if (m.second.clickedOn(xf, yf)) {
         std::cout << "Clicked on province: " << m.first << std::endl;
         break;
       }
