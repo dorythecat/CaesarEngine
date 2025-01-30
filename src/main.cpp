@@ -53,9 +53,12 @@ void mouse_click_callback(GLFWwindow *window, int button, int action, int mods) 
     glfwGetCursorPos(window, &x, &y);
     int width, height;
     glfwGetWindowSize(window, &width, &height);
-    // This is to avoid conversion errors, but at some point we could change tthe system to work with double-precision floats, which would be more accurate, but memory-aggressive
-    float xf = (2.0f * static_cast<float>(x) / static_cast<float>(width) - 1.0f) * scale + offsetX;
-    float yf = (1.0f - 2.0f * static_cast<float>(y) / static_cast<float>(height)) * scale + offsetY;
+    // At some point we could change the system to work with double-precision floats, which would be more accurate, but use more memory
+    float scaleFact = 2.0f * scale;
+    float xf = scaleFact * static_cast<float>(x) / static_cast<float>(width);
+    float yf = scaleFact * static_cast<float>(y) / static_cast<float>(height);
+    xf = xf - scale + offsetX;
+    yf = scale - yf + offsetY;
     for (auto& m : p) {
       if (m.second.clickedOn(xf, yf)) {
         std::cout << "Clicked on province: " << m.first << std::endl;
