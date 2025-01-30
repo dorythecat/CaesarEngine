@@ -34,8 +34,5 @@ file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp) # Get all the source 
 add_executable(${PROJECT_NAME} ${SOURCES} ${PROJECT_SOURCE_DIR}/libs/glad/src/glad.c) # Create the executable
 target_link_libraries(${PROJECT_NAME} glfw) # Link the executable with the libraries
 
-# Move neccessary files to output directory
-configure_file(${PROJECT_SOURCE_DIR}/res/shaders/default.vert ${PROJECT_BINARY_DIR}/res/shaders/default.vert COPYONLY)
-configure_file(${PROJECT_SOURCE_DIR}/res/shaders/default.frag ${PROJECT_BINARY_DIR}/res/shaders/default.frag COPYONLY)
-configure_file(${PROJECT_SOURCE_DIR}/res/test.png ${PROJECT_BINARY_DIR}/res/test.png COPYONLY)
-configure_file(${PROJECT_SOURCE_DIR}/res/provinces.txt ${PROJECT_BINARY_DIR}/res/provinces.txt COPYONLY)
+file(COPY ${PROJECT_SOURCE_DIR}/res DESTINATION ${PROJECT_BINARY_DIR}) # Copy the resources to the build directory
+
