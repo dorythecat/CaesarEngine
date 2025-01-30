@@ -38,3 +38,4 @@ target_link_libraries(${PROJECT_NAME} glfw) # Link the executable with the libra
 configure_file(${PROJECT_SOURCE_DIR}/res/shaders/default.vert ${PROJECT_BINARY_DIR}/res/shaders/default.vert COPYONLY)
 configure_file(${PROJECT_SOURCE_DIR}/res/shaders/default.frag ${PROJECT_BINARY_DIR}/res/shaders/default.frag COPYONLY)
 configure_file(${PROJECT_SOURCE_DIR}/res/test.png ${PROJECT_BINARY_DIR}/res/test.png COPYONLY)
+configure_file(${PROJECT_SOURCE_DIR}/res/provinces.txt ${PROJECT_BINARY_DIR}/res/provinces.txt COPYONLY)
