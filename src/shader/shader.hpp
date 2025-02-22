@@ -1,4 +1,3 @@
-
 #ifndef SHADER_H
 #define SHADER_H
 
@@ -25,23 +24,40 @@ public:
 
   void use() { glUseProgram(ID); }
 
-  // Utility uniform functions
+  // --- Utility uniform functions ---
+  // Boolean
   void setBool(const std::string &name, bool value) const {         
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value); 
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value); 
   }
+  // Scalars
   void setInt(const std::string &name, int value) const { 
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), value); 
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), value); 
   }
   void setFloat(const std::string &name, float value) const { 
-        glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
+    glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
   }
   void setDouble(const std::string &name, double value) const { 
-        glUniform1d(glGetUniformLocation(ID, name.c_str()), value); 
+    glUniform1d(glGetUniformLocation(ID, name.c_str()), value); 
   }
-  void setVec2(const std::string &name, float x, float y) const { 
-        glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y); 
+  // Vectors
+  void setVec2f(const std::string &name,
+                float x,
+                float y) const { 
+    glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y); 
   }
-
+  void setVec3f(const std::string &name,
+                float x,
+                float y,
+                float z) const { 
+    glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z); 
+  }
+  void setVec4f(const std::string &name,
+                float x,
+                float y,
+                float z,
+                float w) const { 
+    glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w); 
+  }
 private:
   void loadShaderCode(std::string vertexPath, std::string fragmentPath) {
     std::string vertexCode, fragmentCode;
@@ -106,6 +122,4 @@ private:
   }
 };
 
-#endif
-
-
+#endif // SHADER_H
