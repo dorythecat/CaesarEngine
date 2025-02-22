@@ -38,8 +38,16 @@ void Province::generateMesh(const char* mapPath) {
     //  p0 += x1;
     //  i += n;
     //}
+    
+    // Calculate UV coordinates
+    float u = (float)(xy % x) / (float)x;
+    float v = -(float)(xy / x) / (float)y;
+    float u0 = u + x1;
+    float v0 = v - y1;
 
-    addQuad(p, q, p0, q + y1, color);
+    addQuad(p, q, u, v,
+            p0, q + y1, u0, v0,
+            color);
   } stbi_image_free(data);
 
   // Shrink to fit, so we don't waste memory
@@ -75,6 +83,14 @@ void Province::generateMeshData() {
   glEnableVertexAttribArray(0);
 
   glVertexAttribPointer(1,
+                        2,
+                        GL_FLOAT,
+                        GL_FALSE,
+                        sizeof(Vertex),
+                        (void*)offsetof(Vertex, u));
+  glEnableVertexAttribArray(1);
+
+  glVertexAttribPointer(2,
                         3,
                         GL_UNSIGNED_BYTE,
                         GL_FALSE,
@@ -85,13 +101,15 @@ void Province::generateMeshData() {
   glBindVertexArray(0);
 }
 
-void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
+void Province::addQuad(float x0, float y0, float u0, float v0,
+                       float x1, float y1, float u1, float v1,
+                       Color c) {
   unsigned int index = static_cast<unsigned int>(vertices.size());
 
-  vertices.push_back(Vertex(x0, y0, c));
-  vertices.push_back(Vertex(x0, y1, c));
-  vertices.push_back(Vertex(x1, y0, c));
-  vertices.push_back(Vertex(x1, y1, c));
+  vertices.push_back(Vertex(x0, y0, u0, v0, c));
+  vertices.push_back(Vertex(x0, y1, u0, v1, c));
+  vertices.push_back(Vertex(x1, y0, u1, v0, c));
+  vertices.push_back(Vertex(x1, y1, u1, v1, c));
 
   indices.push_back(index);
   indices.push_back(index + 1);

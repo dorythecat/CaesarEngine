@@ -119,6 +119,26 @@ int main() {
   text.setText("Abcdefg\nhig", 100.0f, 100.0f, 50.0f);
   Shader textShader("res/shaders/text.vert", "res/shaders/text.frag");
 
+  int width, height, nrChannels;
+  unsigned char *data = stbi_load("res/heightmap.png", &width, &height, &nrChannels, 0);
+  if (!data) {
+    std::cerr << "Failed to load heightmap.png" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  unsigned int texture;
+  glGenTextures(1, &texture);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+  glGenerateMipmap(GL_TEXTURE_2D);
+  stbi_image_free(data);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -133,9 +153,12 @@ int main() {
     shader.use();
     shader.setFloat("scale", scale);
     shader.setVec2f("offset", offsetX, offsetY);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    shader.setInt("heightmap", 0);
     for (auto& m : p) {
       m.second.render();
     }
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     textShader.use();
     textShader.setInt("tex", 0);
