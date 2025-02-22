@@ -10,6 +10,7 @@ uniform vec2 offset;
 uniform sampler2D heightmap;
 
 void main() {
-  gl_Position = vec4(aPos - offset, 0.0, scale);
-  ourColor = texture(heightmap, aTexCoords).rgb;
+  float h = texture(heightmap, aTexCoords).r;
+  gl_Position = vec4(aPos - offset, h, scale);
+  ourColor = aColor;
 }

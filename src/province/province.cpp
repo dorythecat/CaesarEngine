@@ -30,7 +30,7 @@ void Province::generateMesh(const char* mapPath) {
     float p = (float)(xy % x) * x1 - 1.0f;
     float q = (float)(xy / x) * y1 + 1.0f;
 
-    float p0 = p + x1;
+    //float p0 = p;
     //while (data[i] == color.r &&
     //       data[i + 1] == color.g &&
     //       data[i + 2] == color.b &&
@@ -40,13 +40,11 @@ void Province::generateMesh(const char* mapPath) {
     //}
     
     // Calculate UV coordinates
-    float u = (float)(xy % x) / (float)x;
-    float v = -(float)(xy / x) / (float)y;
-    float u0 = u + x1;
-    float v0 = v - y1;
+    float u = p / 2.0f + 0.5f;
+    float v = q / 2.0f - 0.5f;
 
     addQuad(p, q, u, v,
-            p0, q + y1, u0, v0,
+            p + x1, q + y1, u + x1, v + y1,
             color);
   } stbi_image_free(data);
 
@@ -96,7 +94,7 @@ void Province::generateMeshData() {
                         GL_FALSE,
                         sizeof(Vertex),
                         (void*)offsetof(Vertex, color));
-  glEnableVertexAttribArray(1);
+  glEnableVertexAttribArray(2);
 
   glBindVertexArray(0);
 }
