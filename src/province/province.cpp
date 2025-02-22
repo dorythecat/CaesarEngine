@@ -30,14 +30,14 @@ void Province::generateMesh(const char* mapPath) {
     float p = (float)(xy % x) * x1 - 1.0f;
     float q = (float)(xy / x) * y1 + 1.0f;
 
-    float p0 = p;
-    while (data[i] == color.r &&
-           data[i + 1] == color.g &&
-           data[i + 2] == color.b &&
-           i % (n * x) != 0) {
-      p0 += x1;
-      i += n;
-    }
+    float p0 = p + x1;
+    //while (data[i] == color.r &&
+    //       data[i + 1] == color.g &&
+    //       data[i + 2] == color.b &&
+    //       i % (n * x) != 0) {
+    //  p0 += x1;
+    //  i += n;
+    //}
 
     addQuad(p, q, p0, q + y1, color);
   } stbi_image_free(data);
