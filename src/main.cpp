@@ -11,6 +11,7 @@
 #include "window/window.hpp"
 #include "shader/shader.hpp"
 #include "province/province.hpp"
+#include "text/text.hpp"
 
 std::map<std::string, Province> p;
 float scale = 1.0f;
@@ -114,20 +115,31 @@ int main() {
   glfwSetMouseButtonCallback(window.window(), mouse_click_callback);
   glfwSetScrollCallback(window.window(), scroll_callback);
 
+  Text text("res/text.png", "res/text.csv");
+  text.setText("Abcdefg\nhig", 100.0f, 100.0f, 50.0f);
+  Shader textShader("res/shaders/text.vert", "res/shaders/text.frag");
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
   double time, deltaTime, lastFrame = 0.0f;
   while(!window.shouldClose()) {
     time = glfwGetTime();
     deltaTime = time - lastFrame;
     lastFrame = time;
 
-    window.clear(0.0f, 0.0f, 0.0f, 1.0f);
+    window.clear(0.5f, 0.5f, 0.5f, 1.0f);
     processInput(window.window());
-    shader.setFloat("scale", scale);
-    shader.setVec2("offset", offsetX, offsetY);
     shader.use();
+    shader.setFloat("scale", scale);
+    shader.setVec2f("offset", offsetX, offsetY);
     for (auto& m : p) {
       m.second.render();
     }
+
+    textShader.use();
+    textShader.setInt("tex", 0);
+    text.render();
 
     window.swapBuffers();
     window.pollEvents();
