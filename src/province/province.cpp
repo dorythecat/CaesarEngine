@@ -21,6 +21,7 @@ void Province::generateMesh(const char* mapPath) {
 
   float x1 = 2.0f / (float)x;
   float y1 = -2.0f / (float)y;
+  
   for (int i = 0; i < x * y * n; i += n) {
     if (data[i] != color.r ||
         data[i + 1] != color.g ||
@@ -30,27 +31,23 @@ void Province::generateMesh(const char* mapPath) {
     float p = (float)(xy % x) * x1 - 1.0f;
     float q = (float)(xy / x) * y1 + 1.0f;
 
-    //float p0 = p;
-    //while (data[i] == color.r &&
-    //       data[i + 1] == color.g &&
-    //       data[i + 2] == color.b &&
-    //       i % (n * x) != 0) {
-    //  p0 += x1;
-    //  i += n;
-    //}
+    float p0 = p;
+    while (data[i] == color.r &&
+           data[i + 1] == color.g &&
+           data[i + 2] == color.b &&
+           i % (n * x) != 0) {
+      p0 += x1;
+      i += n;
+    }
     
-    // Calculate UV coordinates
-    float u = p / 2.0f + 0.5f;
-    float v = q / 2.0f - 0.5f;
-
-    addQuad(p, q, u, v,
-            p + x1, q + y1, u + x1, v + y1,
-            color);
+    addQuad(p, q, p0, q + y1, color);
   } stbi_image_free(data);
 
   // Shrink to fit, so we don't waste memory
   vertices.shrink_to_fit();
   indices.shrink_to_fit();
+
+  std::cout << vertices.size() << " vertices, " << indices.size() << " indices" << std::endl;
 }
 
 void Province::generateMeshData() {
@@ -81,33 +78,23 @@ void Province::generateMeshData() {
   glEnableVertexAttribArray(0);
 
   glVertexAttribPointer(1,
-                        2,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(Vertex),
-                        (void*)offsetof(Vertex, u));
-  glEnableVertexAttribArray(1);
-
-  glVertexAttribPointer(2,
                         3,
                         GL_UNSIGNED_BYTE,
                         GL_FALSE,
                         sizeof(Vertex),
                         (void*)offsetof(Vertex, color));
-  glEnableVertexAttribArray(2);
+  glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
 }
 
-void Province::addQuad(float x0, float y0, float u0, float v0,
-                       float x1, float y1, float u1, float v1,
-                       Color c) {
+void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
   unsigned int index = static_cast<unsigned int>(vertices.size());
 
-  vertices.push_back(Vertex(x0, y0, u0, v0, c));
-  vertices.push_back(Vertex(x0, y1, u0, v1, c));
-  vertices.push_back(Vertex(x1, y0, u1, v0, c));
-  vertices.push_back(Vertex(x1, y1, u1, v1, c));
+  vertices.push_back(Vertex(x0, y0, c));
+  vertices.push_back(Vertex(x0, y1, c));
+  vertices.push_back(Vertex(x1, y0, c));
+  vertices.push_back(Vertex(x1, y1, c));
 
   indices.push_back(index);
   indices.push_back(index + 1);

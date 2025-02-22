@@ -25,16 +25,15 @@ public:
   };
   struct Vertex {
     float x, y;
-    float u, v;
     Color color;
 
-    Vertex() : x(0.0f), y(0.0f), u(0.0f), v(0.0f) {}
-    Vertex(float x, float y, float u, float v) : x(x), y(y), u(u), v(v) {}
-    Vertex(float x, float y, float u, float v, Color color) : x(x), y(y), u(u), v(v), color(color) {}
+    Vertex() : x(0.0f), y(0.0f) {}
+    Vertex(float x, float y) : x(x), y(y) {}
+    Vertex(float x, float y, Color color) : x(x), y(y), color(color) {}
 
     bool operator==(const Vertex& other) {
       // We don't need to compare the color, really (in fact, it benefits us not to)
-      return x == other.x && y == other.y && u == other.u && v == other.v;
+      return x == other.x && y == other.y;
     }
   };
 
@@ -71,9 +70,7 @@ private:
 
   void generateMesh(const char* mapPath);
   void generateMeshData();
-  void addQuad(float x0, float y0, float u0, float v0,
-               float x1, float y1, float u1, float v1,
-               Color c);
+  void addQuad(float x0, float y0, float x1, float y1, Color c);
 };
 
 #endif // PROVINCE_HPP
