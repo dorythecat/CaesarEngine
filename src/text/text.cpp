@@ -72,20 +72,42 @@ Text::~Text() {
 
 void Text::setText(std::string text, float x, float y, float scale) {
   size = text.size();
-  float vertices[16 * size];
-  unsigned int indices[6 * size];
+  std::vector<float> vertices(16 * size);
+  std::vector<unsigned int> indices(6 * size);
 
   float xoffset = x;
   float yoffset = y;
 
   for (unsigned int i = 0; i < size; i++) {
     char c = text.c_str()[i];
+    if (c == ' ') {
+      xoffset += characters[0].advance * scale;
+      continue;
+    }
     if (c == '\n') {
       xoffset = x;
       yoffset -= scale;
       continue;
     }
+    if (c == '\t') {
+      xoffset += 4 * characters[0].advance * scale;
+      continue;
+    }
+    if (c == '\r') {
+      xoffset = x;
+      continue;
+    }
+    if (c < 32 || c > 126) {
+      xoffset += characters[0].advance * scale;
+      continue;
+    }
     Character character = characters[c - 32];
+
+    if (character.quadLeft == character.quadRight ||
+        character.quadBottom == character.quadTop) {
+      xoffset += character.advance * scale;
+      continue;
+    };
 
     float x0 = xoffset + character.quadLeft * scale;
     float y0 = yoffset + character.quadBottom * scale;
@@ -124,20 +146,28 @@ void Text::setText(std::string text, float x, float y, float scale) {
 
     indices[6 * i] = 4 * i;
     indices[6 * i + 1] = 4 * i + 1;
-    indices[6 * i + 2] = 4 * i + 3;
-    indices[6 * i + 3] = 4 * i + 1;
+    indices[6 * i + 2] = 4 * i + 2;
+    indices[6 * i + 3] = 4 * i;
     indices[6 * i + 4] = 4 * i + 2;
     indices[6 * i + 5] = 4 * i + 3;
 
     xoffset += character.advance * scale;
   }
 
+  // No needs to shrink the vectors because the size is always the same
+
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER,
+               vertices.size() * sizeof(float),
+               &vertices[0],
+               GL_STATIC_DRAW);
   
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+               indices.size() * sizeof(unsigned int),
+               &indices[0],
+               GL_STATIC_DRAW);
 
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
   glEnableVertexAttribArray(0);

@@ -116,7 +116,7 @@ int main() {
   glfwSetScrollCallback(window.window(), scroll_callback);
 
   Text text("res/text.png", "res/text.csv");
-  text.setText("Abcdefg\nhig", 100.0f, 100.0f, 50.0f);
+  text.setText("Abcdefg\nhijklmnopq", 100.0f, 100.0f, 50.0f);
   Shader textShader("res/shaders/text.vert", "res/shaders/text.frag");
 
   int width, height, nrChannels;
