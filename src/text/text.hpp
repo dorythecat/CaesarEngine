@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "../utils.hpp"
 #include "../province/province.hpp"
 
 struct Character {
@@ -22,7 +23,7 @@ public:
   Text(std::string atlasPath, std::string indexPath);
   ~Text();
 
-  void setText(std::string text, float x, float y, float scale);
+  void setText(std::string text, float x, float y, float scale, vec2i windowDimensions);
   void render();
 
 private:

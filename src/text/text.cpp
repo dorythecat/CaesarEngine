@@ -70,7 +70,7 @@ Text::~Text() {
   glDeleteBuffers(1, &EBO);
 }
 
-void Text::setText(std::string text, float x, float y, float scale) {
+void Text::setText(std::string text, float x, float y, float scale, vec2i windowSize) {
   size = text.size();
   std::vector<float> vertices(16 * size);
   std::vector<unsigned int> indices(6 * size);
@@ -114,10 +114,10 @@ void Text::setText(std::string text, float x, float y, float scale) {
     float x1 = xoffset + character.quadRight * scale;
     float y1 = yoffset + character.quadTop * scale;
 
-    x0 = 2 * x0 / 800 - 1;
-    y0 = 2 * y0 / 600 - 1;
-    x1 = 2 * x1 / 800 - 1;
-    y1 = 2 * y1 / 600 - 1;
+    x0 = 2.0f * x0 / static_cast<float>(windowSize.x) - 1.0f;
+    y0 = 2.0f * y0 / static_cast<float>(windowSize.y) - 1.0f;
+    x1 = 2.0f * x1 / static_cast<float>(windowSize.x) - 1.0f;
+    y1 = 2.0f * y1 / static_cast<float>(windowSize.y) - 1.0f;
 
     float s0 = character.atlasLeft;
     float t0 = character.atlasBottom;

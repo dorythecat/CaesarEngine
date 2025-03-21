@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "utils.hpp"
 #include "window/window.hpp"
 #include "shader/shader.hpp"
 #include "province/province.hpp"
@@ -116,7 +117,6 @@ int main() {
   glfwSetScrollCallback(window.window(), scroll_callback);
 
   Text text("res/text.png", "res/text.csv");
-  text.setText("Abcdefg\nhijklmnopq", 100.0f, 100.0f, 50.0f);
   Shader textShader("res/shaders/text.vert", "res/shaders/text.frag");
 
   glEnable(GL_BLEND);
@@ -133,15 +133,25 @@ int main() {
     shader.use();
     shader.setFloat("scale", scale);
     shader.setVec2f("offset", offsetX, offsetY);
-    for (auto& m : p) {
-      m.second.render();
-    }
-
     textShader.use();
     textShader.setFloat("scale", scale);
     textShader.setVec2f("offset", offsetX, offsetY);
     textShader.setInt("tex", 0);
-    text.render();
+    for (auto& m : p) {
+      shader.use();
+      m.second.render();
+    }
+
+    for (auto& m : p) {
+      textShader.use();
+      vec2i dimensions = window.getDimensions();
+      text.setText(m.first,
+                   m.second.getCenterX() * dimensions.x + dimensions.x / 2 - 30.0f,
+                   m.second.getCenterY() * dimensions.y + dimensions.y / 2,
+                   30.0f,
+                   dimensions);
+      text.render();
+    }
 
     window.swapBuffers();
     window.pollEvents();
