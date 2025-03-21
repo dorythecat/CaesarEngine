@@ -138,6 +138,8 @@ int main() {
     }
 
     textShader.use();
+    textShader.setFloat("scale", scale);
+    textShader.setVec2f("offset", offsetX, offsetY);
     textShader.setInt("tex", 0);
     text.render();
 

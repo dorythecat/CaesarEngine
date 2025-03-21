@@ -4,7 +4,10 @@ layout (location = 1) in vec2 texCoords;
 
 out vec2 TexCoords;
 
+uniform vec2 offset;
+uniform float scale;
+
 void main() {
-  gl_Position = vec4(vertex, 0.0, 1.0);
+  gl_Position = vec4(vertex - offset, 0.0, scale);
   TexCoords = texCoords;
 }  
