@@ -8,6 +8,11 @@
 
 class Window {
 public:
+  typedef struct {
+      int x;
+      int y;
+  } window_dimensions;
+
   Window(int width, int height, const char* title);
   ~Window() {
       glfwDestroyWindow(_window);
@@ -34,6 +39,13 @@ public:
   GLFWwindow* window() {
       return _window;
   }
+
+  window_dimensions getDimensions() {
+      window_dimensions dimensions;
+      glfwGetWindowSize(_window, &dimensions.x, &dimensions.y);
+      return dimensions;
+  }
+
 private:
   GLFWwindow* _window;
 
