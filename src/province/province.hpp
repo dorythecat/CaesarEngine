@@ -54,6 +54,9 @@ public:
     indices = other.indices;
     color = other.color;
 
+    centerX = other.centerX;
+    centerY = other.centerY;
+
     generateMeshData(); // Regenerate the mesh data, otherwise it won't render
   }
 
@@ -61,12 +64,16 @@ public:
 
   bool clickedOn(float x, float y);
 
+  float getCenterX() const { return centerX; }
+  float getCenterY() const { return centerY; }
+
 private:
   unsigned int VAO, VBO, EBO;
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
   Color color;
   std::string name;
+  float centerX, centerY;
 
   void generateMesh(const char* mapPath);
   void generateMeshData();

@@ -9,6 +9,9 @@ Province::Province(const char* mapPath,
 }
 
 void Province::generateMesh(const char* mapPath) {
+  centerX = 0.0f;
+  centerY = 0.0f;
+
   int x, y, n;
   unsigned char* data = stbi_load(mapPath, &x, &y, &n, 0);
   if (!data) {
@@ -39,7 +42,10 @@ void Province::generateMesh(const char* mapPath) {
       p0 += x1;
       i += n;
     }
-    
+
+    centerX += p + p0;
+    centerY += q + q + y1;
+
     addQuad(p, q, p0, q + y1, color);
   } stbi_image_free(data);
 
@@ -47,7 +53,11 @@ void Province::generateMesh(const char* mapPath) {
   vertices.shrink_to_fit();
   indices.shrink_to_fit();
 
+  centerX /= static_cast<float>(vertices.size());
+  centerY /= static_cast<float>(vertices.size());
+
   std::cout << vertices.size() << " vertices, " << indices.size() << " indices" << std::endl;
+  std::cout << "Center: (" << centerX << ", " << centerY << ")" << std::endl;
 }
 
 void Province::generateMeshData() {
