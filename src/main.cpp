@@ -16,8 +16,7 @@
 
 std::map<std::string, Province> p;
 float scale = 1.0f;
-float offsetX = 0.0f;
-float offsetY = 0.0f;
+vec2f offset;
 
 void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
@@ -33,19 +32,19 @@ void processInput(GLFWwindow *window) {
   }
 
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    offsetY += 0.001f * scale;
+    offset.y += 0.001f * scale;
   }
 
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-    offsetY -= 0.001f * scale;
+    offset.y -= 0.001f * scale;
   }
 
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-    offsetX -= 0.001f * scale;
+    offset.x -= 0.001f * scale;
   }
 
   if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-    offsetX += 0.001f * scale;
+    offset.x += 0.001f * scale;
   }
 }
 
@@ -59,8 +58,8 @@ void mouse_click_callback(GLFWwindow *window, int button, int action, int mods) 
     float scaleFact = 2.0f * scale;
     float xf = scaleFact * static_cast<float>(x) / static_cast<float>(width);
     float yf = scaleFact * static_cast<float>(y) / static_cast<float>(height);
-    xf = xf - scale + offsetX;
-    yf = scale - yf + offsetY;
+    xf = xf - scale + offset.x;
+    yf = scale - yf + offset.y;
     for (auto& m : p) {
       if (m.second.clickedOn(xf, yf)) {
         std::cout << "Clicked on province: " << m.first << std::endl;
@@ -132,10 +131,10 @@ int main() {
     processInput(window.window());
     shader.use();
     shader.setFloat("scale", scale);
-    shader.setVec2f("offset", offsetX, offsetY);
+    shader.setVec2f("offset", offset.x, offset.y);
     textShader.use();
     textShader.setFloat("scale", scale);
-    textShader.setVec2f("offset", offsetX, offsetY);
+    textShader.setVec2f("offset", offset.x, offset.y);
     textShader.setInt("tex", 0);
     for (auto& m : p) {
       shader.use();
