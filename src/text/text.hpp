@@ -20,7 +20,8 @@ struct Character {
 
 class Text {
 public:
-  Text(std::string atlasPath, std::string indexPath);
+  Text(std::string atlasPath = "res/text.png",
+       std::string indexPath = "res/text.csv");
   ~Text();
 
   void setText(std::string text, float x, float y, float scale, vec2i windowDimensions);

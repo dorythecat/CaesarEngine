@@ -115,7 +115,7 @@ int main() {
   glfwSetMouseButtonCallback(window.window(), mouse_click_callback);
   glfwSetScrollCallback(window.window(), scroll_callback);
 
-  Text text("res/text.png", "res/text.csv");
+  Text text;
   Shader textShader("res/shaders/text.vert", "res/shaders/text.frag");
 
   glEnable(GL_BLEND);
