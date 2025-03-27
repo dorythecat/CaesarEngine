@@ -46,8 +46,8 @@ void ProvinceManager::render(Window &window) {
   for (auto &province : provinces) {
     vec2i dimensions = window.getDimensions();
     text.setText(province.first,
-                 province.second.getCenterX() * dimensions.x + dimensions.x / 2 - 30.0f,
-                 province.second.getCenterY() * dimensions.y + dimensions.y / 2,
+                 (province.second.getCenterX() + 0.5f) * static_cast<float>(dimensions.x) - 30.0f,
+                 (province.second.getCenterY() + 0.5f) * static_cast<float>(dimensions.y),
                  30.0f,
                  dimensions);
     text.render();

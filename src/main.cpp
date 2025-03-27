@@ -11,7 +11,7 @@
 float scale = 1.0f;
 vec2f offset;
 
-void processInput(GLFWwindow *window, ProvinceManager *pm) {
+void processInput(GLFWwindow *window) {
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
@@ -90,7 +90,7 @@ int main() {
     lastFrame = time;
 
     window.clear(0.5f, 0.5f, 0.5f, 1.0f);
-    processInput(window.window(), &pm);
+    processInput(window.window());
 
     // Setup shaders
     pm.provShader.use();
