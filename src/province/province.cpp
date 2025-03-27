@@ -58,9 +58,6 @@ void Province::generateMesh(const char* mapPath) {
 
   centerX /= static_cast<float>(vertices.size());
   centerY /= static_cast<float>(vertices.size());
-
-  std::cout << vertices.size() << " vertices, " << indices.size() << " indices" << std::endl;
-  std::cout << "Center: (" << centerX << ", " << centerY << ")" << std::endl;
 }
 
 void Province::generateMeshData() {
