@@ -12,6 +12,9 @@ void Province::generateMesh(const char* mapPath) {
   centerX = 0.0f;
   centerY = 0.0f;
 
+  // If we don't do this, we'll get vertically flipped provinces
+  stbi_set_flip_vertically_on_load(false);
+
   int x, y, n;
   unsigned char* data = stbi_load(mapPath, &x, &y, &n, 0);
   if (!data) {
