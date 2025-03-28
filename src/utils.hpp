@@ -17,6 +17,4 @@ typedef struct {
   double x, y;
 } vec2d;
 
-void printException(const std::exception& e);
-
 #endif // UTILS_HPP
