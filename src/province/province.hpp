@@ -64,6 +64,8 @@ public:
 
   bool clickedOn(float x, float y);
 
+  std::string getName() const { return name; }
+  Color getColor() const { return color; }
   float getCenterX() const { return centerX; }
   float getCenterY() const { return centerY; }
 
@@ -71,8 +73,8 @@ private:
   unsigned int VAO, VBO, EBO;
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
-  Color color;
   std::string name;
+  Color color;
   float centerX, centerY;
 
   void generateMesh(const char* mapPath);
