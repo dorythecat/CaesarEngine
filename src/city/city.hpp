@@ -2,10 +2,8 @@
 #define CITY_HPP
 
 #include <string>
-#include <vector>
 
 #include "../utils.hpp"
-#include "../province/province.hpp"
 
 class City {
 public:
