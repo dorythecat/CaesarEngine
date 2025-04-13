@@ -1,0 +1,54 @@
+# [ID] {
+#  name: [City Name],
+   province: [Province ID],
+   population: [Population],
+   wealth: [Wealth],
+   food: [Food],
+   industry: [Industry],
+   capital: <(true) | false>,
+   connected: {
+     <province ID>,
+     <province ID>,
+     ...
+   }
+# }
+
+CT1 {
+  name: "New York",
+  province: PR1,
+  population: 8419600,
+  wealth: 1000000,
+  food: 500000,
+  industry: 200000,
+  capital: true,
+  connected: {
+    CT2
+  }
+}
+
+CT2 {
+  name: "Los Angeles",
+  province: PR2,
+  population: 3980400,
+  wealth: 800000,
+  food: 400000,
+  industry: 150000,
+  capital: false,
+  connected: {
+    CT1,
+    CT3
+  }
+}
+
+CT3 {
+  name: "Chicago",
+  province: PR3,
+  population: 2716000,
+  wealth: 600000,
+  food: 300000,
+  industry: 100000,
+  capital: false,
+  connected: {
+    CT2
+  }
+}
