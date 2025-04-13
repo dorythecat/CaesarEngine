@@ -16,6 +16,7 @@ public:
     int food;
     int industry;
     bool isCapital = false;
+    std::vector<City*> connected;
   } Data;
 
   City(Data data) : data(data) {}
