@@ -14,8 +14,7 @@ ProvinceManager::ProvinceManager(std::string provShaderPath,
   unsigned int i = 0;
   for (std::string line; std::getline(province_file, line);) {
     i++;
-    if (line.length() == 0 ||
-        line.find_first_not_of(' ') == std::string::npos) continue;
+    if (line.empty()) continue;
     line = line.substr(line.find_first_not_of(' '));
     std::string first = line.substr(0, 1);
     if (first == "\n" || first == "#") continue;
