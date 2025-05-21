@@ -84,6 +84,7 @@ int main() {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+  /*
   City city({"Test", pm.getProvince("PR1"), {0.0f, 0.0f}, 1000, 10, 100, 0});
   std::cout << city.getName() << std::endl;
   std::cout << city.getProvince().getName() << std::endl;
@@ -92,6 +93,7 @@ int main() {
   std::cout << city.getWealth() << std::endl;
   std::cout << city.getFood() << std::endl;
   std::cout << city.getIndustry() << std::endl;
+  */
 
   double time, deltaTime, lastFrame = 0.0f;
   while(!window.shouldClose()) {
