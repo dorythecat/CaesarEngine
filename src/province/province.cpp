@@ -22,8 +22,10 @@ void Province::generateMesh(const char* mapPath) {
     return;
   }
 
-  vertices.reserve(x * y * 4);
-  indices.reserve(x * y * 6);
+  // Even though the theoretical maximum size is more than this, it should NEVER
+  // reach that point, so we can safely use this. Could probably reduce further, but, eh.
+  vertices.reserve(x * y);
+  indices.reserve(x * y);
 
   float x1 = 2.0f / (float)x;
   float y1 = -2.0f / (float)y;
@@ -52,7 +54,8 @@ void Province::generateMesh(const char* mapPath) {
     addQuad(p, q, p0, q + y1, color);
   } stbi_image_free(data);
 
-  // Shrink to fit, so we don't waste memory
+  // Shrink to fit, so we don't waste any memory
+  // And trust me, it will waste A LOT of memory
   vertices.shrink_to_fit();
   indices.shrink_to_fit();
 
