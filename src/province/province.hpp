@@ -80,6 +80,14 @@ public:
     centerX = other.centerX;
     centerY = other.centerY;
 
+    category = other.category;
+
+    population = other.population;
+    wealth = other.wealth;
+    food = other.food;
+    production = other.production;
+    strength = other.strength;
+
     generateMeshData(); // Regenerate the mesh data, otherwise it won't render
   }
 
