@@ -25,7 +25,7 @@ ProvinceManager::ProvinceManager(std::string provShaderPath,
       curProv.push_back(cur);
 
     if (curProv.size() < 3) {
-      std::cerr << "ERROR: Province defined at line " << i << " is improperly formatted." << std::endl;
+      std::cerr << "ERROR: Province defined at line " << i << " lacks required information." << std::endl;
       continue;
     }
     provinces.emplace(curProv[0], Province(mapPath.c_str(), Province::Color(curProv[1]), curProv[2]));
