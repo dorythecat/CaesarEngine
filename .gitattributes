@@ -1,2 +1,2 @@
-libs/* -linguist-detectable
-res/* -linguist-detectable
+libs/** -linguist-detectable
+res/** -linguist-detectable
