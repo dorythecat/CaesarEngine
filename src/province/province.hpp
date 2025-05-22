@@ -62,7 +62,8 @@ public:
 
   Province(const char* mapPath,
            Color color,
-           std::string name);
+           std::string name,
+           int category);
   ~Province() noexcept {
     // Clean up the mesh data
     glDeleteVertexArrays(1, &VAO);

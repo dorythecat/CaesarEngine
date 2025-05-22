@@ -24,11 +24,11 @@ ProvinceManager::ProvinceManager(std::string provShaderPath,
     for (std::string cur; std::getline(lineStream, cur, ',');)
       curProv.push_back(cur);
 
-    if (curProv.size() < 3) {
+    if (curProv.size() < 4) {
       std::cerr << "ERROR: Province defined at line " << i << " lacks required information." << std::endl;
       continue;
     }
-    provinces.emplace(curProv[0], Province(mapPath.c_str(), Province::Color(curProv[1]), curProv[2]));
+    provinces.emplace(curProv[0], Province(mapPath.c_str(), Province::Color(curProv[1]), curProv[2], std::stoi(curProv[3])));
   }
 
   provShader = Shader(provShaderPath);

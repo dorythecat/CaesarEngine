@@ -2,8 +2,64 @@
 
 Province::Province(const char* mapPath,
                    Color color,
-                   std::string name) :
-  color(color), name(name) {
+                   std::string name,
+                   int category) :
+  color(color), name(name), category(category) {
+  // TODO(Dory): Properly assign default values and state scaling
+  switch (category) {
+    case 0: // Single-province state capital
+      population = 10000;
+      wealth = 10000;
+      food = 10000;
+      production = 10000;
+      strength = 10000;
+      break;
+    case 1: // Multi-province state capital
+      population = 10000;
+      wealth = 10000;
+      food = 10000;
+      production = 10000;
+      strength = 10000;
+      break;
+    case 2: // City
+      population = 10000;
+      wealth = 10000;
+      food = 10000;
+      production = 10000;
+      strength = 10000;
+      break;
+    case 3: // Town
+      population = 10000;
+      wealth = 10000;
+      food = 10000;
+      production = 10000;
+      strength = 10000;
+      break;
+    case 4: // Village
+      population = 10000;
+      wealth = 10000;
+      food = 10000;
+      production = 10000;
+      strength = 10000;
+      break;
+    case 5: // Settlement
+      population = 10000;
+      wealth = 10000;
+      food = 10000;
+      production = 10000;
+      strength = 10000;
+      break;
+    case 254: // No city
+    case 255: // Wasteland
+    default: // Unassigned
+      population = 0;
+      wealth = 0;
+      food = 0;
+      production = 0;
+      strength = 0;
+      break;
+  }
+
   generateMesh(mapPath);
   generateMeshData();
 }
