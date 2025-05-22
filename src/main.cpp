@@ -7,7 +7,6 @@
 #include "utils.hpp"
 #include "window/window.hpp"
 #include "province_manager/province_manager.hpp"
-#include "city/city.hpp"
 
 float scale = 1.0f;
 vec2f offset;
@@ -83,17 +82,6 @@ int main() {
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  /*
-  City city({"Test", pm.getProvince("PR1"), {0.0f, 0.0f}, 1000, 10, 100, 0});
-  std::cout << city.getName() << std::endl;
-  std::cout << city.getProvince().getName() << std::endl;
-  std::cout << city.getPosition().x << ", " << city.getPosition().y << std::endl;
-  std::cout << city.getPopulation() << std::endl;
-  std::cout << city.getWealth() << std::endl;
-  std::cout << city.getFood() << std::endl;
-  std::cout << city.getIndustry() << std::endl;
-  */
 
   double time, deltaTime, lastFrame = 0.0f;
   while(!window.shouldClose()) {
