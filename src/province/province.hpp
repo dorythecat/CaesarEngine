@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 #include <stb_image.h>
 
@@ -23,6 +24,20 @@ public:
       g = (unsigned char)std::stoi(hex.substr(2, 2), nullptr, 16);
       b = (unsigned char)std::stoi(hex.substr(4, 2), nullptr, 16);
     }
+
+    // For unordered_set
+    bool operator==(const Color& other) const {
+      return r == other.r && g == other.g && b == other.b;
+    }
+
+    struct HashFunction {
+      size_t operator()(const Color& color) const {
+        size_t rHash = std::hash<int>()(color.r);
+        size_t gHash = std::hash<int>()(color.g) << 1;
+        size_t bHash = std::hash<int>()(color.b) << 2;
+        return rHash ^ gHash ^ bHash;
+      }
+    };
   };
   struct Vertex {
     float x, y;
@@ -101,6 +116,13 @@ public:
   float getCenterX() const { return centerX; }
   float getCenterY() const { return centerY; }
 
+  bool isAdjacent(Color c) const {
+    return adjacentColors.find(c) != adjacentColors.end();
+  }
+  bool isAdjacent(Province* p) const {
+    return isAdjacent(p->getColor());
+  }
+
 private:
   unsigned int VAO, VBO, EBO;
   std::vector<Vertex> vertices;
@@ -108,6 +130,8 @@ private:
   std::string name;
   Color color;
   float centerX, centerY;
+
+  std::unordered_set<Color, Color::HashFunction> adjacentColors;
 
   void generateMesh(const char* mapPath);
   void generateMeshData();

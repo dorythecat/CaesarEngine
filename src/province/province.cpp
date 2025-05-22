@@ -85,7 +85,7 @@ void Province::generateMesh(const char* mapPath) {
 
   float x1 = 2.0f / (float)x;
   float y1 = -2.0f / (float)y;
-  
+
   for (int i = 0; i < x * y * n; i += n) {
     if (data[i] != color.r ||
         data[i + 1] != color.g ||
@@ -95,6 +95,13 @@ void Province::generateMesh(const char* mapPath) {
     float p = (float)(xy % x) * x1 - 1.0f;
     float q = (float)(xy / x) * y1 + 1.0f;
 
+    // Start of rectangle adjacency
+    if (i % (n * x) > 0) {
+      Color c = Color(data[i - n], data[i - n + 1], data[i - n + 2]);
+      adjacentColors.insert(c);
+    }
+
+    float i0 = i;
     float p0 = p;
     while (data[i] == color.r &&
            data[i + 1] == color.g &&
@@ -104,11 +111,35 @@ void Province::generateMesh(const char* mapPath) {
       i += n;
     }
 
+    // End of rectangle adjacency
+    if (i % (n * x) < n * (x - 1)) {
+      Color c = Color(data[i + n], data[i + n + 1], data[i + n + 2]);
+      adjacentColors.insert(c);
+    }
+
+    // Above rectangle adjacency
+    if (i >= n * x) {
+      for (int j = (i0 - n * x); j < (i - n * x); j += n) {
+        Color c = Color(data[j], data[j + 1], data[j + 2]);
+        adjacentColors.insert(c);
+      }
+    }
+
+    // Below rectangle adjacency
+    if (i <= n * x * (y - 1)) {
+      for (int j = (i0 + n * x); j < (i + n * x); j += n) {
+        Color c = Color(data[j], data[j + 1], data[j + 2]);
+        adjacentColors.insert(c);
+      }
+    }
+
     centerX += p + p0;
     centerY += q + q + y1;
 
     addQuad(p, q, p0, q + y1, color);
   } stbi_image_free(data);
+
+  adjacentColors.erase(color); // Remove the color of the province itself
 
   // Shrink to fit, so we don't waste any memory
   // And trust me, it will waste A LOT of memory
