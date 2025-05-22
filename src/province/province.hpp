@@ -38,6 +38,28 @@ public:
     }
   };
 
+  // "City data"
+  // This data works as the "city" included in every Province object
+  // The "category" decides the initial values of the city variables,
+  // as well as maybe some other stuff down the line
+  // The value goes from 0 to 255, where:
+  // 0: Single-province state capital
+  // 1: Multi-province state capital
+  // 2: City
+  // 3: Town
+  // 4: Village
+  // 5: Settlement
+  // 6 to 253: Unassigned
+  // 254: No city
+  // 255: Wasteland (Untraversable province, can't be part of a state)
+  int category;
+
+  int population;
+  int wealth;
+  int food;
+  int production;
+  int strength;
+
   Province(const char* mapPath,
            Color color,
            std::string name);
