@@ -4,6 +4,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <iostream>
+#include <string>
+
 #include "utils.hpp"
 #include "window/window.hpp"
 #include "province_manager/province_manager.hpp"
