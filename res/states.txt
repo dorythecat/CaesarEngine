@@ -1,0 +1,15 @@
+001 {
+  name: "Test State 1"
+  provinces: {
+    PR1, PR2,
+    PR3
+  }
+}
+
+002 {
+  name: "Test State 2"
+  provinces: {
+    PR4, PR5,
+    PR6
+  }
+}

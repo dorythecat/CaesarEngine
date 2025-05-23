@@ -1,3 +1,4 @@
+#include <algorithm>
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_ONLY_PNG
 
@@ -6,10 +7,14 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <sstream>
+#include <map>
 
 #include "utils.hpp"
 #include "window/window.hpp"
 #include "province_manager/province_manager.hpp"
+#include "state/state.hpp"
 
 float scale = 1.0f;
 vec2f offset;
@@ -85,6 +90,79 @@ int main() {
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  // Load states
+  // TODO(Dory): Make this its own class or move into somewhere else
+  std::ifstream stateFile("res/states.txt");
+  if (!stateFile.is_open()) {
+    // TODO(Dory): Proper error handling
+    std::cerr << "FATAL ERROR: Could not open file \"res/states.txt\"" << std::endl;
+    return EXIT_FAILURE;
+  }
+
+  std::map<std::string, State> states;
+  unsigned int i = 0;
+  for (std::string line; std::getline(stateFile, line);) {
+    i++;
+    if (line.empty()) continue;
+    line = line.substr(line.find_first_not_of(' '));
+    std::string first = line.substr(0, 1);
+    std::string last = line.substr(line.find_last_not_of(' '));
+    if (first == "#" || last != "{") continue;
+
+    std::string id = line.substr(0, line.find_first_of(' '));
+
+    std::istringstream lineStream(line);
+    std::string name;
+    bool provinceSearch = false;
+    std::vector<std::string> provinceIds;
+    for (std::string cur; std::getline(stateFile, cur);) {
+      i++;
+      if (cur.empty()) continue;
+      cur = cur.substr(cur.find_first_not_of(' '));
+      std::string first = cur.substr(0, 1);
+      if (first == "#") continue;
+      if (provinceSearch) {
+        if (first == "}") {
+          provinceSearch = false;
+          continue;
+        }
+        std::istringstream curStream(cur);
+        for (std::string provinceId; std::getline(curStream, provinceId, ',');) {
+          provinceId = provinceId.substr(provinceId.find_first_not_of(' '));
+          if (provinceId == "}") {
+            provinceSearch = false;
+            break;
+          }
+          provinceIds.push_back(provinceId);
+        }
+      }
+      if (first == "}") break;
+      first = cur.substr(0, cur.find_first_of(' '));
+      if (first == "name:") {
+        name = cur.substr(cur.find(first) + first.length());
+        name = name.substr(name.find_first_not_of(' '));
+        name = name.substr(name.find_first_not_of('"'));
+        name = name.substr(0, name.find_last_not_of('"') + 1);
+      } else if (first == "provinces:") {
+        provinceSearch = true;
+      }
+    }
+
+    if (name.empty()) {
+      std::cerr << "FATAL ERROR: State " << id << " has no name" << std::endl;
+      return EXIT_FAILURE;
+    }
+
+    if (provinceIds.empty()) {
+      std::cerr << "FATAL ERROR: State " << id << " has no provinces" << std::endl;
+      return EXIT_FAILURE;
+    }
+
+    State state(name);
+    for (const auto &provinceId : provinceIds) state.addProvince(pm.getProvince(provinceId));
+    states.emplace(id, state);
+  }
 
   double time, deltaTime, lastFrame = 0.0f;
   while(!window.shouldClose()) {
