@@ -17,7 +17,7 @@ ProvinceManager::ProvinceManager(std::string provShaderPath,
     if (line.empty()) continue;
     line = line.substr(line.find_first_not_of(' '));
     std::string first = line.substr(0, 1);
-    if (first == "\n" || first == "#") continue;
+    if (first == "#") continue;
 
     std::istringstream lineStream(line);
     std::vector<std::string> curProv;
