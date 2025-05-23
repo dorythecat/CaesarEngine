@@ -41,6 +41,7 @@ void ProvinceManager::render(Window &window) {
     province.second.render();
   }
 
+  // TODO(Dory): Find a better way to do province name text
   textShader.use();
   for (auto &province : provinces) {
     vec2i dimensions = window.getDimensions();
