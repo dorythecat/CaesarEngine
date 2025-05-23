@@ -21,8 +21,10 @@ ProvinceManager::ProvinceManager(std::string provShaderPath,
 
     std::istringstream lineStream(line);
     std::vector<std::string> curProv;
-    for (std::string cur; std::getline(lineStream, cur, ',');)
+    for (std::string cur; std::getline(lineStream, cur, ',');) {
+      cur = cur.substr(cur.find_first_not_of(' '));
       curProv.push_back(cur);
+    }
 
     if (curProv.size() < 4) {
       std::cerr << "ERROR: Province defined at line " << i << " lacks required information." << std::endl;
