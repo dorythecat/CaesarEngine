@@ -1,6 +1,8 @@
 # ID,Color,Name,Category
 
 PR1,ff0000,Province 1,0
-PR2,00ff00,Province 2,0
-PR3,0000ff,Province 3,0
-PR4,000077,Province 4,0
+PR2,770000,Province 2,0
+PR3,00ff00,Province 3,0
+PR4,007700,Province 4,0
+PR5,0000ff,Province 5,0
+PR6,000077,Province 6,0
