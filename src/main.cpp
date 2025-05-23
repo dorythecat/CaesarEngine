@@ -103,7 +103,7 @@ int main() {
     pm.textShader.setInt("tex", 0);
 
     // Render provinces
-    pm.render(window);
+    pm.render(window, scale, offset);
 
     window.swapBuffers();
     window.pollEvents();

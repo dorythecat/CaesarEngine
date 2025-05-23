@@ -35,11 +35,14 @@ ProvinceManager::ProvinceManager(std::string provShaderPath,
   textShader = Shader(textShaderPath);
 }
 
-void ProvinceManager::render(Window &window) {
+void ProvinceManager::render(Window &window, float scale, vec2f offset) {
   provShader.use();
   for (auto &province : provinces) {
     province.second.render();
   }
+
+  if (scale > 0.5f) return; // Don't render text if zoomed in too far
+  // TODO(Dory): Don't render text if it's offscreen
 
   // TODO(Dory): Find a better way to do province name text
   textShader.use();
