@@ -6,6 +6,7 @@
 #include <map>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "../utils.hpp"
 #include "../window/window.hpp"
