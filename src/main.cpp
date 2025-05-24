@@ -15,6 +15,7 @@
 #include "window/window.hpp"
 #include "province_manager/province_manager.hpp"
 #include "state/state.hpp"
+#include "text/text.hpp"
 
 float scale = 1.0f;
 vec2f offset;
@@ -185,6 +186,18 @@ int main() {
 
     // Render provinces
     pm.render(window, scale, offset);
+
+    pm.textShader.use();
+    Text text;
+    for (auto &state : states) {
+      vec2i dimensions = window.getDimensions();
+      text.setText(state.first,
+                   (state.second.getCenterX() + 0.5f) * static_cast<float>(dimensions.x) - 10.0f,
+                   (state.second.getCenterY() + 0.5f) * static_cast<float>(dimensions.y),
+                   10.0f,
+                   dimensions);
+      text.render();
+    }
 
     window.swapBuffers();
     window.pollEvents();
