@@ -71,7 +71,7 @@ Text::~Text() {
 }
 
 void Text::setText(std::string text, float x, float y, float scale, vec2i windowSize) {
-  size = text.size();
+  size = static_cast<unsigned int>(text.size());
   std::vector<float> vertices(16 * size);
   std::vector<unsigned int> indices(6 * size);
 
