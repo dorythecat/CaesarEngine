@@ -78,6 +78,26 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
   scale -= 0.1f;
 }
 
+double lastX = 0.0;
+double lastY = 0.0;
+void mouse_cursor_callback(GLFWwindow *window, double xpos, double ypos) {
+  if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
+    lastX = xpos;
+    lastY = ypos;
+    return;
+  }
+
+  double deltaX = xpos - lastX;
+  double deltaY = ypos - lastY;
+  if (deltaX == 0.0 && deltaY == 0.0) {
+    return; // No movement
+  }
+  offset.x -= deltaX * scale * 0.002f; // Scale the offset by the scale factor
+  offset.y += deltaY * scale * 0.002f; // Invert the y-axis to match the OpenGL coordinate system
+  lastX = xpos;
+  lastY = ypos;
+}
+
 int main() {
   Window window(800, 600, "Caesar Engine");
 
@@ -88,6 +108,7 @@ int main() {
   glfwSetWindowUserPointer(window.window(), (void*)&pm);
   glfwSetMouseButtonCallback(window.window(), mouse_click_callback);
   glfwSetScrollCallback(window.window(), scroll_callback);
+  glfwSetCursorPosCallback(window.window(), mouse_cursor_callback);
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
