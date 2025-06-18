@@ -5,16 +5,14 @@
 #include <vector>
 #include <exception>
 
-typedef struct {
-  int x, y;
-} vec2i;
+template <typename T>
+struct vec2 {
+public:
+  T x, y;
+};
 
-typedef struct {
-  float x, y;
-} vec2f;
-
-typedef struct {
-  double x, y;
-} vec2d;
+typedef vec2<int> vec2i;
+typedef vec2<float> vec2f;
+typedef vec2<double> vec2d;
 
 #endif // UTILS_HPP
