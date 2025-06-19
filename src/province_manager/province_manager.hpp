@@ -30,7 +30,9 @@ public:
   void render(Window &window, float scale, vec2f offset);
   std::string clickedOnProvince(float x, float y);
 
-  Province& getProvince(std::string name);
+  Province& getProvince(std::string name) {
+    return provinces.at(name);
+  }
 
 private:
   std::map<std::string, Province> provinces;

@@ -66,7 +66,3 @@ std::string ProvinceManager::clickedOnProvince(float x, float y) {
     }
   } return "";
 }
-
-Province& ProvinceManager::getProvince(std::string name) {
-  return provinces.at(name);
-}
