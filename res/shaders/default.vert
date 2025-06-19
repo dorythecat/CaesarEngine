@@ -6,8 +6,9 @@ out vec3 ourColor;
 
 uniform float scale;
 uniform vec2 offset;
+uniform sampler2D heightmap;
 
 void main() {
   gl_Position = vec4(aPos - offset, 0.0, scale);
-  ourColor = aColor;
+  ourColor = aColor / 255.0;
 }
