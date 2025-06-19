@@ -38,6 +38,15 @@ public:
   float getCenterX() const { return centerX / provinces.size(); }
   float getCenterY() const { return centerY / provinces.size(); }
 
+  std::string getName() const { return name; }
+
+  bool hasProvince(const std::string &provinceName) const {
+    for (auto &province : provinces) {
+      if (province.getName() == provinceName) return true;
+    }
+    return false;
+  }
+
 private:
   std::string name;
   std::vector<Province> provinces;
