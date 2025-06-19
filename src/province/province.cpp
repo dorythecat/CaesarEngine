@@ -91,6 +91,7 @@ void Province::generateMesh(const char* mapPath) {
         data[i + 1] != color.g ||
         data[i + 2] != color.b) continue;
 
+    // Some preliminary calculations we'll use over and over
     int xy = i / n;
     float p = (float)(xy % x) * x1 - 1.0f;
     float q = (float)(xy / x) * y1 + 1.0f;
@@ -101,6 +102,7 @@ void Province::generateMesh(const char* mapPath) {
       adjacentColors.insert(c);
     }
 
+    // Actual quad generation
     float i0 = i;
     float p0 = p;
     while (data[i] == color.r &&
