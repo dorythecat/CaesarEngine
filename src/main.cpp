@@ -21,50 +21,43 @@ float scale = 1.0f;
 vec2f offset;
 
 void processInput(GLFWwindow *window) {
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
     glfwSetWindowShouldClose(window, true);
-  }
 
-  if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  }
 
-  if (glfwGetKey(window, GLFW_KEY_F6) == GLFW_PRESS) {
+  if (glfwGetKey(window, GLFW_KEY_F6) == GLFW_PRESS)
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  }
 
-  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-    offset.y += 0.001f;
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-    offset.y -= 0.001f;
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-    offset.x -= 0.001f;
-  }
-
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-    offset.x += 0.001f;
-  }
+  if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) offset.y += 0.001f;
+  if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) offset.y -= 0.001f;
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) offset.x -= 0.001f;
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) offset.x += 0.001f;
 }
 
-void mouse_click_callback(GLFWwindow *window, int button, int action, int mods) {
+void mouse_click_callback(GLFWwindow *window,
+                          int button,
+                          int action,
+                          int mods) {
   if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
     double x, y;
     glfwGetCursorPos(window, &x, &y);
     int width, height;
     glfwGetWindowSize(window, &width, &height);
-    // At some point we could change the system to work with double-precision floats, which would be more accurate, but use more memory
+    // At some point we could change the system to work with
+    // double-precision floats, which would be more accurate,
+    // but use more memory
     float scaleFact = 2.0f * scale;
     float xf = scaleFact * static_cast<float>(x) / static_cast<float>(width);
     float yf = scaleFact * static_cast<float>(y) / static_cast<float>(height);
     xf = xf - scale + offset.x;
     yf = scale - yf + offset.y;
-    ProvinceManager *pm = static_cast<ProvinceManager*>(glfwGetWindowUserPointer(window));
+    ProvinceManager *pm =
+      static_cast<ProvinceManager*>(glfwGetWindowUserPointer(window));
     std::string province = pm->clickedOnProvince(xf, yf);
-    if (province != "") std::cout << "Clicked on province: " << province << std::endl;
+    if (province != "")
+      std::cout << "Clicked on province: " << province << std::endl;
   }
 }
 
@@ -78,24 +71,22 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
   scale -= 0.1f;
 }
 
-double lastX = 0.0;
-double lastY = 0.0;
+float lastX = 0.0;
+float lastY = 0.0;
 void mouse_cursor_callback(GLFWwindow *window, double xpos, double ypos) {
   if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
-    lastX = xpos;
-    lastY = ypos;
+    lastX = static_cast<float>(xpos);
+    lastY = static_cast<float>(ypos);
     return;
   }
 
-  double deltaX = xpos - lastX;
-  double deltaY = ypos - lastY;
-  if (deltaX == 0.0 && deltaY == 0.0) {
-    return; // No movement
-  }
+  float deltaX = static_cast<float>(xpos) - lastX;
+  float deltaY = static_cast<float>(ypos) - lastY;
+  if (deltaX == 0.0 && deltaY == 0.0) return; // No movement
   offset.x -= deltaX * scale * 0.002f; // Scale the offset by the scale factor
   offset.y += deltaY * scale * 0.002f; // Invert the y-axis to match the OpenGL coordinate system
-  lastX = xpos;
-  lastY = ypos;
+  lastX = static_cast<float>(xpos);
+  lastY = static_cast<float>(ypos);
 }
 
 int main() {
@@ -150,7 +141,8 @@ int main() {
           continue;
         }
         std::istringstream curStream(cur);
-        for (std::string provinceId; std::getline(curStream, provinceId, ',');) {
+        for (std::string provinceId;
+             std::getline(curStream, provinceId, ',');) {
           provinceId = provinceId.substr(provinceId.find_first_not_of(' '));
           if (provinceId == "}") {
             provinceSearch = false;
@@ -182,7 +174,8 @@ int main() {
     }
 
     State state(name);
-    for (const auto &provinceId : provinceIds) state.addProvince(pm.getProvince(provinceId));
+    for (const auto &provinceId : provinceIds)
+      state.addProvince(pm.getProvince(provinceId));
     states.emplace(id, state);
   }
 
