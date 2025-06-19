@@ -7,15 +7,10 @@
 
 #include <iostream>
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <map>
 
 #include "utils.hpp"
 #include "window/window.hpp"
-#include "province_manager/province_manager.hpp"
-#include "state/state.hpp"
-#include "text/text.hpp"
+#include "state_manager/state_manager.hpp"
 
 float scale = 1.0f;
 vec2f offset;
@@ -53,11 +48,15 @@ void mouse_click_callback(GLFWwindow *window,
     float yf = scaleFact * static_cast<float>(y) / static_cast<float>(height);
     xf = xf - scale + offset.x;
     yf = scale - yf + offset.y;
-    ProvinceManager *pm =
-      static_cast<ProvinceManager*>(glfwGetWindowUserPointer(window));
-    std::string province = pm->clickedOnProvince(xf, yf);
-    if (province != "")
-      std::cout << "Clicked on province: " << province << std::endl;
+    StateManager *sm =
+      static_cast<StateManager*>(glfwGetWindowUserPointer(window));
+    std::string state = sm->clickedOnState(xf, yf);
+    if (state != "") {
+      std::string provinceName = sm->pm->clickedOnProvince(xf, yf);
+      Province p = sm->pm->getProvince(provinceName);
+      std::cout << "Clicked on province: " << p.getName() <<
+                   ", on state: " << state << std::endl;
+    }
   }
 }
 
@@ -92,92 +91,17 @@ void mouse_cursor_callback(GLFWwindow *window, double xpos, double ypos) {
 int main() {
   Window window(800, 600, "Caesar Engine");
 
-  ProvinceManager pm;
+  StateManager sm;
 
   glfwSwapInterval(0); // Disable VSync
   
-  glfwSetWindowUserPointer(window.window(), (void*)&pm);
+  glfwSetWindowUserPointer(window.window(), (void*)&sm);
   glfwSetMouseButtonCallback(window.window(), mouse_click_callback);
   glfwSetScrollCallback(window.window(), scroll_callback);
   glfwSetCursorPosCallback(window.window(), mouse_cursor_callback);
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  // Load states
-  // TODO(Dory): Make this its own class or move into somewhere else
-  std::ifstream stateFile("res/states.txt");
-  if (!stateFile.is_open()) {
-    // TODO(Dory): Proper error handling
-    std::cerr << "FATAL ERROR: Could not open file \"res/states.txt\"" << std::endl;
-    return EXIT_FAILURE;
-  }
-
-  std::map<std::string, State> states;
-  unsigned int i = 0;
-  for (std::string line; std::getline(stateFile, line);) {
-    i++;
-    if (line.empty()) continue;
-    line = line.substr(line.find_first_not_of(' '));
-    std::string first = line.substr(0, 1);
-    std::string last = line.substr(line.find_last_not_of(' '));
-    if (first == "#" || last != "{") continue;
-
-    std::string id = line.substr(0, line.find_first_of(' '));
-
-    std::istringstream lineStream(line);
-    std::string name;
-    bool provinceSearch = false;
-    std::vector<std::string> provinceIds;
-    for (std::string cur; std::getline(stateFile, cur);) {
-      i++;
-      if (cur.empty()) continue;
-      cur = cur.substr(cur.find_first_not_of(' '));
-      std::string first = cur.substr(0, 1);
-      if (first == "#") continue;
-      if (provinceSearch) {
-        if (first == "}") {
-          provinceSearch = false;
-          continue;
-        }
-        std::istringstream curStream(cur);
-        for (std::string provinceId;
-             std::getline(curStream, provinceId, ',');) {
-          provinceId = provinceId.substr(provinceId.find_first_not_of(' '));
-          if (provinceId == "}") {
-            provinceSearch = false;
-            break;
-          }
-          provinceIds.push_back(provinceId);
-        }
-      }
-      if (first == "}") break;
-      first = cur.substr(0, cur.find_first_of(' '));
-      if (first == "name:") {
-        name = cur.substr(cur.find(first) + first.length());
-        name = name.substr(name.find_first_not_of(' '));
-        name = name.substr(name.find_first_not_of('"'));
-        name = name.substr(0, name.find_last_not_of('"') + 1);
-      } else if (first == "provinces:") {
-        provinceSearch = true;
-      }
-    }
-
-    if (name.empty()) {
-      std::cerr << "FATAL ERROR: State " << id << " has no name" << std::endl;
-      return EXIT_FAILURE;
-    }
-
-    if (provinceIds.empty()) {
-      std::cerr << "FATAL ERROR: State " << id << " has no provinces" << std::endl;
-      return EXIT_FAILURE;
-    }
-
-    State state(name);
-    for (const auto &provinceId : provinceIds)
-      state.addProvince(pm.getProvince(provinceId));
-    states.emplace(id, state);
-  }
 
   double time, deltaTime, lastFrame = 0.0f;
   while(!window.shouldClose()) {
@@ -189,29 +113,17 @@ int main() {
     processInput(window.window());
 
     // Setup shaders
-    pm.provShader.use();
-    pm.provShader.setFloat("scale", scale);
-    pm.provShader.setVec2f("offset", offset.x, offset.y);
+    sm.pm->provShader.use();
+    sm.pm->provShader.setFloat("scale", scale);
+    sm.pm->provShader.setVec2f("offset", offset.x, offset.y);
     
-    pm.textShader.use();
-    pm.textShader.setFloat("scale", scale);
-    pm.textShader.setVec2f("offset", offset.x, offset.y);
-    pm.textShader.setInt("tex", 0);
+    sm.pm->textShader.use();
+    sm.pm->textShader.setFloat("scale", scale);
+    sm.pm->textShader.setVec2f("offset", offset.x, offset.y);
+    sm.pm->textShader.setInt("tex", 0);
 
-    // Render provinces
-    pm.render(window, scale, offset);
-
-    pm.textShader.use();
-    Text text;
-    for (auto &state : states) {
-      vec2i dimensions = window.getDimensions();
-      text.setText(state.first,
-                   (state.second.getCenterX() + 0.5f) * static_cast<float>(dimensions.x) - 10.0f,
-                   (state.second.getCenterY() + 0.5f) * static_cast<float>(dimensions.y),
-                   10.0f,
-                   dimensions);
-      text.render();
-    }
+    // Render staes (and therefore provinces)
+    sm.render(window, scale, offset);
 
     window.swapBuffers();
     window.pollEvents();
