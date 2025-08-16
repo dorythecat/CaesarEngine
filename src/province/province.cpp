@@ -1,7 +1,5 @@
 #include "province.hpp"
 
-#include <utility>
-
 Province::Province(const char* mapPath,
                    Color color,
                    std::string name,
