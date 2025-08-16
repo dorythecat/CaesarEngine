@@ -17,24 +17,22 @@ public:
     unsigned char r, g, b;
 
     Color() : r(0.0f), g(0.0f), b(0.0f) {}
-    Color(unsigned char grey) : r(grey), g(grey), b(grey) {}
-    Color(unsigned char r, unsigned char g, unsigned char b) : r(r), g(g), b(b) {}
-    Color(std::string hex) {
-      r = (unsigned char)std::stoi(hex.substr(0, 2), nullptr, 16);
-      g = (unsigned char)std::stoi(hex.substr(2, 2), nullptr, 16);
-      b = (unsigned char)std::stoi(hex.substr(4, 2), nullptr, 16);
+    explicit Color(const unsigned char grey) : r(grey), g(grey), b(grey) {}
+    Color(const unsigned char r, const unsigned char g, const unsigned char b) : r(r), g(g), b(b) {}
+    explicit Color(const std::string &hex) {
+      r = static_cast<unsigned char>(std::stoi(hex.substr(0, 2), nullptr, 16));
+      g = static_cast<unsigned char>(std::stoi(hex.substr(2, 2), nullptr, 16));
+      b = static_cast<unsigned char>(std::stoi(hex.substr(4, 2), nullptr, 16));
     }
 
     // For unordered_set
-    bool operator==(const Color& other) const {
-      return r == other.r && g == other.g && b == other.b;
-    }
+    bool operator==(const Color& other) const { return r == other.r && g == other.g && b == other.b; }
 
     struct HashFunction {
-      size_t operator()(const Color& color) const {
-        size_t rHash = std::hash<int>()(color.r);
-        size_t gHash = std::hash<int>()(color.g) << 1;
-        size_t bHash = std::hash<int>()(color.b) << 2;
+      size_t operator()(const Color &aColor) const {
+        const size_t rHash = std::hash<int>()(aColor.r);
+        const size_t gHash = std::hash<int>()(aColor.g) << 1;
+        const size_t bHash = std::hash<int>()(aColor.b) << 2;
         return rHash ^ gHash ^ bHash;
       }
     };
@@ -44,13 +42,11 @@ public:
     Color color;
 
     Vertex() : x(0.0f), y(0.0f) {}
-    Vertex(float x, float y) : x(x), y(y) {}
-    Vertex(float x, float y, Color color) : x(x), y(y), color(color) {}
+    Vertex(const float x, const float y) : x(x), y(y) {}
+    Vertex(const float x, const float y, const Color color) : x(x), y(y), color(color) {}
 
-    bool operator==(const Vertex& other) {
-      // We don't need to compare the color, really (in fact, it benefits us not to)
-      return x == other.x && y == other.y;
-    }
+    // We don't need to compare the color, really (in fact, it benefits us not to)
+    bool operator==(const Vertex& other) const { return x == other.x && y == other.y; }
   };
 
   // "City data"
@@ -107,29 +103,25 @@ public:
     generateMeshData(); // Regenerate the mesh data, otherwise it won't render
   }
 
-  void render();
+  void render() const;
 
-  bool clickedOn(float x, float y);
+  [[nodiscard]] bool clickedOn(float x, float y) const;
 
-  std::string getName() const { return name; }
-  Color getColor() const { return color; }
-  float getCenterX() const { return centerX; }
-  float getCenterY() const { return centerY; }
+  [[nodiscard]] std::string getName() const { return name; }
+  [[nodiscard]] Color getColor() const { return color; }
+  [[nodiscard]] float getCenterX() const { return centerX; }
+  [[nodiscard]] float getCenterY() const { return centerY; }
 
-  bool isAdjacent(Color c) const {
-    return adjacentColors.find(c) != adjacentColors.end();
-  }
-  bool isAdjacent(Province* p) const {
-    return isAdjacent(p->getColor());
-  }
+  [[nodiscard]] bool isAdjacent(const Color c) const { return adjacentColors.contains(c); }
+  [[nodiscard]] bool isAdjacent(Province* p) const { return isAdjacent(p->getColor()); }
 
 private:
-  unsigned int VAO, VBO, EBO;
+  unsigned int VAO{}, VBO{}, EBO{};
   std::vector<Vertex> vertices;
   std::vector<unsigned int> indices;
-  std::string name;
   Color color;
-  float centerX, centerY;
+  std::string name;
+  float centerX = 0.0f, centerY = 0.0f;
 
   std::unordered_set<Color, Color::HashFunction> adjacentColors;
 

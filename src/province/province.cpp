@@ -1,10 +1,12 @@
 #include "province.hpp"
 
+#include <utility>
+
 Province::Province(const char* mapPath,
                    Color color,
                    std::string name,
                    int category) :
-  color(color), name(name), category(category) {
+  category(category), color(color), name(std::move(name))  {
   // TODO(Dory): Properly assign default values and state scaling
   switch (category) {
     case 0: // Single-province state capital
@@ -80,11 +82,11 @@ void Province::generateMesh(const char* mapPath) {
 
   // Even though the theoretical maximum size is more than this, it should NEVER
   // reach that point, so we can safely use this. Could probably reduce further, but, eh.
-  vertices.reserve(x * y);
-  indices.reserve(x * y);
+  vertices.reserve(static_cast<size_t>(x * y));
+  indices.reserve(static_cast<size_t>(x * y));
 
-  float x1 = 2.0f / (float)x;
-  float y1 = -2.0f / (float)y;
+  const float x1 = 2.0f / static_cast<float>(x);
+  const float y1 = -2.0f / static_cast<float>(y);
 
   for (int i = 0; i < x * y * n; i += n) {
     if (data[i] != color.r ||
@@ -92,18 +94,18 @@ void Province::generateMesh(const char* mapPath) {
         data[i + 2] != color.b) continue;
 
     // Some preliminary calculations we'll use over and over
-    int xy = i / n;
-    float p = (float)(xy % x) * x1 - 1.0f;
-    float q = (float)(xy / x) * y1 + 1.0f;
+    const int xy = i / n;
+    const float p = static_cast<float>(xy % x) * x1 - 1.0f;
+    const float q = static_cast<float>(xy / x) * y1 + 1.0f;
 
     // Start of rectangle adjacency
     if (i % (n * x) > 0) {
-      Color c = Color(data[i - n], data[i - n + 1], data[i - n + 2]);
+      auto c = Color(data[i - n], data[i - n + 1], data[i - n + 2]);
       adjacentColors.insert(c);
     }
 
     // Actual quad generation
-    float i0 = i;
+    const int i0 = i;
     float p0 = p;
     while (data[i] == color.r &&
            data[i + 1] == color.g &&
@@ -115,14 +117,14 @@ void Province::generateMesh(const char* mapPath) {
 
     // End of rectangle adjacency
     if (i % (n * x) < n * (x - 1)) {
-      Color c = Color(data[i + n], data[i + n + 1], data[i + n + 2]);
+      auto c = Color(data[i + n], data[i + n + 1], data[i + n + 2]);
       adjacentColors.insert(c);
     }
 
     // Above rectangle adjacency
     if (i >= n * x) {
       for (int j = (i0 - n * x); j < (i - n * x); j += n) {
-        Color c = Color(data[j], data[j + 1], data[j + 2]);
+        auto c = Color(data[j], data[j + 1], data[j + 2]);
         adjacentColors.insert(c);
       }
     }
@@ -130,7 +132,7 @@ void Province::generateMesh(const char* mapPath) {
     // Below rectangle adjacency
     if (i <= n * x * (y - 1)) {
       for (int j = (i0 + n * x); j < (i + n * x); j += n) {
-        Color c = Color(data[j], data[j + 1], data[j + 2]);
+        auto c = Color(data[j], data[j + 1], data[j + 2]);
         adjacentColors.insert(c);
       }
     }
@@ -164,13 +166,13 @@ void Province::generateMeshData() {
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER,
-               vertices.size() * sizeof(Vertex),
+               static_cast<GLsizeiptr>(vertices.size() * sizeof(Vertex)),
                &vertices[0],
                GL_STATIC_DRAW);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               indices.size() * sizeof(unsigned int),
+               static_cast<GLsizeiptr>(vertices.size() * sizeof(unsigned int)),
                &indices[0],
                GL_STATIC_DRAW);
 
@@ -179,7 +181,7 @@ void Province::generateMeshData() {
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(Vertex),
-                        (void*)nullptr);
+                        nullptr);
   glEnableVertexAttribArray(0);
 
   glVertexAttribPointer(1,
@@ -187,19 +189,19 @@ void Province::generateMeshData() {
                         GL_UNSIGNED_BYTE,
                         GL_FALSE,
                         sizeof(Vertex),
-                        (void*)offsetof(Vertex, color));
+                        reinterpret_cast<void *>(offsetof(Vertex, color)));
   glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
 }
 
-void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
-  unsigned int index = static_cast<unsigned int>(vertices.size());
+void Province::addQuad(const float x0, const float y0, const float x1, const float y1, const Color c) {
+  const auto index = static_cast<unsigned int>(vertices.size());
 
-  vertices.push_back(Vertex(x0, y0, c));
-  vertices.push_back(Vertex(x0, y1, c));
-  vertices.push_back(Vertex(x1, y0, c));
-  vertices.push_back(Vertex(x1, y1, c));
+  vertices.emplace_back(x0, y0, c);
+  vertices.emplace_back(x0, y1, c);
+  vertices.emplace_back(x1, y0, c);
+  vertices.emplace_back(x1, y1, c);
 
   indices.push_back(index);
   indices.push_back(index + 1);
@@ -210,21 +212,17 @@ void Province::addQuad(float x0, float y0, float x1, float y1, Color c) {
   indices.push_back(index + 1);
 }
 
-void Province::render() {
+void Province::render() const {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES,
                  static_cast<int>(indices.size()),
                  GL_UNSIGNED_INT,
-                 0);
+                 nullptr);
   glBindVertexArray(0);
 }
 
-bool Province::clickedOn(float x, float y) {
-  // There's probably a better way to do this, but it handles all edge cases and everything for us, so...
-  for (unsigned int i = 0; i < vertices.size(); i += 4) {
-    Vertex v1 = vertices[i];
-    Vertex v2 = vertices[i + 3];
-    if (x >= v1.x && x <= v2.x &&
-        y >= v2.y && y <= v1.y) return true;
-  } return false;
+bool Province::clickedOn(const float x, const float y) const {
+  for (unsigned int i = 0; i < vertices.size(); i += 4)
+    if (x >= vertices[i].x && x <= vertices[i + 3].x && y >= vertices[i + 3].y && y <= vertices[i].y) return true;
+  return false;
 }
