@@ -17,7 +17,6 @@ class ProvinceManager {
 public:
   Shader provShader;
   Shader textShader;
-  std::string map_path_;
 
   explicit ProvinceManager(const std::string &provShaderPath = "res/shaders/default",
                            const std::string &textShaderPath = "res/shaders/text",
