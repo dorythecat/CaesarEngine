@@ -43,24 +43,22 @@ void mouse_click_callback(GLFWwindow *window,
     // At some point we could change the system to work with
     // double-precision floats, which would be more accurate,
     // but use more memory
-    float scaleFact = 2.0f * scale;
+    const float scaleFact = 2.0f * scale;
     float xf = scaleFact * static_cast<float>(x) / static_cast<float>(width);
     float yf = scaleFact * static_cast<float>(y) / static_cast<float>(height);
     xf = xf - scale + offset.x;
     yf = scale - yf + offset.y;
-    StateManager *sm =
-      static_cast<StateManager*>(glfwGetWindowUserPointer(window));
-    std::string state = sm->clickedOnState(xf, yf);
-    if (state != "") {
-      std::string provinceName = sm->pm->clickedOnProvince(xf, yf);
-      Province p = sm->pm->getProvince(provinceName);
+    auto *sm = static_cast<StateManager*>(glfwGetWindowUserPointer(window));
+    if (const std::string state = sm->clickedOnState(xf, yf); !state.empty()) {
+      const std::string provinceName = sm->pm->clickedOnProvince(xf, yf);
+      const Province p = sm->pm->getProvince(provinceName);
       std::cout << "Clicked on province: " << p.getName() <<
                    ", on state: " << state << std::endl;
     }
   }
 }
 
-void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+void scroll_callback(GLFWwindow *window, const double xoffset, const double yoffset) {
   if (yoffset < 0.0) {
     if (scale > 10.0f) return;
     scale += 0.1f;
@@ -72,16 +70,16 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 
 float lastX = 0.0;
 float lastY = 0.0;
-void mouse_cursor_callback(GLFWwindow *window, double xpos, double ypos) {
+void mouse_cursor_callback(GLFWwindow *window, const double xpos, const double ypos) {
   if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
     lastX = static_cast<float>(xpos);
     lastY = static_cast<float>(ypos);
     return;
   }
 
-  float deltaX = static_cast<float>(xpos) - lastX;
-  float deltaY = static_cast<float>(ypos) - lastY;
-  if (deltaX == 0.0 && deltaY == 0.0) return; // No movement
+  const float deltaX = static_cast<float>(xpos) - lastX;
+  const float deltaY = static_cast<float>(ypos) - lastY;
+  if (deltaX == 0.0f && deltaY == 0.0f) return; // No movement
   offset.x -= deltaX * scale * 0.002f; // Scale the offset by the scale factor
   offset.y += deltaY * scale * 0.002f; // Invert the y-axis to match the OpenGL coordinate system
   lastX = static_cast<float>(xpos);
@@ -103,10 +101,10 @@ int main() {
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  double time, deltaTime, lastFrame = 0.0f;
+  double lastFrame = 0.0;
   while(!window.shouldClose()) {
-    time = glfwGetTime();
-    deltaTime = time - lastFrame;
+    const double time = glfwGetTime();
+    double deltaTime = time - lastFrame;
     lastFrame = time;
 
     window.clear(0.5f, 0.5f, 0.5f, 1.0f);
@@ -122,7 +120,7 @@ int main() {
     sm.pm->textShader.setVec2f("offset", offset.x, offset.y);
     sm.pm->textShader.setInt("tex", 0);
 
-    // Render staes (and therefore provinces)
+    // Render states (and therefore provinces)
     sm.render(window, scale, offset);
 
     window.swapBuffers();
