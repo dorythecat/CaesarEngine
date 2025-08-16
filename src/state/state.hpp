@@ -51,7 +51,7 @@ private:
   std::string name;
   std::vector<Province> provinces;
 
-  float centerX = 0, centerY = 0;
+  float centerX = 0.0f, centerY = 0.0f;
 };
 
 #endif // STATE_HPP
