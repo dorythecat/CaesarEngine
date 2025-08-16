@@ -1,10 +1,12 @@
 #include "state_manager.hpp"
 
-StateManager::StateManager(std::string provShaderPath,
-                           std::string textShaderPath,
-                           std::string mapPath,
-                           std::string provPath,
-                           std::string statePath) {
+#include <ranges>
+
+StateManager::StateManager(const std::string &provShaderPath,
+                           const std::string &textShaderPath,
+                           const std::string &mapPath,
+                           const std::string &provPath,
+                           const std::string &statePath) {
   this->pm = std::make_unique<ProvinceManager>(provShaderPath,
                                                textShaderPath,
                                                mapPath,
@@ -17,14 +19,10 @@ StateManager::StateManager(std::string provShaderPath,
     return;
   }
 
-  unsigned int i = 0;
   for (std::string line; std::getline(stateFile, line);) {
-    i++;
     if (line.empty()) continue;
     line = line.substr(line.find_first_not_of(' '));
-    std::string first = line.substr(0, 1);
-    std::string last = line.substr(line.find_last_not_of(' '));
-    if (first == "#" || last != "{") continue;
+    if (line.substr(0, 1) == "#" || line.substr(line.find_last_not_of(' ')) != "{") continue;
 
     std::string id = line.substr(0, line.find_first_of(' '));
 
@@ -33,7 +31,7 @@ StateManager::StateManager(std::string provShaderPath,
     bool provinceSearch = false;
     std::vector<std::string> provinceIds;
     for (std::string cur; std::getline(stateFile, cur);) {
-      i++;
+
       if (cur.empty()) continue;
       cur = cur.substr(cur.find_first_not_of(' '));
       std::string first = cur.substr(0, 1);
@@ -77,10 +75,10 @@ StateManager::StateManager(std::string provShaderPath,
     }
 
     State state(name);
-    for (const auto &provinceId : provinceIds)
-      state.addProvince(pm->getProvince(provinceId));
+    for (const auto &provinceId: provinceIds) state.addProvince(pm->getProvince(provinceId));
     states.emplace(id, state);
-  } stateFile.close();
+  }
+  stateFile.close();
 
   if (states.empty()) {
     std::cerr << "FATAL ERROR: No states found in \"res/states.txt\"" << std::endl;
@@ -88,29 +86,27 @@ StateManager::StateManager(std::string provShaderPath,
   }
 }
 
-void StateManager::render(Window &window, float scale, vec2f offset) {
+void StateManager::render(Window &window, const float scale, const vec2f &offset) {
   pm->render(window, scale, offset);
 
   pm->textShader.use();
-  for (auto &state : states) {
+  for (auto &[name, state]: states) {
     vec2i dimensions = window.getDimensions();
-      text.setText(state.first,
-                   (state.second.getCenterX() + 0.5f) * static_cast<float>(dimensions.x) - 10.0f,
-                   (state.second.getCenterY() + 0.5f) * static_cast<float>(dimensions.y),
-                   10.0f,
-                   dimensions);
-      text.render();
+    text.setText(name,
+                 (state.getCenterX() + 0.5f) * static_cast<float>(dimensions.x) - 10.0f,
+                 (state.getCenterY() + 0.5f) * static_cast<float>(dimensions.y),
+                 10.0f,
+                 dimensions);
+    text.render();
   }
 }
 
-std::string StateManager::clickedOnState(float x, float y) {
-  std::string provinceName = pm->clickedOnProvince(x, y);
-  if (provinceName == "") return "";
-  Province province = pm->getProvince(provinceName);
-  for (auto &state : states) {
-    if (state.second.hasProvince(province.getName())) return state.second.getName();
-  }
-  std::cerr << "FATAL ERROR: Province " << provinceName
-            << " not found in any state" << std::endl;
+std::string StateManager::clickedOnState(float x, float y) const {
+  const std::string provinceName = pm->clickedOnProvince(x, y);
+  if (provinceName.empty()) return "";
+  const Province province = pm->getProvince(provinceName);
+  for (const auto &state: states | std::views::values)
+    if (state.hasProvince(province.getName())) return state.getName();
+  std::cerr << "FATAL ERROR: Province " << provinceName << " not found in any state" << std::endl;
   return "";
 }
