@@ -10,56 +10,57 @@
 
 class Shader {
 public:
-  unsigned int ID;
+  unsigned int ID{};
 
   Shader() {
     loadShaderCode("res/shaders/default.vert", "res/shaders/default.frag");
   }
-  Shader(std::string path) {
+  explicit Shader(const std::string &path) {
     loadShaderCode(path + ".vert", path + ".frag");
   }
-  Shader(std::string vertexPath, std::string fragmentPath) {
+  Shader(const std::string &vertexPath, const std::string &fragmentPath) {
     loadShaderCode(vertexPath, fragmentPath);
   }
 
-  void use() { glUseProgram(ID); }
+  void use() const { glUseProgram(ID); }
 
   // --- Utility uniform functions ---
   // Boolean
-  void setBool(const std::string &name, bool value) const {         
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value); 
+  void setBool(const std::string &name, const bool value) const {
+    glUniform1i(glGetUniformLocation(ID, name.c_str()), static_cast<int>(value));
   }
   // Scalars
-  void setInt(const std::string &name, int value) const { 
+  void setInt(const std::string &name, const int value) const {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), value); 
   }
-  void setFloat(const std::string &name, float value) const { 
+  void setFloat(const std::string &name, const float value) const {
     glUniform1f(glGetUniformLocation(ID, name.c_str()), value); 
   }
-  void setDouble(const std::string &name, double value) const { 
+  void setDouble(const std::string &name, const double value) const {
     glUniform1d(glGetUniformLocation(ID, name.c_str()), value); 
   }
   // Vectors
   void setVec2f(const std::string &name,
-                float x,
-                float y) const { 
+                const float x,
+                const float y) const {
     glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y); 
   }
   void setVec3f(const std::string &name,
-                float x,
-                float y,
-                float z) const { 
+                const float x,
+                const float y,
+                const float z) const {
     glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z); 
   }
   void setVec4f(const std::string &name,
-                float x,
-                float y,
-                float z,
-                float w) const { 
+                const float x,
+                const float y,
+                const float z,
+                const float w) const {
     glUniform4f(glGetUniformLocation(ID, name.c_str()), x, y, z, w); 
   }
+
 private:
-  void loadShaderCode(std::string vertexPath, std::string fragmentPath) {
+  void loadShaderCode(const std::string& vertexPath, const std::string& fragmentPath) {
     std::string vertexCode, fragmentCode;
     std::ifstream vShaderFile, fShaderFile;
 
@@ -105,19 +106,21 @@ private:
     glDeleteShader(fragment);
   }
 
-  void checkCompileErrors(unsigned int shader, std::string type) {
+  static void checkCompileErrors(const unsigned int shader, const std::string &type) {
     int success;
     char infoLog[1024];
     if (type != "PROGRAM") {
       glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
       if (success) return;
       glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-      std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+      std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog <<
+        "\n -- --------------------------------------------------- -- " << std::endl;
     } else {
       glGetProgramiv(shader, GL_LINK_STATUS, &success);
       if (success) return;
       glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-      std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+      std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog <<
+        "\n -- --------------------------------------------------- -- " << std::endl;
     }
   }
 };
