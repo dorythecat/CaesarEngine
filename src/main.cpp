@@ -101,7 +101,7 @@ int main() {
         //double deltaTime = time - lastFrame;
         //lastFrame = time;
 
-        window.clear(0.5f, 0.5f, 0.5f, 1.0f);
+        Window::clear(0.5f, 0.5f, 0.5f, 1.0f);
         processInput(window.window());
 
         // Setup shaders
@@ -118,6 +118,6 @@ int main() {
         sm.render(window, scale, offset);
 
         window.swapBuffers();
-        Window::pollEvents();
+        glfwPollEvents();
     } return EXIT_SUCCESS;
 }

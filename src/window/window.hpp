@@ -21,8 +21,6 @@ public:
 
     void swapBuffers() const { glfwSwapBuffers(_window); }
 
-    static void pollEvents() { glfwPollEvents(); }
-
     [[nodiscard]] bool shouldClose() const { return glfwWindowShouldClose(_window) == GLFW_TRUE; }
 
     [[nodiscard]] GLFWwindow* window() const { return _window; }
