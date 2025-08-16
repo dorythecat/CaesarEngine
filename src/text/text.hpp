@@ -2,15 +2,13 @@
 #define TEXT_HPP
 
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
 
 #include <string>
 #include <vector>
-#include <iostream>
 #include <fstream>
 
 #include "../utils.hpp"
-#include "../province/province.hpp"
+#include "../province/province.hpp" // Include for stb_image
 
 struct Character {
   float advance;
@@ -20,17 +18,17 @@ struct Character {
 
 class Text {
 public:
-  Text(std::string atlasPath = "res/text.png",
-       std::string indexPath = "res/text.csv");
+  explicit Text(const std::string& atlasPath = "res/text.png",
+                const std::string& indexPath = "res/text.csv");
   ~Text();
 
-  void setText(std::string text, float x, float y, float scale, vec2i windowDimensions);
-  void render();
+  void setText(const std::string &text, float x, float y, float scale, const vec2i &windowDimensions);
+  void render() const;
 
 private:
   std::vector<Character> characters;
-  GLuint atlas, VAO, VBO, EBO;
-  unsigned int size;
+  GLuint atlas{}, VAO{}, VBO{}, EBO{};
+  unsigned int size{};
 };
 
 #endif // TEXT_HPP

@@ -1,6 +1,6 @@
 #include "text.hpp"
 
-Text::Text(std::string atlasPath, std::string indexPath) {
+Text::Text(const std::string& atlasPath, const std::string& indexPath) {
   stbi_set_flip_vertically_on_load(true);
   int width, height, nrChannels;
   unsigned char *data = stbi_load(atlasPath.c_str(),
@@ -42,19 +42,20 @@ Text::Text(std::string atlasPath, std::string indexPath) {
   std::string line;
   while (std::getline(index, line)) {
     std::istringstream iss(line);
-    std::vector<float> data;
-    while (getline(iss, line, ',')) data.push_back(std::stof(line));
+    std::vector<float> characterData;
+    while (getline(iss, line, ',')) characterData.push_back(std::stof(line));
 
-    Character character;
-    character.advance = data[1];
-    character.quadLeft = data[2];
-    character.quadBottom = data[3];
-    character.quadRight = data[4];
-    character.quadTop = data[5];
-    character.atlasLeft = data[6] / static_cast<float>(width);
-    character.atlasBottom = data[7] / static_cast<float>(height);
-    character.atlasRight = data[8] / static_cast<float>(width);
-    character.atlasTop = data[9] / static_cast<float>(height);
+    Character character{
+      characterData[1],
+      characterData[2],
+      characterData[3],
+      characterData[4],
+      characterData[5],
+      characterData[6] / static_cast<float>(width),
+      characterData[7] / static_cast<float>(height),
+      characterData[8] / static_cast<float>(width),
+      characterData[9] / static_cast<float>(height)
+    };
     characters.push_back(character);
   } index.close();
 
@@ -70,7 +71,7 @@ Text::~Text() {
   glDeleteBuffers(1, &EBO);
 }
 
-void Text::setText(std::string text, float x, float y, float scale, vec2i windowSize) {
+void Text::setText(const std::string &text, const float x, const float y, const float scale, const vec2i &windowDimensions) {
   size = static_cast<unsigned int>(text.size());
   std::vector<float> vertices(16 * size);
   std::vector<unsigned int> indices(6 * size);
@@ -101,48 +102,45 @@ void Text::setText(std::string text, float x, float y, float scale, vec2i window
       xoffset += characters[0].advance * scale;
       continue;
     }
-    Character character = characters[c - 32];
+    auto [advance,
+      quadLeft, quadBottom, quadRight, quadTop,
+      atlasLeft, atlasBottom, atlasRight, atlasTop] = characters[static_cast<unsigned long>(c - 32)];
 
-    if (character.quadLeft == character.quadRight ||
-        character.quadBottom == character.quadTop) {
-      xoffset += character.advance * scale;
+    if (quadLeft == quadRight ||
+        quadBottom == quadTop) {
+      xoffset += advance * scale;
       continue;
     };
 
-    float x0 = xoffset + character.quadLeft * scale;
-    float y0 = yoffset + character.quadBottom * scale;
-    float x1 = xoffset + character.quadRight * scale;
-    float y1 = yoffset + character.quadTop * scale;
+    float x0 = xoffset + quadLeft * scale;
+    float y0 = yoffset + quadBottom * scale;
+    float x1 = xoffset + quadRight * scale;
+    float y1 = yoffset + quadTop * scale;
 
-    x0 = 2.0f * x0 / static_cast<float>(windowSize.x) - 1.0f;
-    y0 = 2.0f * y0 / static_cast<float>(windowSize.y) - 1.0f;
-    x1 = 2.0f * x1 / static_cast<float>(windowSize.x) - 1.0f;
-    y1 = 2.0f * y1 / static_cast<float>(windowSize.y) - 1.0f;
-
-    float s0 = character.atlasLeft;
-    float t0 = character.atlasBottom;
-    float s1 = character.atlasRight;
-    float t1 = character.atlasTop;
+    x0 = 2.0f * x0 / static_cast<float>(windowDimensions.x) - 1.0f;
+    y0 = 2.0f * y0 / static_cast<float>(windowDimensions.y) - 1.0f;
+    x1 = 2.0f * x1 / static_cast<float>(windowDimensions.x) - 1.0f;
+    y1 = 2.0f * y1 / static_cast<float>(windowDimensions.y) - 1.0f;
 
     vertices[16 * i] = x0;
     vertices[16 * i + 1] = y0;
-    vertices[16 * i + 2] = s0;
-    vertices[16 * i + 3] = t0;
+    vertices[16 * i + 2] = atlasLeft;
+    vertices[16 * i + 3] = atlasBottom;
 
     vertices[16 * i + 4] = x1;
     vertices[16 * i + 5] = y0;
-    vertices[16 * i + 6] = s1;
-    vertices[16 * i + 7] = t0;
+    vertices[16 * i + 6] = atlasRight;
+    vertices[16 * i + 7] = atlasBottom;
 
     vertices[16 * i + 8] = x1;
     vertices[16 * i + 9] = y1;
-    vertices[16 * i + 10] = s1;
-    vertices[16 * i + 11] = t1;
+    vertices[16 * i + 10] = atlasRight;
+    vertices[16 * i + 11] = atlasTop;
 
     vertices[16 * i + 12] = x0;
     vertices[16 * i + 13] = y1;
-    vertices[16 * i + 14] = s0;
-    vertices[16 * i + 15] = t1;
+    vertices[16 * i + 14] = atlasLeft;
+    vertices[16 * i + 15] = atlasTop;
 
     indices[6 * i] = 4 * i;
     indices[6 * i + 1] = 4 * i + 1;
@@ -151,7 +149,7 @@ void Text::setText(std::string text, float x, float y, float scale, vec2i window
     indices[6 * i + 4] = 4 * i + 2;
     indices[6 * i + 5] = 4 * i + 3;
 
-    xoffset += character.advance * scale;
+    xoffset += advance * scale;
   }
 
   // No needs to shrink the vectors because the size is always the same
@@ -159,20 +157,20 @@ void Text::setText(std::string text, float x, float y, float scale, vec2i window
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER,
-               vertices.size() * sizeof(float),
+               static_cast<GLsizeiptr>(vertices.size() * sizeof(float)),
                &vertices[0],
                GL_STATIC_DRAW);
   
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               indices.size() * sizeof(unsigned int),
+               static_cast<GLsizeiptr>(vertices.size() * sizeof(unsigned int)),
                &indices[0],
                GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
   glEnableVertexAttribArray(0);
 
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), reinterpret_cast<void *>(2 * sizeof(float)));
   glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
@@ -180,11 +178,11 @@ void Text::setText(std::string text, float x, float y, float scale, vec2i window
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void Text::render() {
+void Text::render() const {
   glBindVertexArray(VAO);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, atlas);
-  glDrawElements(GL_TRIANGLES, 6 * size, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_TRIANGLES, static_cast<GLint>(6 * size), GL_UNSIGNED_INT, nullptr);
   glBindVertexArray(0);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
