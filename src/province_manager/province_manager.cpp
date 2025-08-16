@@ -1,9 +1,11 @@
 #include "province_manager.hpp"
 
-ProvinceManager::ProvinceManager(std::string provShaderPath,
-                                 std::string textShaderPath,
-                                 std::string mapPath,
-                                 std::string provPath) {
+#include <ranges>
+
+ProvinceManager::ProvinceManager(const std::string &provShaderPath,
+                                 const std::string &textShaderPath,
+                                 const std::string& mapPath,
+                                 const std::string& provPath) {
   std::ifstream province_file(provPath);
   if (!province_file.is_open()) {
     // TODO(Dory): Proper error handling
@@ -30,39 +32,35 @@ ProvinceManager::ProvinceManager(std::string provShaderPath,
       std::cerr << "ERROR: Province defined at line " << i << " lacks required information." << std::endl;
       continue;
     }
-    provinces.emplace(curProv[0], Province(mapPath.c_str(), Province::Color(curProv[1]), curProv[2], std::stoi(curProv[3])));
+    provinces.emplace(curProv[0], Province(mapPath.c_str(),
+      Province::Color(curProv[1]), curProv[2], std::stoi(curProv[3])));
   }
 
   provShader = Shader(provShaderPath);
   textShader = Shader(textShaderPath);
 }
 
-void ProvinceManager::render(Window &window, float scale, vec2f offset) {
+void ProvinceManager::render(const Window &window, const float scale, vec2f offset) {
   provShader.use();
-  for (auto &province : provinces) {
-    province.second.render();
-  }
+  for (auto &province: provinces | std::views::values) province.render();
 
   if (scale > 0.5f) return; // Don't render text if zoomed in too far
   // TODO(Dory): Don't render text if it's offscreen
 
   // TODO(Dory): Find a better way to do province name text
   textShader.use();
-  for (auto &province : provinces) {
+  for (auto &[name, province] : provinces) {
     vec2i dimensions = window.getDimensions();
-    text.setText(province.first,
-                 (province.second.getCenterX() + 0.5f) * static_cast<float>(dimensions.x) - 5.0f,
-                 (province.second.getCenterY() + 0.5f) * static_cast<float>(dimensions.y),
+    text.setText(name,
+                 (province.getCenterX() + 0.5f) * static_cast<float>(dimensions.x) - 5.0f,
+                 (province.getCenterY() + 0.5f) * static_cast<float>(dimensions.y),
                  5.0f,
                  dimensions);
     text.render();
   }
 }
 
-std::string ProvinceManager::clickedOnProvince(float x, float y) {
-  for (auto &province : provinces) {
-    if (province.second.clickedOn(x, y)) {
-      return province.first;
-    }
-  } return "";
+std::string ProvinceManager::clickedOnProvince(const float x, const float y) {
+  for (auto &[name, province] : provinces) if (province.clickedOn(x, y)) return name;
+  return "";
 }

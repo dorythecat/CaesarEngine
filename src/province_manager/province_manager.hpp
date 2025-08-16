@@ -17,22 +17,21 @@ class ProvinceManager {
 public:
   Shader provShader;
   Shader textShader;
+  std::string map_path_;
 
-  ProvinceManager(std::string provShaderPath = "res/shaders/default",
-                  std::string textShaderPath = "res/shaders/text",
-                  std::string mapPath = "res/test.png",
-                  std::string provPath = "res/provinces.txt");
+  explicit ProvinceManager(const std::string &provShaderPath = "res/shaders/default",
+                           const std::string &textShaderPath = "res/shaders/text",
+                           const std::string &mapPath = "res/test.png",
+                           const std::string &provPath = "res/provinces.txt");
   ~ProvinceManager() = default;
 
   ProvinceManager(const ProvinceManager&) = delete;
   ProvinceManager& operator=(const ProvinceManager&) = delete;
 
-  void render(Window &window, float scale, vec2f offset);
+  void render(const Window &window, float scale, vec2f offset);
   std::string clickedOnProvince(float x, float y);
 
-  Province& getProvince(std::string name) {
-    return provinces.at(name);
-  }
+  Province& getProvince(const std::string &name) { return provinces.at(name); }
 
 private:
   std::map<std::string, Province> provinces;
