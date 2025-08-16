@@ -1,6 +1,6 @@
 #include "text.hpp"
 
-Text::Text(const std::string& atlasPath, const std::string& indexPath) {
+Text::Text(const std::string &atlasPath, const std::string &indexPath) {
   stbi_set_flip_vertically_on_load(true);
   int width, height, nrChannels;
   unsigned char *data = stbi_load(atlasPath.c_str(),
@@ -57,7 +57,8 @@ Text::Text(const std::string& atlasPath, const std::string& indexPath) {
       characterData[9] / static_cast<float>(height)
     };
     characters.push_back(character);
-  } index.close();
+  }
+  index.close();
 
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -71,7 +72,11 @@ Text::~Text() {
   glDeleteBuffers(1, &EBO);
 }
 
-void Text::setText(const std::string &text, const float x, const float y, const float scale, const vec2i &windowDimensions) {
+void Text::setText(const std::string &text,
+                   const float x,
+                   const float y,
+                   const float scale,
+                   const vec2i &windowDimensions) {
   size = static_cast<unsigned int>(text.size());
   std::vector<float> vertices(16 * size);
   std::vector<unsigned int> indices(6 * size);
@@ -160,7 +165,7 @@ void Text::setText(const std::string &text, const float x, const float y, const 
                static_cast<GLsizeiptr>(vertices.size() * sizeof(float)),
                &vertices[0],
                GL_STATIC_DRAW);
-  
+
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                static_cast<GLsizeiptr>(vertices.size() * sizeof(unsigned int)),

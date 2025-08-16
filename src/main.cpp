@@ -18,8 +18,10 @@ vec2f offset;
 void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    if (glfwGetKey(window, GLFW_KEY_F6) == GLFW_PRESS) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    if (glfwGetKey(window, GLFW_KEY_F6) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) offset.y += 0.001f;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) offset.y -= 0.001f;
@@ -43,11 +45,11 @@ void mouse_click_callback(GLFWwindow *window,
         float yf = scaleFact * static_cast<float>(y) / static_cast<float>(height);
         xf = xf - scale + offset.x;
         yf = scale - yf + offset.y;
-        auto *sm = static_cast<StateManager*>(glfwGetWindowUserPointer(window));
+        auto *sm = static_cast<StateManager *>(glfwGetWindowUserPointer(window));
         if (const std::string state = sm->clickedOnState(xf, yf); !state.empty()) {
-          const std::string provinceName = sm->pm->clickedOnProvince(xf, yf);
-          const Province p = sm->pm->getProvince(provinceName);
-          std::cout << "Clicked on province: " << p.getName() << ", on state: " << state << std::endl;
+            const std::string provinceName = sm->pm->clickedOnProvince(xf, yf);
+            const Province p = sm->pm->getProvince(provinceName);
+            std::cout << "Clicked on province: " << p.getName() << ", on state: " << state << std::endl;
         }
     }
 }
@@ -64,6 +66,7 @@ void scroll_callback(GLFWwindow *window, const double xoffset, const double yoff
 
 float lastX = 0.0;
 float lastY = 0.0;
+
 void mouse_cursor_callback(GLFWwindow *window, const double xpos, const double ypos) {
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
         lastX = static_cast<float>(xpos);
@@ -86,8 +89,8 @@ int main() {
     StateManager sm;
 
     glfwSwapInterval(0); // Disable VSync
-  
-    glfwSetWindowUserPointer(window.window(), (void*)&sm);
+
+    glfwSetWindowUserPointer(window.window(), (void *) &sm);
     glfwSetMouseButtonCallback(window.window(), mouse_click_callback);
     glfwSetScrollCallback(window.window(), scroll_callback);
     glfwSetCursorPosCallback(window.window(), mouse_cursor_callback);
@@ -96,7 +99,7 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     //double lastFrame = 0.0;
-    while(!window.shouldClose()) {
+    while (!window.shouldClose()) {
         //const double time = glfwGetTime();
         //double deltaTime = time - lastFrame;
         //lastFrame = time;
@@ -108,7 +111,7 @@ int main() {
         sm.pm->provShader.use();
         sm.pm->provShader.setFloat("scale", scale);
         sm.pm->provShader.setVec2f("offset", offset.x, offset.y);
-    
+
         sm.pm->textShader.use();
         sm.pm->textShader.setFloat("scale", scale);
         sm.pm->textShader.setVec2f("offset", offset.x, offset.y);

@@ -18,8 +18,8 @@ struct Character {
 
 class Text {
 public:
-  explicit Text(const std::string& atlasPath = "res/text.png",
-                const std::string& indexPath = "res/text.csv");
+  explicit Text(const std::string &atlasPath = "res/text.png",
+                const std::string &indexPath = "res/text.csv");
   ~Text();
 
   void setText(const std::string &text, float x, float y, float scale, const vec2i &windowDimensions);
