@@ -1,3 +1,5 @@
+[![Project build](https://github.com/dorythecat/CaesarEngine/actions/workflows/cmake-multi-platform.yml/badge.svg)](https://github.com/dorythecat/CaesarEngine/actions/workflows/cmake-multi-platform.yml)
+
 # Caesar Engine
 This engine has been built from the ground up to be a similar to Paradox Game's Clausewitz engine. It is designed for use on a more "fantastical setting" type of game, instead of the gorunded games Clausewitz is known for.
 
@@ -13,3 +15,9 @@ The following keys can be used to interact with the engine:
 - `F6`: Deactivate wireframe mode
 - `Scroll Wheel`: Zoom in and out
 - `WASD`: Move the camera
+
+# How to test
+If you want to test Caesar Engine by yourself, click on the "Project build"
+badge on the top of this page, and then click on the latest build. You will be
+able to download a zip file containing the engine, which you can extract and run
+easily.
