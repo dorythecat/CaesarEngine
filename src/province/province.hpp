@@ -6,11 +6,11 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
-#include <utility>
 
 #include <stb_image.h>
 
 #include "../shader/shader.hpp"
+#include "../utils.hpp"
 
 class Province {
 public:
@@ -90,8 +90,7 @@ public:
     indices = other.indices;
     color = other.color;
 
-    centerX = other.centerX;
-    centerY = other.centerY;
+    center = other.center;
 
     category = other.category;
 
@@ -110,8 +109,9 @@ public:
 
   [[nodiscard]] std::string getName() const { return name; }
   [[nodiscard]] Color getColor() const { return color; }
-  [[nodiscard]] float getCenterX() const { return centerX; }
-  [[nodiscard]] float getCenterY() const { return centerY; }
+  [[nodiscard]] vec2f getCenter() const { return center; }
+  [[nodiscard]] float getCenterX() const { return center.x; }
+  [[nodiscard]] float getCenterY() const { return center.y; }
 
   [[nodiscard]] bool isAdjacent(const Color c) const { return adjacentColors.contains(c); }
   [[nodiscard]] bool isAdjacent(Province* p) const { return isAdjacent(p->getColor()); }
@@ -122,7 +122,7 @@ private:
   std::vector<unsigned int> indices;
   Color color;
   std::string name;
-  float centerX = 0.0f, centerY = 0.0f;
+  vec2f center;
 
   std::unordered_set<Color, Color::HashFunction> adjacentColors;
 

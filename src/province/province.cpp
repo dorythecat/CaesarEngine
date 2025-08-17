@@ -65,9 +65,6 @@ Province::Province(const char* mapPath,
 }
 
 void Province::generateMesh(const char* mapPath) {
-  centerX = 0.0f;
-  centerY = 0.0f;
-
   // If we don't do this, we'll get vertically flipped provinces
   stbi_set_flip_vertically_on_load(false);
 
@@ -135,8 +132,7 @@ void Province::generateMesh(const char* mapPath) {
       }
     }
 
-    centerX += p + p0;
-    centerY += q + q + y1;
+    center += vec2f(p + p0, q + q + y1);
 
     addQuad(p, q, p0, q + y1, color);
   } stbi_image_free(data);
@@ -151,8 +147,7 @@ void Province::generateMesh(const char* mapPath) {
   std::cout << "Vertices: " << vertices.size() << std::endl;
   std::cout << "Indices: " << indices.size() << std::endl;
 
-  centerX /= static_cast<float>(vertices.size());
-  centerY /= static_cast<float>(vertices.size());
+  center /= static_cast<float>(vertices.size());
 }
 
 void Province::generateMeshData() {
