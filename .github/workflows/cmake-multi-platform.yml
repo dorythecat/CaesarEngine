@@ -1,4 +1,4 @@
-name: CMake on multiple platforms
+name: Build project for Windows and Ubuntu
 
 on:
   push:
@@ -38,6 +38,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Updated submodules
+      run: git submodule update --init --recursive
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
