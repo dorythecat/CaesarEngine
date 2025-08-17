@@ -75,11 +75,19 @@ jobs:
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest --build-config ${{ matrix.build_type }}
 
-    - name: Archive build output
+    - name: Archive build output (Ubuntu)
+      if: matrix.os == 'ubuntu-latest'
       run: |
         cd ${{ steps.strings.outputs.build-output-dir }}
         tar -czf ${{ github.workspace }}/${{ matrix.os }}-${{ matrix.c_compiler }}-build.tar.gz .
       shell: bash
+
+    - name: Archive build output (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        cd ${{ steps.strings.outputs.build-output-dir }}
+        tar -czf ${{ github.workspace }}/${{ matrix.os }}-${{ matrix.c_compiler }}-build.tar.gz .
+      shell: pwsh
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
