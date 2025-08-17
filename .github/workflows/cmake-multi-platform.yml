@@ -98,19 +98,3 @@ jobs:
     - name: Determine version
       id: version
       run: echo "version=$(git describe --tags --always)" >> $GITHUB_ENV
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: ./release-artifacts
-
-      - name: Upload Release Assets
-        uses: softprops/action-gh-release@v1
-        with:
-          files: ./release-artifacts/*.tar.gz
-          tag_name: ${{ env.version }}
-          release_name: Release ${{ env.version }}
