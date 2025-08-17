@@ -51,11 +51,8 @@ void ProvinceManager::render(const Window &window, const float scale, vec2f offs
   textShader.use();
   for (auto &[name, province] : provinces) {
     vec2i dimensions = window.getDimensions();
-    text.setText(name,
-                 (province.getCenterX() + 0.5f) * static_cast<float>(dimensions.x) - 5.0f,
-                 (province.getCenterY() + 0.5f) * static_cast<float>(dimensions.y),
-                 5.0f,
-                 dimensions);
+    const vec2f position = (province.getCenter() + 0.5f) * static_cast<vec2f>(dimensions) - vec2f(5.0f, 0.0f);
+    text.setText(name, 5.0f, position, dimensions);
     text.render();
   }
 }

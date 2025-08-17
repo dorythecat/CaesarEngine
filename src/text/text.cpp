@@ -73,38 +73,36 @@ Text::~Text() {
 }
 
 void Text::setText(const std::string &text,
-                   const float x,
-                   const float y,
                    const float scale,
+                   const vec2f &position,
                    const vec2i &windowDimensions) {
   size = static_cast<unsigned int>(text.size());
   std::vector<float> vertices(16 * size);
   std::vector<unsigned int> indices(6 * size);
 
-  float xoffset = x;
-  float yoffset = y;
+  vec2f offset = position;
 
   for (unsigned int i = 0; i < size; i++) {
-    char c = text.c_str()[i];
+    const char c = text.c_str()[i];
     if (c == ' ') {
-      xoffset += characters[0].advance * scale;
+      offset.x += characters[0].advance * scale;
       continue;
     }
     if (c == '\n') {
-      xoffset = x;
-      yoffset -= scale;
+      offset.x = position.x;
+      offset.y -= scale;
       continue;
     }
     if (c == '\t') {
-      xoffset += 4 * characters[0].advance * scale;
+      offset.x += 4 * characters[0].advance * scale;
       continue;
     }
     if (c == '\r') {
-      xoffset = x;
+      offset.x = position.x;
       continue;
     }
     if (c < 32 || c > 126) {
-      xoffset += characters[0].advance * scale;
+      offset.x += characters[0].advance * scale;
       continue;
     }
     auto [advance,
@@ -113,37 +111,30 @@ void Text::setText(const std::string &text,
 
     if (quadLeft == quadRight ||
         quadBottom == quadTop) {
-      xoffset += advance * scale;
+      offset.x += advance * scale;
       continue;
     };
 
-    float x0 = xoffset + quadLeft * scale;
-    float y0 = yoffset + quadBottom * scale;
-    float x1 = xoffset + quadRight * scale;
-    float y1 = yoffset + quadTop * scale;
+    const vec2f q0 = (offset + vec2f(quadLeft, quadBottom) * scale) * 2.0f / static_cast<vec2f>(windowDimensions)- 1.0f;
+    const vec2f q1 = (offset + vec2f(quadRight, quadTop) * scale) * 2.0f / static_cast<vec2f>(windowDimensions) - 1.0f;
 
-    x0 = 2.0f * x0 / static_cast<float>(windowDimensions.x) - 1.0f;
-    y0 = 2.0f * y0 / static_cast<float>(windowDimensions.y) - 1.0f;
-    x1 = 2.0f * x1 / static_cast<float>(windowDimensions.x) - 1.0f;
-    y1 = 2.0f * y1 / static_cast<float>(windowDimensions.y) - 1.0f;
-
-    vertices[16 * i] = x0;
-    vertices[16 * i + 1] = y0;
+    vertices[16 * i] = q0.x;
+    vertices[16 * i + 1] = q0.y;
     vertices[16 * i + 2] = atlasLeft;
     vertices[16 * i + 3] = atlasBottom;
 
-    vertices[16 * i + 4] = x1;
-    vertices[16 * i + 5] = y0;
+    vertices[16 * i + 4] = q1.x;
+    vertices[16 * i + 5] = q0.y;
     vertices[16 * i + 6] = atlasRight;
     vertices[16 * i + 7] = atlasBottom;
 
-    vertices[16 * i + 8] = x1;
-    vertices[16 * i + 9] = y1;
+    vertices[16 * i + 8] = q1.x;
+    vertices[16 * i + 9] = q1.y;
     vertices[16 * i + 10] = atlasRight;
     vertices[16 * i + 11] = atlasTop;
 
-    vertices[16 * i + 12] = x0;
-    vertices[16 * i + 13] = y1;
+    vertices[16 * i + 12] = q0.x;
+    vertices[16 * i + 13] = q1.y;
     vertices[16 * i + 14] = atlasLeft;
     vertices[16 * i + 15] = atlasTop;
 
@@ -154,7 +145,7 @@ void Text::setText(const std::string &text,
     indices[6 * i + 4] = 4 * i + 2;
     indices[6 * i + 5] = 4 * i + 3;
 
-    xoffset += advance * scale;
+    offset.x += advance * scale;
   }
 
   // No needs to shrink the vectors because the size is always the same
