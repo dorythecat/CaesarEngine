@@ -32,7 +32,7 @@ public:
       }
     }
   }
-  [[nodiscard]] vec2f getCenter() const { return center; }
+  [[nodiscard]] vec2f getCenter() const { return center / static_cast<float>(provinces.size()); }
   [[nodiscard]] float getCenterX() const { return center.x / static_cast<float>(provinces.size()); }
   [[nodiscard]] float getCenterY() const { return center.y / static_cast<float>(provinces.size()); }
 
