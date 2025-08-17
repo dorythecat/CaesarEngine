@@ -16,28 +16,25 @@ public:
   State(const State& other) {
     name = other.name;
     provinces = other.provinces;
-
-    centerX = other.centerX;
-    centerY = other.centerY;
+    center = other.center;
   }
 
   void addProvince(const Province& province) {
     provinces.push_back(province);
-    centerX += province.getCenterX();
-    centerY += province.getCenterY();
+    center += province.getCenter();
   }
   void removeProvince(const std::string& provinceName) {
     for (auto it = provinces.begin(); it != provinces.end(); ++it) {
       if (it->getName() == provinceName) {
         provinces.erase(it);
-        centerX -= it->getCenterX();
-        centerY -= it->getCenterY();
+        center -= it->getCenter();
         break;
       }
     }
   }
-  [[nodiscard]] float getCenterX() const { return centerX / static_cast<float>(provinces.size()); }
-  [[nodiscard]] float getCenterY() const { return centerY / static_cast<float>(provinces.size()); }
+  [[nodiscard]] vec2f getCenter() const { return center; }
+  [[nodiscard]] float getCenterX() const { return center.x / static_cast<float>(provinces.size()); }
+  [[nodiscard]] float getCenterY() const { return center.y / static_cast<float>(provinces.size()); }
 
   [[nodiscard]] std::string getName() const { return name; }
 
@@ -50,8 +47,7 @@ public:
 private:
   std::string name;
   std::vector<Province> provinces;
-
-  float centerX = 0.0f, centerY = 0.0f;
+  vec2f center;
 };
 
 #endif // STATE_HPP
