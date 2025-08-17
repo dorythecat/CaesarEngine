@@ -78,7 +78,7 @@ jobs:
     - name: Archive build output
       run: |
         cd ${{ steps.strings.outputs.build-output-dir }}
-        tar -czf ../${{ matrix.os }}-${{ matrix.c_compiler }}-build.tar.gz *
+        tar -czf ${{ github.workspace }}/${{ matrix.os }}-${{ matrix.c_compiler }}-build.tar.gz .
       shell: bash
 
     - name: Upload build artifact
@@ -99,4 +99,4 @@ jobs:
       - name: Upload Release Assets
         uses: softprops/action-gh-release@v1
         with:
-          files: ./release-artifacts/**/*.tar.gz
+          files: ./release-artifacts/*.tar.gz
