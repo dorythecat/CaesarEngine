@@ -9,8 +9,11 @@ message(STATUS "using ${CMAKE_GENERATOR}")
 # For more info on all of these warning flags, check out https://gcc.gnu.org/onlinedocs/gcc-3.4.0/gcc/Warning-Options.html
 # For more information of all of these optimization flags, check out https://gcc.gnu.org/onlinedocs/gcc-12.2.0/gcc/Optimize-Options.html
 
-# Set warning flags
-set(WARN_FLAGS -Wall -Wextra -Wundef -Wdouble-promotion -Wformat=2 -fno-common -Wconversion -pedantic -Wno-unused-parameter)
+# Set warning flags (Only for GCC and Clang, MSVC has its own set of flags)
+if(CMAKE_COMPILER_IS_GNUCXX)
+    message(STATUS "GCC detected, adding compile flags")
+    set(WARN_FLAGS -Wall -Wextra -Wundef -Wdouble-promotion -Wformat=2 -fno-common -Wconversion -pedantic -Wno-unused-parameter)
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
 # Set debug and release flags
 set(DEBUG_FLAGS -g3 -Og -DDEBUG)
