@@ -20,7 +20,7 @@ option(GLFW_INSTALL "Generate installation target" OFF)
 option(GLFW_DOCUMENT_INTERNALS "Include internals in documentation" OFF)
 
 # Add subdirectories
-add_subdirectory("libs/glfw")
+add_subdirectory("${PROJECT_SOURCE_DIR}/libs/glfw")
 
 # Include directories
 include_directories(${PROJECT_SOURCE_DIR}/libs/glfw/include ${PROJECT_SOURCE_DIR}/libs/glfw/deps ${PROJECT_SOURCE_DIR}/libs/glad/include ${PROJECT_SOURCE_DIR}/libs/stb)
