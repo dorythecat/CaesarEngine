@@ -42,8 +42,9 @@ public:
   [[nodiscard]] std::string getName() const { return name; }
 
   [[nodiscard]] bool hasProvince(const std::string &provinceName) const {
-    std::ranges::find_if(provinces, [&](const Province& province) { return province.getName() == provinceName; });
-    return false;
+    return std::ranges::any_of(provinces, [&provinceName](const Province& province) {
+      return province.getName() == provinceName;
+    });
   }
 
 private:
