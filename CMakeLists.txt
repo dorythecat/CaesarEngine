@@ -8,9 +8,13 @@ message(STATUS "using ${CMAKE_GENERATOR}")
 # For knowing what these do, and where I have gotten this information, check the awesome article at https://interrupt.memfault.com/blog/best-and-worst-gcc-clang-compiler-flags (I know it's for embedded systems, but it's still a  pretty good article)
 # For more info on all of these warning flags, check out https://gcc.gnu.org/onlinedocs/gcc-3.4.0/gcc/Warning-Options.html
 # For more information of all of these optimization flags, check out https://gcc.gnu.org/onlinedocs/gcc-12.2.0/gcc/Optimize-Options.html
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wundef -Wdouble-promotion -Wformat=2 -fno-common -Wconversion -pedantic -Wno-unused-parameter") # Bundle the necessary static libraries, as well as enable some useful warnings, and disable some nasty ones
-set(CMAKE_CXX_FLAGS_DEBUG "-g3 -Og -DDEBUG") # Enable debug symbols and optimisations for debug builds
-set(CMAKE_CXX_FLAGS_RELEASE "-O3") # Enable full optimisations for release builds
+
+# Set warning flags
+set(WARN_FLAGS -Wall -Wextra -Wundef -Wdouble-promotion -Wformat=2 -fno-common -Wconversion -pedantic -Wno-unused-parameter)
+
+# Set debug and release flags
+set(DEBUG_FLAGS -g3 -Og -DDEBUG)
+set(RELEASE_FLAGS -O3)
 
 # GLFW settings
 option(GLFW_BUILD_EXAMPLES "Build the GLFW example programs" OFF)
@@ -33,4 +37,16 @@ file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp) # Get all the source 
 add_executable(${PROJECT_NAME} ${SOURCES} ${PROJECT_SOURCE_DIR}/libs/glad/src/glad.c) # Create the executable
 target_link_libraries(${PROJECT_NAME} glfw) # Link the executable with the libraries
 file(COPY ${PROJECT_SOURCE_DIR}/res DESTINATION ${PROJECT_BINARY_DIR}) # Copy the resources to the build directory
+
+# Apply warning flags to all configurations
+target_compile_options(${PROJECT_NAME} PRIVATE ${WARN_FLAGS})
+
+# Apply configuration-specific flags
+target_compile_options(${PROJECT_NAME} PRIVATE
+        $<$<CONFIG:Debug>:${DEBUG_FLAGS}>
+        $<$<CONFIG:Release>:${RELEASE_FLAGS}>
+)
+
+# Link libraries as before
+target_link_libraries(${PROJECT_NAME} glfw)
 
