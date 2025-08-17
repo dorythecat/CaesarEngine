@@ -105,6 +105,10 @@ struct vec2 {
         os << "vec2(" << v.x << ", " << v.y << ")";
         return os;
     }
+
+    // Casting
+    template <typename U>
+    explicit operator vec2<U>() const { return vec2<U>(static_cast<U>(x), static_cast<U>(y)); }
 };
 
 // 2D vector types
