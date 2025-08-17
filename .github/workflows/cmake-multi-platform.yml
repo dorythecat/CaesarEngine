@@ -95,6 +95,10 @@ jobs:
         name: ${{ matrix.os }}-${{ matrix.c_compiler }}-build
         path: ${{ github.workspace }}/${{ matrix.os }}-${{ matrix.c_compiler }}-build.tar.gz
 
+    - name: Determine version
+      id: version
+      run: echo "version=$(git describe --tags --always)" >> $GITHUB_ENV
+
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -108,3 +112,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ./release-artifacts/*.tar.gz
+          tag_name: ${{ env.version }}
+          release_name: Release ${{ env.version }}
