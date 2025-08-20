@@ -29,7 +29,7 @@ public:
   StateManager(const StateManager&) = delete;
   StateManager& operator=(const StateManager&) = delete;
 
-  void render(Window &window, float scale, const vec2f &offset);
+  void render(const Window &window, float scale);
   std::string clickedOnState(float x, float y) const;
 
   [[nodiscard]] Province& getProvince(const std::string& name) const { return pm->getProvince(name); }

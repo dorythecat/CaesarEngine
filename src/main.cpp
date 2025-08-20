@@ -118,7 +118,7 @@ int main() {
         sm.pm->textShader.setInt("tex", 0);
 
         // Render states (and therefore provinces)
-        sm.render(window, scale, offset);
+        sm.render(window, scale);
 
         window.swapBuffers();
         glfwPollEvents();

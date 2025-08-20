@@ -40,7 +40,7 @@ ProvinceManager::ProvinceManager(const std::string &provShaderPath,
   textShader = Shader(textShaderPath);
 }
 
-void ProvinceManager::render(const Window &window, const float scale, vec2f offset) {
+void ProvinceManager::render(const Window &window, const float scale) {
   provShader.use();
   for (auto &province: provinces | std::views::values) province.render();
 
