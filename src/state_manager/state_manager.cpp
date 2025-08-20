@@ -91,9 +91,7 @@ void StateManager::render(Window &window, const float scale, const vec2f &offset
 
   pm->textShader.use();
   for (auto &[name, state]: states) {
-    vec2i dimensions = window.getDimensions();
-    const vec2f position = (state.getCenter() + 0.5f) * static_cast<vec2f>(dimensions) - vec2f(10.0f, 0.0f);
-    text.setText(name, 10.0f, position, dimensions);
+    text.setText(name, 10.0f, state.getCenter(), static_cast<vec2f>(window.getDimensions()));
     text.render();
   }
 }

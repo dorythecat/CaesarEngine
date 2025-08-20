@@ -49,10 +49,8 @@ void ProvinceManager::render(const Window &window, const float scale, vec2f offs
 
   // TODO(Dory): Find a better way to do province name text
   textShader.use();
-  for (auto &[name, province] : provinces) {
-    vec2i dimensions = window.getDimensions();
-    const vec2f position = (province.getCenter() + 0.5f) * static_cast<vec2f>(dimensions) - vec2f(5.0f, 0.0f);
-    text.setText(name, 5.0f, position, dimensions);
+  for (auto &[name, province] : provinces) {;
+    text.setText(name, 5.0f, province.getCenter(), static_cast<vec2f>(window.getDimensions()));
     text.render();
   }
 }

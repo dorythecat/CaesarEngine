@@ -74,11 +74,13 @@ Text::~Text() {
 
 void Text::setText(const std::string &text,
                    const float scale,
-                   const vec2f &position,
-                   const vec2i &windowDimensions) {
+                   vec2f position,
+                   const vec2f &windowDimensions) {
   size = static_cast<unsigned int>(text.size());
   std::vector<float> vertices(16 * size);
   std::vector<unsigned int> indices(6 * size);
+
+  position = (position + 0.5f) * windowDimensions - vec2f(scale, 0.0f);
 
   vec2f offset = position;
 
@@ -115,8 +117,8 @@ void Text::setText(const std::string &text,
       continue;
     };
 
-    const vec2f q0 = (offset + vec2f(quadLeft, quadBottom) * scale) * 2.0f / static_cast<vec2f>(windowDimensions)- 1.0f;
-    const vec2f q1 = (offset + vec2f(quadRight, quadTop) * scale) * 2.0f / static_cast<vec2f>(windowDimensions) - 1.0f;
+    const vec2f q0 = (offset + vec2f(quadLeft, quadBottom) * scale) * 2.0f / windowDimensions- 1.0f;
+    const vec2f q1 = (offset + vec2f(quadRight, quadTop) * scale) * 2.0f / windowDimensions - 1.0f;
 
     vertices[16 * i] = q0.x;
     vertices[16 * i + 1] = q0.y;
