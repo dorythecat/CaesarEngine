@@ -86,12 +86,12 @@ StateManager::StateManager(const std::string &provShaderPath,
   }
 }
 
-void StateManager::render(const Window &window, const float scale, const vec2f offset) {
+void StateManager::render(const Window &window, const float scale, const vec2f &offset) {
   pm->render(window, scale, offset);
 
   pm->textShader.use();
   for (auto &[name, state]: states) {
-    text.setText(name, 10.0f, state.getCenter(), static_cast<vec2f>(window.getDimensions()));
+    text.setText(name, 10.0f, state.getCenter(), static_cast<vec2f>(window.getDimensions()), offset);
     text.render();
   }
 }

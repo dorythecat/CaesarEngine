@@ -40,7 +40,7 @@ ProvinceManager::ProvinceManager(const std::string &provShaderPath,
   textShader = Shader(textShaderPath);
 }
 
-void ProvinceManager::render(const Window &window, const float scale, const vec2f offset) {
+void ProvinceManager::render(const Window &window, const float scale, const vec2f &offset) {
   provShader.use();
   for (auto &province: provinces | std::views::values) province.render();
 
@@ -50,7 +50,7 @@ void ProvinceManager::render(const Window &window, const float scale, const vec2
   // TODO(Dory): Find a better way to do province name text
   textShader.use();
   for (auto &[name, province] : provinces) {;
-    text.setText(name, 5.0f, province.getCenter(), static_cast<vec2f>(window.getDimensions()));
+    text.setText(name, 5.0f, province.getCenter(), static_cast<vec2f>(window.getDimensions()), offset);
     text.render();
   }
 }

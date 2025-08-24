@@ -75,36 +75,37 @@ Text::~Text() {
 void Text::setText(const std::string &text,
                    const float scale,
                    vec2f position,
-                   const vec2f &windowDimensions) {
+                   const vec2f &windowDimensions,
+                   const vec2f &offset) {
   size = static_cast<unsigned int>(text.size());
   std::vector<float> vertices(16 * size);
   std::vector<unsigned int> indices(6 * size);
 
   position = (position + 0.5f) * windowDimensions - vec2f(scale, 0.0f);
 
-  vec2f offset = position;
+  vec2f textOffset = position;
 
   for (unsigned int i = 0; i < size; i++) {
     const char c = text.c_str()[i];
     if (c == ' ') {
-      offset.x += characters[0].advance * scale;
+      textOffset.x += characters[0].advance * scale;
       continue;
     }
     if (c == '\n') {
-      offset.x = position.x;
-      offset.y -= scale;
+      textOffset.x = position.x;
+      textOffset.y -= scale;
       continue;
     }
     if (c == '\t') {
-      offset.x += 4 * characters[0].advance * scale;
+      textOffset.x += 4 * characters[0].advance * scale;
       continue;
     }
     if (c == '\r') {
-      offset.x = position.x;
+      textOffset.x = position.x;
       continue;
     }
     if (c < 32 || c > 126) {
-      offset.x += characters[0].advance * scale;
+      textOffset.x += characters[0].advance * scale;
       continue;
     }
     auto [advance,
@@ -113,12 +114,12 @@ void Text::setText(const std::string &text,
 
     if (quadLeft == quadRight ||
         quadBottom == quadTop) {
-      offset.x += advance * scale;
+      textOffset.x += advance * scale;
       continue;
     };
 
-    const vec2f q0 = (offset + vec2f(quadLeft, quadBottom) * scale) * 2.0f / windowDimensions- 1.0f;
-    const vec2f q1 = (offset + vec2f(quadRight, quadTop) * scale) * 2.0f / windowDimensions - 1.0f;
+    const vec2f q0 = (textOffset + vec2f(quadLeft, quadBottom) * scale) * 2.0f / windowDimensions- 1.0f;
+    const vec2f q1 = (textOffset + vec2f(quadRight, quadTop) * scale) * 2.0f / windowDimensions - 1.0f;
 
     vertices[16 * i] = q0.x;
     vertices[16 * i + 1] = q0.y;
@@ -147,7 +148,7 @@ void Text::setText(const std::string &text,
     indices[6 * i + 4] = 4 * i + 2;
     indices[6 * i + 5] = 4 * i + 3;
 
-    offset.x += advance * scale;
+    textOffset.x += advance * scale;
   }
 
   // No needs to shrink the vectors because the size is always the same

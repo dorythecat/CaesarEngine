@@ -22,7 +22,7 @@ public:
                 const std::string &indexPath = "res/text.csv");
   ~Text();
 
-  void setText(const std::string &text, float scale, vec2f position, const vec2f &windowDimensions);
+  void setText(const std::string &text, float scale, vec2f position, const vec2f &windowDimensions, const vec2f &offset);
   void render() const;
 
 private:
