@@ -86,8 +86,8 @@ StateManager::StateManager(const std::string &provShaderPath,
   }
 }
 
-void StateManager::render(const Window &window, const float scale) {
-  pm->render(window, scale);
+void StateManager::render(const Window &window, const float scale, const vec2f offset) {
+  pm->render(window, scale, offset);
 
   pm->textShader.use();
   for (auto &[name, state]: states) {

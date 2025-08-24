@@ -27,7 +27,7 @@ public:
   ProvinceManager(const ProvinceManager&) = delete;
   ProvinceManager& operator=(const ProvinceManager&) = delete;
 
-  void render(const Window &window, float scale);
+  void render(const Window &window, float scale, vec2f offset);
   std::string clickedOnProvince(float x, float y);
 
   Province& getProvince(const std::string &name) { return provinces.at(name); }
