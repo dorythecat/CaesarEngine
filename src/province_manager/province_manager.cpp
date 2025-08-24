@@ -2,15 +2,14 @@
 
 #include <ranges>
 
-ProvinceManager::ProvinceManager(const std::string &provShaderPath,
+ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
+                                 const std::string &provShaderPath,
                                  const std::string &textShaderPath,
                                  const std::string& mapPath,
-                                 const std::string& provPath) {
+                                 const std::string& provPath) : text(errorHandler), errorHandler(errorHandler) {
   std::ifstream province_file(provPath);
   if (!province_file.is_open()) {
-    // TODO(Dory): Proper error handling
-    std::cerr << "FATAL ERROR: Could not open file \"" << provPath << "\"" << std::endl;
-    return;
+    errorHandler->logFatal("Could not open file \"" + provPath + "\"", ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
   }
 
   unsigned int i = 0;
@@ -29,7 +28,7 @@ ProvinceManager::ProvinceManager(const std::string &provShaderPath,
     }
 
     if (curProv.size() < 4) {
-      std::cerr << "ERROR: Province defined at line " << i << " lacks required information." << std::endl;
+      errorHandler->logWarning("Province defined at line " + std::to_string(i) + " lacks required information.", ErrorHandler::FORMAT_ERROR);
       continue;
     }
     provinces.emplace(curProv[0], Province(mapPath.c_str(),

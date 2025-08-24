@@ -3,22 +3,22 @@
 
 #include <string>
 #include <map>
-#include <iostream>
 #include <fstream>
-#include <sstream>
 
 #include "../utils.hpp"
 #include "../window/window.hpp"
 #include "../shader/shader.hpp"
 #include "../province/province.hpp"
 #include "../text/text.hpp"
+#include "../error_handler/error_handler.h"
 
 class ProvinceManager {
 public:
   Shader provShader;
   Shader textShader;
 
-  explicit ProvinceManager(const std::string &provShaderPath = "res/shaders/default",
+  explicit ProvinceManager(ErrorHandler* errorHandler,
+                           const std::string &provShaderPath = "res/shaders/default",
                            const std::string &textShaderPath = "res/shaders/text",
                            const std::string &mapPath = "res/test.png",
                            const std::string &provPath = "res/provinces.txt");
@@ -35,6 +35,7 @@ public:
 private:
   std::map<std::string, Province> provinces;
   Text text;
+  ErrorHandler* errorHandler;
 };
 
 #endif // PROVINCE_MANAGER_HPP

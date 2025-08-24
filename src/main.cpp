@@ -88,11 +88,11 @@ int main() {
 
     const Window window(800, 600, "Caesar Engine", &errorHandler);
 
-    StateManager sm;
+    StateManager sm(&errorHandler);
 
     glfwSwapInterval(0); // Disable VSync
 
-    glfwSetWindowUserPointer(window.window(), (void *) &sm);
+    glfwSetWindowUserPointer(window.window(), &sm);
     glfwSetMouseButtonCallback(window.window(), mouse_click_callback);
     glfwSetScrollCallback(window.window(), scroll_callback);
     glfwSetCursorPosCallback(window.window(), mouse_cursor_callback);

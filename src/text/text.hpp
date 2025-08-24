@@ -9,6 +9,7 @@
 
 #include "../utils.hpp"
 #include "../province/province.hpp" // Include for stb_image
+#include "../error_handler/error_handler.h"
 
 struct Character {
   float advance;
@@ -18,7 +19,8 @@ struct Character {
 
 class Text {
 public:
-  explicit Text(const std::string &atlasPath = "res/text.png",
+  explicit Text(ErrorHandler* errorHandler,
+                const std::string &atlasPath = "res/text.png",
                 const std::string &indexPath = "res/text.csv");
   ~Text();
 
@@ -29,6 +31,7 @@ private:
   std::vector<Character> characters;
   GLuint atlas{}, VAO{}, VBO{}, EBO{};
   unsigned int size{};
+  ErrorHandler* errorHandler;
 };
 
 #endif // TEXT_HPP

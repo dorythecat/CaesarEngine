@@ -1,20 +1,20 @@
 #include "state_manager.hpp"
 
-StateManager::StateManager(const std::string &provShaderPath,
+StateManager::StateManager(ErrorHandler* errorHandler,
+                           const std::string &provShaderPath,
                            const std::string &textShaderPath,
                            const std::string &mapPath,
                            const std::string &provPath,
-                           const std::string &statePath) {
-  this->pm = std::make_unique<ProvinceManager>(provShaderPath,
+                           const std::string &statePath) : text(errorHandler), errorHandler(errorHandler) {
+  this->pm = std::make_unique<ProvinceManager>(errorHandler,
+                                               provShaderPath,
                                                textShaderPath,
                                                mapPath,
                                                provPath);
 
   std::ifstream stateFile("res/states.txt");
   if (!stateFile.is_open()) {
-    // TODO(Dory): Proper error handling
-    std::cerr << "FATAL ERROR: Could not open file \"res/states.txt\"" << std::endl;
-    return;
+    errorHandler->logFatal("Could not open file \"" + statePath + "\"", ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
   }
 
   for (std::string line; std::getline(stateFile, line);) {
@@ -63,13 +63,13 @@ StateManager::StateManager(const std::string &provShaderPath,
     }
 
     if (name.empty()) {
-      std::cerr << "FATAL ERROR: State " << id << " has no name" << std::endl;
-      return;
+      errorHandler->logWarning("State " + id + " has no name", ErrorHandler::FORMAT_ERROR);
+      continue;
     }
 
     if (provinceIds.empty()) {
-      std::cerr << "FATAL ERROR: State " << id << " has no provinces" << std::endl;
-      return;
+      errorHandler->logError("State " + id + " has no provinces", ErrorHandler::FORMAT_ERROR);
+      continue;
     }
 
     State state(name);
@@ -79,8 +79,7 @@ StateManager::StateManager(const std::string &provShaderPath,
   stateFile.close();
 
   if (states.empty()) {
-    std::cerr << "FATAL ERROR: No states found in \"res/states.txt\"" << std::endl;
-    return;
+    errorHandler->logFatal("No states found in \"" + statePath + "\"", ErrorHandler::FORMAT_ERROR);
   }
 }
 
@@ -100,6 +99,6 @@ std::string StateManager::clickedOnState(float x, float y) const {
   const Province province = pm->getProvince(provinceName);
   for (const auto &state: states | std::views::values)
     if (state.hasProvince(province.getName())) return state.getName();
-  std::cerr << "FATAL ERROR: Province " << provinceName << " not found in any state" << std::endl;
+  errorHandler->logError("Province " + provinceName + " not found in any state", ErrorHandler::UNKNOWN_ERROR);
   return "";
 }

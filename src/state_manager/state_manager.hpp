@@ -17,7 +17,8 @@ class StateManager {
 public:
   std::unique_ptr<ProvinceManager> pm;
 
-  explicit StateManager(const std::string &provShaderPath = "res/shaders/default",
+  explicit StateManager(ErrorHandler* errorHandler,
+                        const std::string &provShaderPath = "res/shaders/default",
                         const std::string &textShaderPath = "res/shaders/text",
                         const std::string &mapPath = "res/test.png",
                         const std::string &provPath = "res/provinces.txt",
@@ -36,6 +37,7 @@ public:
 private:
   std::map<std::string, State> states;
   Text text;
+  ErrorHandler* errorHandler;
 };
 
 #endif // STATE_MANAGER_HPP

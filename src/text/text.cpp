@@ -1,6 +1,7 @@
 #include "text.hpp"
 
-Text::Text(const std::string &atlasPath, const std::string &indexPath) {
+Text::Text(ErrorHandler* errorHandler, const std::string &atlasPath, const std::string &indexPath) :
+errorHandler(errorHandler) {
   stbi_set_flip_vertically_on_load(true);
   int width, height, nrChannels;
   unsigned char *data = stbi_load(atlasPath.c_str(),
@@ -10,7 +11,7 @@ Text::Text(const std::string &atlasPath, const std::string &indexPath) {
                                   0);
 
   if (!data) {
-    std::cerr << "Failed to load texture" << std::endl;
+    errorHandler->logError("Failed to load texture atlas from " + atlasPath, ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
     return;
   }
 
@@ -35,7 +36,7 @@ Text::Text(const std::string &atlasPath, const std::string &indexPath) {
 
   std::ifstream index(indexPath);
   if (!index.is_open()) {
-    std::cerr << "Failed to open index file" << std::endl;
+    errorHandler->logError("Failed to load texture index from " + indexPath, ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
     return;
   }
 
