@@ -5,10 +5,11 @@
 #include <GLFW/glfw3.h>
 
 #include "../utils.hpp"
+#include "../error_handler/error_handler.h"
 
 class Window {
 public:
-  Window(int width, int height, const char* title);
+  Window(int width, int height, const char* title, ErrorHandler *errorHandler);
   ~Window() {
       glfwDestroyWindow(_window);
       glfwTerminate();
@@ -33,6 +34,7 @@ public:
 
 private:
   GLFWwindow* _window;
+  ErrorHandler* errorHandler;
 
   static void framebufferSizeCallback(GLFWwindow* window, const int width, const int height) {
       glViewport(0, 0, width, height);

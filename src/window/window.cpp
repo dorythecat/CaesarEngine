@@ -1,10 +1,8 @@
 #include "window.hpp"
 
-Window::Window(const int width, const int height, const char* title) {
-  if (!glfwInit()) {
-    std::cerr << "Failed to initialize GLFW" << std::endl;
-    exit(EXIT_FAILURE);
-  }
+Window::Window(const int width, const int height, const char* title, ErrorHandler *errorHandler) :
+errorHandler(errorHandler) {
+  if (!glfwInit()) errorHandler->logFatal("Failed to initialize GLFW", ErrorHandler::WINDOW_CREATION_ERROR);
 
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -18,16 +16,14 @@ Window::Window(const int width, const int height, const char* title) {
 
   _window = glfwCreateWindow(width, height, title, nullptr, nullptr);
   if (!_window) {
-    std::cerr << "Failed to create window" << std::endl;
     glfwTerminate();
-    exit(EXIT_FAILURE);
+    errorHandler->logFatal("Failed to create window", ErrorHandler::WINDOW_CREATION_ERROR);
   }
 
   glfwMakeContextCurrent(_window);
   if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
-    std::cerr << "Failed to initialize GLAD" << std::endl;
     glfwTerminate();
-    exit(EXIT_FAILURE);
+    errorHandler->logFatal("Failed to initialize GLAD", ErrorHandler::WINDOW_CREATION_ERROR);
   }
 
   glViewport(0, 0, width, height);

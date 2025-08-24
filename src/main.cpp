@@ -1,4 +1,3 @@
-#include <algorithm>
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_ONLY_PNG
 
@@ -11,6 +10,7 @@
 #include "utils.hpp"
 #include "window/window.hpp"
 #include "state_manager/state_manager.hpp"
+#include "error_handler/error_handler.h"
 
 float scale = 1.0f;
 vec2f offset;
@@ -84,7 +84,9 @@ void mouse_cursor_callback(GLFWwindow *window, const double xpos, const double y
 }
 
 int main() {
-    Window window(800, 600, "Caesar Engine");
+    ErrorHandler errorHandler;
+
+    const Window window(800, 600, "Caesar Engine", &errorHandler);
 
     StateManager sm;
 
