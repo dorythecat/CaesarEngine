@@ -20,4 +20,4 @@ The following keys can be used to interact with the engine:
 If you want to test Caesar Engine by yourself, click on the "Project build"
 badge on the top of this page, and then click on the latest build. You will be
 able to download a zip file containing the engine, which you can extract and run
-easily.
+easily. The executable file will be inside the `Release` folder, rememeber!
