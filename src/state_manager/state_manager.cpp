@@ -1,7 +1,5 @@
 #include "state_manager.hpp"
 
-#include <ranges>
-
 StateManager::StateManager(const std::string &provShaderPath,
                            const std::string &textShaderPath,
                            const std::string &mapPath,
