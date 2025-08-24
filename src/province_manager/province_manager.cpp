@@ -49,7 +49,7 @@ void ProvinceManager::render(const Window &window, const float scale, const vec2
 
   // TODO(Dory): Find a better way to do province name text
   textShader.use();
-  for (auto &[name, province] : provinces) {;
+  for (auto &[name, province] : provinces) {
     text.setText(name, 5.0f, province.getCenter(), static_cast<vec2f>(window.getDimensions()), offset);
     text.render();
   }
