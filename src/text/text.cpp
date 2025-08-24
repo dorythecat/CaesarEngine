@@ -77,15 +77,15 @@ void Text::setText(const std::string &text,
                    vec2f position,
                    const vec2f &windowDimensions,
                    const vec2f &offset) {
-  size = static_cast<unsigned int>(text.size());
-  std::vector<float> vertices(16 * size);
-  std::vector<unsigned int> indices(6 * size);
+  size = 0;
+  std::vector<float> vertices;
+  std::vector<unsigned int> indices;
 
   position = (position + 0.5f) * windowDimensions - vec2f(scale, 0.0f);
 
   vec2f textOffset = position;
 
-  for (unsigned int i = 0; i < size; i++) {
+  for (unsigned int i = 0; i < text.size(); i++) {
     const char c = text.c_str()[i];
     if (c == ' ') {
       textOffset.x += characters[0].advance * scale;
@@ -121,34 +121,21 @@ void Text::setText(const std::string &text,
     const vec2f q0 = (textOffset + vec2f(quadLeft, quadBottom) * scale) * 2.0f / windowDimensions- 1.0f;
     const vec2f q1 = (textOffset + vec2f(quadRight, quadTop) * scale) * 2.0f / windowDimensions - 1.0f;
 
-    vertices[16 * i] = q0.x;
-    vertices[16 * i + 1] = q0.y;
-    vertices[16 * i + 2] = atlasLeft;
-    vertices[16 * i + 3] = atlasBottom;
 
-    vertices[16 * i + 4] = q1.x;
-    vertices[16 * i + 5] = q0.y;
-    vertices[16 * i + 6] = atlasRight;
-    vertices[16 * i + 7] = atlasBottom;
+    vertices.insert(vertices.end(), {
+      q0.x, q0.y, atlasLeft, atlasBottom,
+      q1.x, q0.y, atlasRight, atlasBottom,
+      q1.x, q1.y, atlasRight, atlasTop,
+      q0.x, q1.y, atlasLeft, atlasTop
+    });
 
-    vertices[16 * i + 8] = q1.x;
-    vertices[16 * i + 9] = q1.y;
-    vertices[16 * i + 10] = atlasRight;
-    vertices[16 * i + 11] = atlasTop;
-
-    vertices[16 * i + 12] = q0.x;
-    vertices[16 * i + 13] = q1.y;
-    vertices[16 * i + 14] = atlasLeft;
-    vertices[16 * i + 15] = atlasTop;
-
-    indices[6 * i] = 4 * i;
-    indices[6 * i + 1] = 4 * i + 1;
-    indices[6 * i + 2] = 4 * i + 2;
-    indices[6 * i + 3] = 4 * i;
-    indices[6 * i + 4] = 4 * i + 2;
-    indices[6 * i + 5] = 4 * i + 3;
+    indices.insert(indices.end(), {
+      4 * size, 4 * size + 1, 4 * size + 2,
+      4 * size, 4 * size + 2, 4 * size + 3
+    });
 
     textOffset.x += advance * scale;
+    size++;
   }
 
   // No needs to shrink the vectors because the size is always the same
