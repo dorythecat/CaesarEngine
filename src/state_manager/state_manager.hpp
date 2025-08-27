@@ -12,6 +12,7 @@
 #include "../province_manager/province_manager.hpp"
 #include "../state/state.hpp"
 #include "../text/text.hpp"
+#include "../error_handler/error_handler.h"
 
 class StateManager {
 public:
