@@ -93,7 +93,8 @@ private:
       vertexCode = vShaderStream.str();
       fragmentCode = fShaderStream.str();
     } catch (std::ifstream::failure& e) {
-      errorHandler->logError("Shader file not successfully read: " + std::string(e.what()), ErrorHandler::FILE_NOT_SUCCESSFULLY_READ_ERROR);
+      errorHandler->logError("Shader file not successfully read: " + std::string(e.what()),
+        ErrorHandler::FILE_NOT_SUCCESSFULLY_READ_ERROR);
     }
     const char* vShaderCode = vertexCode.c_str();
     const char* fShaderCode = fragmentCode.c_str();
@@ -126,12 +127,14 @@ private:
       glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
       if (success) return;
       glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-      errorHandler->logError("Shader compilation error: " + std::string(infoLog), ErrorHandler::SHADER_COMPILATION_ERROR);
+      errorHandler->logError("Shader compilation error: " + std::string(infoLog),
+        ErrorHandler::SHADER_COMPILATION_ERROR);
     } else {
       glGetProgramiv(shader, GL_LINK_STATUS, &success);
       if (success) return;
       glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-      errorHandler->logError("Program linking error: " + std::string(infoLog), ErrorHandler::PROGRAM_LINKING_ERROR);
+      errorHandler->logError("Program linking error: " + std::string(infoLog),
+        ErrorHandler::PROGRAM_LINKING_ERROR);
     }
   }
 };

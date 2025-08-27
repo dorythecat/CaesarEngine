@@ -31,7 +31,8 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
     }
 
     if (curProv.size() < 4) {
-      errorHandler->logWarning("Province defined at line " + std::to_string(i) + " lacks required information.", ErrorHandler::FORMAT_ERROR);
+      errorHandler->logWarning("Province defined at line " + std::to_string(i) + " lacks required information.",
+        ErrorHandler::FORMAT_ERROR);
       continue;
     }
     provinces.emplace(curProv[0], Province(mapPath.c_str(),
