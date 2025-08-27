@@ -6,7 +6,10 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
                                  const std::string &provShaderPath,
                                  const std::string &textShaderPath,
                                  const std::string& mapPath,
-                                 const std::string& provPath) : text(errorHandler), errorHandler(errorHandler) {
+                                 const std::string& provPath) : provShader(errorHandler, provShaderPath),
+                                                                textShader(errorHandler, textShaderPath),
+                                                                text(errorHandler),
+                                                                errorHandler(errorHandler) {
   std::ifstream province_file(provPath);
   if (!province_file.is_open()) {
     errorHandler->logFatal("Could not open file \"" + provPath + "\"", ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
@@ -32,11 +35,8 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
       continue;
     }
     provinces.emplace(curProv[0], Province(mapPath.c_str(),
-      Province::Color(curProv[1]), curProv[2], std::stoi(curProv[3])));
+                                           Province::Color(curProv[1]), curProv[2], std::stoi(curProv[3])));
   }
-
-  provShader = Shader(provShaderPath);
-  textShader = Shader(textShaderPath);
 }
 
 void ProvinceManager::render(const Window &window, const float scale, const vec2f &offset) {

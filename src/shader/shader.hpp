@@ -6,21 +6,26 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 
 #include "../utils.hpp"
+#include "../error_handler/error_handler.h"
+
+class ErrorHandler;
 
 class Shader {
 public:
   unsigned int ID{};
 
-  Shader() {
+  explicit Shader(ErrorHandler* errorHandler) : errorHandler(errorHandler) {
     loadShaderCode("res/shaders/default.vert", "res/shaders/default.frag");
   }
-  explicit Shader(const std::string &path) {
+  explicit Shader(ErrorHandler* errorHandler,
+         const std::string &path) : errorHandler(errorHandler) {
     loadShaderCode(path + ".vert", path + ".frag");
   }
-  Shader(const std::string &vertexPath, const std::string &fragmentPath) {
+  Shader(ErrorHandler* errorHandler,
+         const std::string &vertexPath,
+         const std::string &fragmentPath) : errorHandler(errorHandler) {
     loadShaderCode(vertexPath, fragmentPath);
   }
 
@@ -66,6 +71,8 @@ public:
   }
 
 private:
+  ErrorHandler* errorHandler;
+
   void loadShaderCode(const std::string& vertexPath, const std::string& fragmentPath) {
     std::string vertexCode, fragmentCode;
     std::ifstream vShaderFile, fShaderFile;
@@ -86,7 +93,7 @@ private:
       vertexCode = vShaderStream.str();
       fragmentCode = fShaderStream.str();
     } catch (std::ifstream::failure& e) {
-      std::cout << "ERROR::SHADER::FILE_NOT_SUCCESSFULLY_READ: " << e.what() << std::endl;
+      errorHandler->logError("Shader file not successfully read: " + std::string(e.what()), ErrorHandler::FILE_NOT_SUCCESSFULLY_READ_ERROR);
     }
     const char* vShaderCode = vertexCode.c_str();
     const char* fShaderCode = fragmentCode.c_str();
@@ -112,21 +119,19 @@ private:
     glDeleteShader(fragment);
   }
 
-  static void checkCompileErrors(const unsigned int shader, const std::string &type) {
+  void checkCompileErrors(const unsigned int shader, const std::string &type) const {
     int success;
     char infoLog[1024];
     if (type != "PROGRAM") {
       glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
       if (success) return;
       glGetShaderInfoLog(shader, 1024, nullptr, infoLog);
-      std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog <<
-        "\n -- --------------------------------------------------- -- " << std::endl;
+      errorHandler->logError("Shader compilation error: " + std::string(infoLog), ErrorHandler::SHADER_COMPILATION_ERROR);
     } else {
       glGetProgramiv(shader, GL_LINK_STATUS, &success);
       if (success) return;
       glGetProgramInfoLog(shader, 1024, nullptr, infoLog);
-      std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog <<
-        "\n -- --------------------------------------------------- -- " << std::endl;
+      errorHandler->logError("Program linking error: " + std::string(infoLog), ErrorHandler::PROGRAM_LINKING_ERROR);
     }
   }
 };

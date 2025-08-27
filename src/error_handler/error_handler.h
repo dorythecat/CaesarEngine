@@ -20,14 +20,20 @@ public:
     UNKNOWN_ERROR = 0,
     WINDOW_CREATION_ERROR = 1,
     COULD_NOT_OPEN_FILE_ERROR = 2,
-    FORMAT_ERROR = 3
+    FORMAT_ERROR = 3,
+    FILE_NOT_SUCCESSFULLY_READ_ERROR = 4,
+    SHADER_COMPILATION_ERROR = 5,
+    PROGRAM_LINKING_ERROR = 6
   };
 
   std::vector<std::string> errorMessages = {
     "CODE 0 | Unknown error",
     "CODE 1 | Window creation error",
     "CODE 2 | Could not open file error",
-    "CODE 3 | Format error"
+    "CODE 3 | Format error",
+    "CODE 4 | File not successfully read",
+    "CODE 5 | Shader compilation error",
+    "CODE 6 | Program linking error"
   };
 
   explicit ErrorHandler(const LogLevel logLevel = ALL) : logLevel(logLevel) {}
