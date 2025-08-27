@@ -8,6 +8,8 @@
 #include <sstream>
 #include <iostream>
 
+#include "../utils.hpp"
+
 class Shader {
 public:
   unsigned int ID{};
@@ -44,6 +46,10 @@ public:
                 const float x,
                 const float y) const {
     glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y); 
+  }
+  void setVec2f(const std::string &name,
+                const vec2f &v) const {
+    glUniform2f(glGetUniformLocation(ID, name.c_str()), v.x, v.y);
   }
   void setVec3f(const std::string &name,
                 const float x,

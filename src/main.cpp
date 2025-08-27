@@ -112,11 +112,11 @@ int main() {
         // Setup shaders
         sm.pm->provShader.use();
         sm.pm->provShader.setFloat("scale", scale);
-        sm.pm->provShader.setVec2f("offset", offset.x, offset.y);
+        sm.pm->provShader.setVec2f("offset", offset);
 
         sm.pm->textShader.use();
         sm.pm->textShader.setFloat("scale", scale);
-        sm.pm->textShader.setVec2f("offset", offset.x, offset.y);
+        sm.pm->textShader.setVec2f("offset", offset);
         sm.pm->textShader.setInt("tex", 0);
 
         // Render states (and therefore provinces)
