@@ -150,7 +150,7 @@ void Text::setText(const std::string &text,
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               static_cast<GLsizeiptr>(vertices.size() * sizeof(unsigned int)),
+               static_cast<GLsizeiptr>(indices.size() * sizeof(unsigned int)),
                &indices[0],
                GL_STATIC_DRAW);
 
