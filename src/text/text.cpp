@@ -63,14 +63,12 @@ errorHandler(errorHandler) {
 
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
-  glGenBuffers(1, &EBO);
 }
 
 Text::~Text() {
   glDeleteTextures(1, &atlas);
   glDeleteVertexArrays(1, &VAO);
   glDeleteBuffers(1, &VBO);
-  glDeleteBuffers(1, &EBO);
 }
 
 void Text::setText(const std::string &text,
@@ -80,7 +78,6 @@ void Text::setText(const std::string &text,
                    const vec2f &offset) {
   size = 0;
   std::vector<float> vertices;
-  std::vector<unsigned int> indices;
 
   position = (position + 0.5f) * windowDimensions - vec2f(scale, 0.0f);
 
@@ -126,13 +123,8 @@ void Text::setText(const std::string &text,
     vertices.insert(vertices.end(), {
       q0.x, q0.y, atlasLeft, atlasBottom,
       q1.x, q0.y, atlasRight, atlasBottom,
-      q1.x, q1.y, atlasRight, atlasTop,
-      q0.x, q1.y, atlasLeft, atlasTop
-    });
-
-    indices.insert(indices.end(), {
-      4 * size, 4 * size + 1, 4 * size + 2,
-      4 * size, 4 * size + 2, 4 * size + 3
+      q0.x, q1.y, atlasLeft, atlasTop,
+      q1.x, q1.y, atlasRight, atlasTop
     });
 
     textOffset.x += advance * scale;
@@ -148,12 +140,6 @@ void Text::setText(const std::string &text,
                &vertices[0],
                GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               static_cast<GLsizeiptr>(indices.size() * sizeof(unsigned int)),
-               &indices[0],
-               GL_STATIC_DRAW);
-
   glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
   glEnableVertexAttribArray(0);
 
@@ -162,14 +148,13 @@ void Text::setText(const std::string &text,
 
   glBindVertexArray(0);
   glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void Text::render() const {
   glBindVertexArray(VAO);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, atlas);
-  glDrawElements(GL_TRIANGLES, static_cast<GLint>(6 * size), GL_UNSIGNED_INT, nullptr);
+  for (unsigned int i = 0; i < size; i++) glDrawArrays(GL_TRIANGLE_STRIP, static_cast<GLint>(i * 4), 4);
   glBindVertexArray(0);
   glBindTexture(GL_TEXTURE_2D, 0);
 }

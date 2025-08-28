@@ -29,7 +29,7 @@ public:
 
 private:
   std::vector<Character> characters;
-  GLuint atlas{}, VAO{}, VBO{}, EBO{};
+  GLuint atlas{}, VAO{}, VBO{};
   unsigned int size{};
   ErrorHandler* errorHandler;
 };
