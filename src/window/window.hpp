@@ -29,6 +29,11 @@ public:
   [[nodiscard]] vec2i getDimensions() const {
       vec2i dimensions;
       glfwGetWindowSize(_window, &dimensions.x, &dimensions.y);
+
+      // This avoids crashes when minimizing the window
+      if (dimensions.x <= 0) dimensions.x = 1;
+      if (dimensions.y <= 0) dimensions.y = 1;
+
       return dimensions;
   }
 
