@@ -70,24 +70,23 @@ void mouse_click_callback(GLFWwindow* window,
                           const int button,
                           const int action,
                           int mods) {
-    if (button == keybinds[CLICK_KEY] && action == GLFW_PRESS) {
-        double x, y;
-        glfwGetCursorPos(window, &x, &y);
-        int width, height;
-        glfwGetWindowSize(window, &width, &height);
-        // At some point we could change the system to work with double-precision floats,
-        // which would be more accurate but use more memory
-        const float scaleFact = 2.0f * scale;
-        float xf = scaleFact * static_cast<float>(x) / static_cast<float>(width);
-        float yf = scaleFact * static_cast<float>(y) / static_cast<float>(height);
-        xf = xf - scale + offset.x;
-        yf = scale - yf + offset.y;
-        const auto *sm = static_cast<StateManager *>(glfwGetWindowUserPointer(window));
-        if (const std::string state = sm->clickedOnState(xf, yf); !state.empty()) {
-            const std::string provinceName = sm->pm->clickedOnProvince(xf, yf);
-            const Province p = sm->pm->getProvince(provinceName);
-            std::cout << "Clicked on province: " << p.getName() << ", on state: " << state << std::endl;
-        }
+    if (button != keybinds[CLICK_KEY] || action != GLFW_PRESS) return;
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    // At some point we could change the system to work with double-precision floats,
+    // which would be more accurate but use more memory
+    const float scaleFact = 2.0f * scale;
+    float xf = scaleFact * static_cast<float>(x) / static_cast<float>(width);
+    float yf = scaleFact * static_cast<float>(y) / static_cast<float>(height);
+    xf = xf - scale + offset.x;
+    yf = scale - yf + offset.y;
+    const auto *sm = static_cast<StateManager *>(glfwGetWindowUserPointer(window));
+    if (const std::string state = sm->clickedOnState(xf, yf); !state.empty()) {
+        const std::string provinceName = sm->pm->clickedOnProvince(xf, yf);
+        const Province p = sm->pm->getProvince(provinceName);
+        std::cout << "Clicked on province: " << p.getName() << ", on state: " << state << std::endl;
     }
 }
 
