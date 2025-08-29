@@ -96,23 +96,20 @@ void scroll_callback(GLFWwindow* window, const double xoffset, const double yoff
     scale -= 0.1f;
 }
 
-float lastX = 0.0;
-float lastY = 0.0;
-
+vec2f lastMousePos;
 void mouse_cursor_callback(GLFWwindow* window, const double xpos, const double ypos) {
+    const auto mousePos = static_cast<vec2f>(vec2d(xpos, ypos));
     if (glfwGetMouseButton(window, keybinds[DRAG_KEY]) == GLFW_RELEASE) {
-        lastX = static_cast<float>(xpos);
-        lastY = static_cast<float>(ypos);
+        lastMousePos = mousePos;
         return;
     }
 
-    const float deltaX = static_cast<float>(xpos) - lastX;
-    const float deltaY = static_cast<float>(ypos) - lastY;
-    if (deltaX == 0.0f && deltaY == 0.0f) return; // No movement
-    offset.x -= deltaX * scale * 0.002f; // Scale the offset by the scale factor
-    offset.y += deltaY * scale * 0.002f; // Invert the y-axis to match the OpenGL coordinate system
-    lastX = static_cast<float>(xpos);
-    lastY = static_cast<float>(ypos);
+    const vec2f delta = mousePos - lastMousePos;
+    if (delta == vec2f()) return; // No movement
+    // Remember 1: We need to subtract the delta because the movement is inverted
+    // Remember 2: The y-axis is inverted in window coordinates
+    offset -= delta * scale * 0.002f * vec2f(1.0f, -1.0f);
+    lastMousePos = mousePos;
 }
 
 int main() {
