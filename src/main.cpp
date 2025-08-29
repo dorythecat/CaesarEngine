@@ -40,7 +40,7 @@ std::unordered_map<KEYBINDS_ENUM, int> keybinds = {
 float scale = 1.0f;
 vec2f offset;
 
-void processInput(GLFWwindow *window) {
+void processInput(GLFWwindow* window) {
     // Exit on ESC
     if (glfwGetKey(window, keybinds[EXIT]) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 
@@ -57,7 +57,7 @@ void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, keybinds[MOVE_RIGHT]) == GLFW_PRESS) offset.x += scale * 0.001f;
 }
 
-void mouse_click_callback(GLFWwindow *window,
+void mouse_click_callback(GLFWwindow* window,
                           const int button,
                           const int action,
                           int mods) {
@@ -82,7 +82,7 @@ void mouse_click_callback(GLFWwindow *window,
     }
 }
 
-void scroll_callback(GLFWwindow *window, const double xoffset, const double yoffset) {
+void scroll_callback(GLFWwindow* window, const double xoffset, const double yoffset) {
     if (yoffset < 0.0) {
         if (scale > 10.0f) return;
         scale += 0.1f;
@@ -95,7 +95,7 @@ void scroll_callback(GLFWwindow *window, const double xoffset, const double yoff
 float lastX = 0.0;
 float lastY = 0.0;
 
-void mouse_cursor_callback(GLFWwindow *window, const double xpos, const double ypos) {
+void mouse_cursor_callback(GLFWwindow* window, const double xpos, const double ypos) {
     if (glfwGetMouseButton(window, keybinds[DRAG_KEY]) == GLFW_RELEASE) {
         lastX = static_cast<float>(xpos);
         lastY = static_cast<float>(ypos);
