@@ -45,10 +45,6 @@ bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
     return glfwGetKey(window, keybinds[key]) == GLFW_PRESS;
 }
 
-bool keyReleased(GLFWwindow* window, const KEYBINDS_ENUM key) {
-    return glfwGetKey(window, keybinds[key]) == GLFW_RELEASE;
-}
-
 void processInput(GLFWwindow* window) {
     // Exit on ESC
     if (keyPressed(window, EXIT)) glfwSetWindowShouldClose(window, true);
@@ -104,7 +100,7 @@ float lastX = 0.0;
 float lastY = 0.0;
 
 void mouse_cursor_callback(GLFWwindow* window, const double xpos, const double ypos) {
-    if (keyReleased(window, DRAG_KEY)) {
+    if (glfwGetMouseButton(window, keybinds[DRAG_KEY]) == GLFW_RELEASE) {
         lastX = static_cast<float>(xpos);
         lastY = static_cast<float>(ypos);
         return;
