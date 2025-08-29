@@ -20,4 +20,11 @@ The following keys can be used to interact with the engine:
 If you want to test Caesar Engine by yourself, click on the "Project build"
 badge on the top of this page, and then click on the latest build. You will be
 able to download a zip file containing the engine, which you can extract and run
-easily. The executable file will be inside the `Release` folder, rememeber!
+easily. The executable file will be inside the `Release` folder, remember!
+
+
+# Acknowledgements
+- [GLFW](https://www.glfw.org/) - Window and input handling
+- [GLAD](https://glad.dav1d.de/) - OpenGL function
+- [MSDFGen](https://github.com/Chlumsky/msdfgen) - Font generation
+- [stb_image](https://github.com/nothings/stb) - Image loading
