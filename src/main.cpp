@@ -20,7 +20,9 @@ enum KEYBINDS_ENUM {
     MOVE_UP = 3,
     MOVE_DOWN = 4,
     MOVE_LEFT = 5,
-    MOVE_RIGHT = 6
+    MOVE_RIGHT = 6,
+    CLICK_KEY = 7,
+    DRAG_KEY = 8
 };
 
 std::unordered_map<KEYBINDS_ENUM, int> keybinds = {
@@ -30,7 +32,9 @@ std::unordered_map<KEYBINDS_ENUM, int> keybinds = {
     {MOVE_UP, GLFW_KEY_W},
     {MOVE_DOWN, GLFW_KEY_S},
     {MOVE_LEFT, GLFW_KEY_A},
-    {MOVE_RIGHT, GLFW_KEY_D}
+    {MOVE_RIGHT, GLFW_KEY_D},
+    {CLICK_KEY, GLFW_MOUSE_BUTTON_LEFT},
+    {DRAG_KEY, GLFW_MOUSE_BUTTON_RIGHT},
 };
 
 float scale = 1.0f;
@@ -57,7 +61,7 @@ void mouse_click_callback(GLFWwindow *window,
                           const int button,
                           const int action,
                           int mods) {
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+    if (button == keybinds[CLICK_KEY] && action == GLFW_PRESS) {
         double x, y;
         glfwGetCursorPos(window, &x, &y);
         int width, height;
@@ -92,7 +96,7 @@ float lastX = 0.0;
 float lastY = 0.0;
 
 void mouse_cursor_callback(GLFWwindow *window, const double xpos, const double ypos) {
-    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE) {
+    if (glfwGetMouseButton(window, keybinds[DRAG_KEY]) == GLFW_RELEASE) {
         lastX = static_cast<float>(xpos);
         lastY = static_cast<float>(ypos);
         return;
