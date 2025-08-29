@@ -3,7 +3,6 @@
 
 #include <string>
 #include <map>
-#include <fstream>
 
 #include "../utils.hpp"
 #include "../window/window.hpp"
@@ -28,7 +27,8 @@ public:
   ProvinceManager& operator=(const ProvinceManager&) = delete;
 
   void render(const Window &window, float scale, const vec2f &offset);
-  std::string clickedOnProvince(float x, float y);
+  [[nodiscard]] std::string clickedOnProvince(float x, float y);
+  [[nodiscard]] std::string clickedOnProvince(vec2f pos) { return clickedOnProvince(pos.x, pos.y); }
 
   Province& getProvince(const std::string &name) { return provinces.at(name); }
 

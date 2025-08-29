@@ -30,7 +30,8 @@ public:
   StateManager& operator=(const StateManager&) = delete;
 
   void render(const Window &window, float scale, const vec2f &offset);
-  std::string clickedOnState(float x, float y) const;
+  [[nodiscard]] std::string clickedOnState(float x, float y) const;
+  [[nodiscard]] std::string clickedOnState(const vec2f& pos) const { return clickedOnState(pos.x, pos.y); }
 
   [[nodiscard]] Province& getProvince(const std::string& name) const { return pm->getProvince(name); }
   [[nodiscard]] State& getState(const std::string& name) { return states.at(name); }
