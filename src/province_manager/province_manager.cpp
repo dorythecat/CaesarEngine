@@ -1,7 +1,5 @@
 #include "province_manager.hpp"
 
-#include <ranges>
-
 ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
                                  const std::string &provShaderPath,
                                  const std::string &textShaderPath,
@@ -20,8 +18,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
     i++;
     if (line.empty()) continue;
     line = line.substr(line.find_first_not_of(' '));
-    std::string first = line.substr(0, 1);
-    if (first == "#") continue;
+    if (line.substr(0, 1) == "#") continue; // Check for comments
 
     std::istringstream lineStream(line);
     std::vector<std::string> curProv;
