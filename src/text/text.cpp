@@ -130,8 +130,6 @@ void Text::setText(const std::string &text,
     size++;
   }
 
-  // No needs to shrink the vectors because the size is always the same
-
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
   glBufferData(GL_ARRAY_BUFFER,
