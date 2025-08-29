@@ -110,11 +110,12 @@ void Text::setText(const std::string &text,
     }
 
     auto [advance,
-      quadLeft, quadBottom, quadRight, quadTop,
-      atlasLeft, atlasBottom, atlasRight, atlasTop] = characters[static_cast<unsigned long>(c - 32)];
+      quadLeft, quadBottom,
+      quadRight, quadTop,
+      atlasLeft, atlasBottom,
+      atlasRight, atlasTop] = characters[static_cast<unsigned long>(c - 32)];
 
-    if (quadLeft == quadRight ||
-        quadBottom == quadTop) {
+    if (quadLeft == quadRight || quadBottom == quadTop) {
       textOffset.x += advance * scale;
       continue;
     };
