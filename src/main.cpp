@@ -51,10 +51,10 @@ void processInput(GLFWwindow *window) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Move the view with WASD keys
-    if (glfwGetKey(window, keybinds[MOVE_UP]) == GLFW_PRESS) offset.y += 0.001f;
-    if (glfwGetKey(window, keybinds[MOVE_DOWN]) == GLFW_PRESS) offset.y -= 0.001f;
-    if (glfwGetKey(window, keybinds[MOVE_LEFT]) == GLFW_PRESS) offset.x -= 0.001f;
-    if (glfwGetKey(window, keybinds[MOVE_RIGHT]) == GLFW_PRESS) offset.x += 0.001f;
+    if (glfwGetKey(window, keybinds[MOVE_UP]) == GLFW_PRESS) offset.y += scale * 0.001f;
+    if (glfwGetKey(window, keybinds[MOVE_DOWN]) == GLFW_PRESS) offset.y -= scale * 0.001f;
+    if (glfwGetKey(window, keybinds[MOVE_LEFT]) == GLFW_PRESS) offset.x -= scale * 0.001f;
+    if (glfwGetKey(window, keybinds[MOVE_RIGHT]) == GLFW_PRESS) offset.x += scale * 0.001f;
 }
 
 void mouse_click_callback(GLFWwindow *window,

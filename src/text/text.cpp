@@ -103,7 +103,7 @@ void Text::setText(const std::string &text,
         break;
     }
 
-    // Null/Unsuported characters
+    // Null/Unsupported characters
     if (c < 32 || c > 126) {
       textOffset.x += characters[0].advance * scale;
       continue;
