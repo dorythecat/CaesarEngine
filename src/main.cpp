@@ -6,28 +6,51 @@
 
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 #include "utils.hpp"
 #include "window/window.hpp"
 #include "state_manager/state_manager.hpp"
 #include "error_handler/error_handler.h"
 
+enum KEYBINDS_ENUM {
+    EXIT = 0,
+    DEBUG_WIREFRAME_ON = 1,
+    DEBUG_WIREFRAME_OFF = 2,
+    MOVE_UP = 3,
+    MOVE_DOWN = 4,
+    MOVE_LEFT = 5,
+    MOVE_RIGHT = 6
+};
+
+std::unordered_map<KEYBINDS_ENUM, int> keybinds = {
+    {EXIT, GLFW_KEY_ESCAPE},
+    {DEBUG_WIREFRAME_ON, GLFW_KEY_F5},
+    {DEBUG_WIREFRAME_OFF, GLFW_KEY_F6},
+    {MOVE_UP, GLFW_KEY_W},
+    {MOVE_DOWN, GLFW_KEY_S},
+    {MOVE_LEFT, GLFW_KEY_A},
+    {MOVE_RIGHT, GLFW_KEY_D}
+};
+
 float scale = 1.0f;
 vec2f offset;
 
 void processInput(GLFWwindow *window) {
     // Exit on ESC
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
+    if (glfwGetKey(window, keybinds[EXIT]) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 
     // Debug wireframe mode (on with F5, off with F6)
-    if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    if (glfwGetKey(window, GLFW_KEY_F6) == GLFW_PRESS) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    if (glfwGetKey(window, keybinds[DEBUG_WIREFRAME_ON]) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    if (glfwGetKey(window, keybinds[DEBUG_WIREFRAME_OFF]) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Move the view with WASD keys
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) offset.y += 0.001f;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) offset.y -= 0.001f;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) offset.x -= 0.001f;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) offset.x += 0.001f;
+    if (glfwGetKey(window, keybinds[MOVE_UP]) == GLFW_PRESS) offset.y += 0.001f;
+    if (glfwGetKey(window, keybinds[MOVE_DOWN]) == GLFW_PRESS) offset.y -= 0.001f;
+    if (glfwGetKey(window, keybinds[MOVE_LEFT]) == GLFW_PRESS) offset.x -= 0.001f;
+    if (glfwGetKey(window, keybinds[MOVE_RIGHT]) == GLFW_PRESS) offset.x += 0.001f;
 }
 
 void mouse_click_callback(GLFWwindow *window,
