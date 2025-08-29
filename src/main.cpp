@@ -67,20 +67,17 @@ void mouse_click_callback(GLFWwindow* window,
                           const int action,
                           int mods) {
     if (button != keybinds[CLICK_KEY] || action != GLFW_PRESS) return;
-    double x, y;
-    glfwGetCursorPos(window, &x, &y);
-    int width, height;
-    glfwGetWindowSize(window, &width, &height);
+    vec2d position;
+    glfwGetCursorPos(window, &position.x, &position.y);
+    vec2i dimensions;
+    glfwGetWindowSize(window, &dimensions.x, &dimensions.y);
     // At some point we could change the system to work with double-precision floats,
     // which would be more accurate but use more memory
-    const float scaleFact = 2.0f * scale;
-    float xf = scaleFact * static_cast<float>(x) / static_cast<float>(width);
-    float yf = scaleFact * static_cast<float>(y) / static_cast<float>(height);
-    xf = xf - scale + offset.x;
-    yf = scale - yf + offset.y;
+    vec2f f = static_cast<vec2f>(position) * 2.0f * scale / static_cast<vec2f>(dimensions);
+    f = (f - scale) * vec2f(1.0f, -1.0f) + offset;
     const auto *sm = static_cast<StateManager *>(glfwGetWindowUserPointer(window));
-    if (const std::string state = sm->clickedOnState(xf, yf); !state.empty()) {
-        const std::string provinceName = sm->pm->clickedOnProvince(xf, yf);
+    if (const std::string state = sm->clickedOnState(f.x, f.y); !state.empty()) {
+        const std::string provinceName = sm->pm->clickedOnProvince(f.x, f.y);
         const Province p = sm->pm->getProvince(provinceName);
         std::cout << "Clicked on province: " << p.getName() << ", on state: " << state << std::endl;
     }
