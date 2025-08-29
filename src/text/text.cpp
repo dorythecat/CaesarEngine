@@ -36,7 +36,8 @@ errorHandler(errorHandler) {
 
   std::ifstream index(indexPath);
   if (!index.is_open()) {
-    errorHandler->logError("Failed to load texture index from " + indexPath, ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
+    errorHandler->logError("Failed to load texture index from " + indexPath,
+      ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
     return;
   }
 
@@ -46,7 +47,7 @@ errorHandler(errorHandler) {
     std::vector<float> characterData;
     while (getline(iss, line, ',')) characterData.push_back(std::stof(line));
 
-    Character character{
+    characters.push_back({
       characterData[1],
       characterData[2],
       characterData[3],
@@ -56,10 +57,8 @@ errorHandler(errorHandler) {
       characterData[7] / static_cast<float>(height),
       characterData[8] / static_cast<float>(width),
       characterData[9] / static_cast<float>(height)
-    };
-    characters.push_back(character);
-  }
-  index.close();
+    });
+  } index.close();
 
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
