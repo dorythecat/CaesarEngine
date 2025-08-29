@@ -16,13 +16,14 @@ float scale = 1.0f;
 vec2f offset;
 
 void processInput(GLFWwindow *window) {
+    // Exit on ESC
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    if (glfwGetKey(window, GLFW_KEY_F6) == GLFW_PRESS)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    // Debug wireframe mode (on with F5, off with F6)
+    if (glfwGetKey(window, GLFW_KEY_F5) == GLFW_PRESS) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    if (glfwGetKey(window, GLFW_KEY_F6) == GLFW_PRESS) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+    // Move the view with WASD keys
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) offset.y += 0.001f;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) offset.y -= 0.001f;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) offset.x -= 0.001f;
