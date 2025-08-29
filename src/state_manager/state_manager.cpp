@@ -93,7 +93,7 @@ void StateManager::render(const Window &window, const float scale, const vec2f &
   }
 }
 
-std::string StateManager::clickedOnState(float x, float y) const {
+std::string StateManager::clickedOnState(const float x, const float y) const {
   const std::string provinceName = pm->clickedOnProvince(x, y);
   if (provinceName.empty()) return "";
   const Province province = pm->getProvince(provinceName);
