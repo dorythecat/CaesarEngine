@@ -84,27 +84,31 @@ void Text::setText(const std::string &text,
 
   for (unsigned int i = 0; i < text.size(); i++) {
     const char c = text.c_str()[i];
-    if (c == ' ') {
-      textOffset.x += characters[0].advance * scale;
-      continue;
+    switch (c) {
+      case 9: // Horizontal tab (\t)
+      case 12: // Form feed (\f)
+        textOffset.x += 4 * characters[0].advance * scale;
+        continue;
+      case 10: // Line feed (\n)
+        textOffset.y -= scale;
+        textOffset.x = position.x;
+        continue;
+      case 11 : // Vertical tab (\v)
+        textOffset.y -= scale;
+        continue;
+      case 13: // Carriage return (\r)
+        textOffset.x = position.x;
+        continue;
+      default:
+        break;
     }
-    if (c == '\n') {
-      textOffset.x = position.x;
-      textOffset.y -= scale;
-      continue;
-    }
-    if (c == '\t') {
-      textOffset.x += 4 * characters[0].advance * scale;
-      continue;
-    }
-    if (c == '\r') {
-      textOffset.x = position.x;
-      continue;
-    }
+
+    // Null/Unsuported characters
     if (c < 32 || c > 126) {
       textOffset.x += characters[0].advance * scale;
       continue;
     }
+
     auto [advance,
       quadLeft, quadBottom, quadRight, quadTop,
       atlasLeft, atlasBottom, atlasRight, atlasTop] = characters[static_cast<unsigned long>(c - 32)];
