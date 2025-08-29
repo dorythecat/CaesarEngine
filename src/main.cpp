@@ -40,21 +40,30 @@ std::unordered_map<KEYBINDS_ENUM, int> keybinds = {
 float scale = 1.0f;
 vec2f offset;
 
+// Keybind utilities
+bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
+    return glfwGetKey(window, keybinds[key]) == GLFW_PRESS;
+}
+
+bool keyReleased(GLFWwindow* window, const KEYBINDS_ENUM key) {
+    return glfwGetKey(window, keybinds[key]) == GLFW_RELEASE;
+}
+
 void processInput(GLFWwindow* window) {
     // Exit on ESC
-    if (glfwGetKey(window, keybinds[EXIT]) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
+    if (keyPressed(window, EXIT)) glfwSetWindowShouldClose(window, true);
 
     // Debug wireframe mode (on with F5, off with F6)
-    if (glfwGetKey(window, keybinds[DEBUG_WIREFRAME_ON]) == GLFW_PRESS)
+    if (keyPressed(window, DEBUG_WIREFRAME_ON))
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    if (glfwGetKey(window, keybinds[DEBUG_WIREFRAME_OFF]) == GLFW_PRESS)
+    if (keyPressed(window, DEBUG_WIREFRAME_OFF))
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Move the view with WASD keys
-    if (glfwGetKey(window, keybinds[MOVE_UP]) == GLFW_PRESS) offset.y += scale * 0.001f;
-    if (glfwGetKey(window, keybinds[MOVE_DOWN]) == GLFW_PRESS) offset.y -= scale * 0.001f;
-    if (glfwGetKey(window, keybinds[MOVE_LEFT]) == GLFW_PRESS) offset.x -= scale * 0.001f;
-    if (glfwGetKey(window, keybinds[MOVE_RIGHT]) == GLFW_PRESS) offset.x += scale * 0.001f;
+    if (keyPressed(window, MOVE_UP)) offset.y += scale * 0.001f;
+    if (keyPressed(window, MOVE_DOWN)) offset.y -= scale * 0.001f;
+    if (keyPressed(window, MOVE_LEFT)) offset.x -= scale * 0.001f;
+    if (keyPressed(window, MOVE_RIGHT)) offset.x += scale * 0.001f;
 }
 
 void mouse_click_callback(GLFWwindow* window,
@@ -96,7 +105,7 @@ float lastX = 0.0;
 float lastY = 0.0;
 
 void mouse_cursor_callback(GLFWwindow* window, const double xpos, const double ypos) {
-    if (glfwGetMouseButton(window, keybinds[DRAG_KEY]) == GLFW_RELEASE) {
+    if (keyReleased(window, DRAG_KEY)) {
         lastX = static_cast<float>(xpos);
         lastY = static_cast<float>(ypos);
         return;
