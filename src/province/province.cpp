@@ -1,10 +1,11 @@
 #include "province.hpp"
 
-Province::Province(const char* mapPath,
+Province::Province(ErrorHandler* errorHandler,
+                   const char* mapPath,
                    Color color,
                    std::string name,
                    CityCategory category) :
-  category(category), color(color), name(std::move(name))  {
+  category(category), color(color), name(std::move(name)), errorHandler(errorHandler)  {
   // TODO(Dory): Properly assign default values and state scaling
   switch (category) {
     case SINGLE_PROVINCE_CAPITAL:
@@ -49,9 +50,14 @@ Province::Province(const char* mapPath,
       production = 10000;
       strength = 10000;
       break;
+    default: // Unassigned (between UNASSIGNED_START and UNASSIGNED_END, both inclusive)
+      errorHandler->logError("Province was assigned an unassigned city category, assigning wasteland",
+        ErrorHandler::UNASSIGNED_PROVINCE_CATEGORY);
+      category = WASTELAND; // Set category to wasteland to avoid future issues
+      [[fallthrough]];
+    // We zero out everything for NO_CITY and WASTELAND, as well as for unassigned province categories
     case NO_CITY:
     case WASTELAND:
-    default: // Unassigned
       population = 0;
       wealth = 0;
       food = 0;

@@ -23,7 +23,8 @@ public:
     FORMAT_ERROR = 3,
     FILE_NOT_SUCCESSFULLY_READ_ERROR = 4,
     SHADER_COMPILATION_ERROR = 5,
-    PROGRAM_LINKING_ERROR = 6
+    PROGRAM_LINKING_ERROR = 6,
+    UNASSIGNED_PROVINCE_CATEGORY = 7
   };
 
   std::vector<std::string> errorMessages = {

@@ -11,6 +11,7 @@
 
 #include "../shader/shader.hpp"
 #include "../utils.hpp"
+#include "../error_handler/error_handler.h"
 
 class Province {
 public:
@@ -23,7 +24,7 @@ public:
     SETTLEMENT = 5,
     UNASSIGNED_START = 6, // Inclusive
     UNASSIGNED_END = 253, // Inclusive
-    NO_CITY = 254,
+    NO_CITY = 254, // Effectively the same as wasteland, at least as of now
     WASTELAND = 255 // Untraversable, can't be part of a state
   };
 
@@ -76,7 +77,8 @@ public:
   int production;
   int strength;
 
-  Province(const char* mapPath,
+  Province(ErrorHandler* errorHandler,
+           const char* mapPath,
            Color color,
            std::string name,
            CityCategory category);
@@ -134,6 +136,8 @@ private:
   vec2f center;
 
   std::unordered_set<Color, Color::HashFunction> adjacentColors;
+
+  ErrorHandler* errorHandler;
 
   void generateMesh(const char* mapPath);
   void generateMeshData();
