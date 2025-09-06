@@ -14,8 +14,7 @@
 
 class ProvinceManager {
 public:
-  Shader provShader;
-  Shader textShader;
+  Shader provShader, textShader;
 
   explicit ProvinceManager(ErrorHandler* errorHandler,
                            const std::string &provShaderPath = "res/shaders/default",
