@@ -14,6 +14,19 @@
 
 class Province {
 public:
+  enum CityCategory {
+    SINGLE_PROVINCE_CAPITAL = 0,
+    MULTI_PROVINCE_CAPITAL = 1,
+    CITY = 2,
+    TOWN = 3,
+    VILLAGE = 4,
+    SETTLEMENT = 5,
+    UNASSIGNED_START = 6, // Inclusive
+    UNASSIGNED_END = 253, // Inclusive
+    NO_CITY = 254,
+    WASTELAND = 255 // Untraversable, can't be part of a state
+  };
+
   struct Color {
     unsigned char r, g, b;
 
@@ -55,16 +68,7 @@ public:
   // The "category" decides the initial values of the city variables,
   // as well as maybe some other stuff down the line
   // The value goes from 0 to 255, where:
-  // 0: Single-province state capital
-  // 1: Multi-province state capital
-  // 2: City
-  // 3: Town
-  // 4: Village
-  // 5: Settlement
-  // 6 to 253: Unassigned
-  // 254: No city
-  // 255: Wasteland (Untraversable province, can't be part of a state)
-  int category;
+  CityCategory category;
 
   int population;
   int wealth;
@@ -75,7 +79,7 @@ public:
   Province(const char* mapPath,
            Color color,
            std::string name,
-           int category);
+           CityCategory category);
   ~Province() noexcept {
     // Clean up the mesh data
     glDeleteVertexArrays(1, &VAO);

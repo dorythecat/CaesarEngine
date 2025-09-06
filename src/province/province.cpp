@@ -3,54 +3,54 @@
 Province::Province(const char* mapPath,
                    Color color,
                    std::string name,
-                   int category) :
+                   CityCategory category) :
   category(category), color(color), name(std::move(name))  {
   // TODO(Dory): Properly assign default values and state scaling
   switch (category) {
-    case 0: // Single-province state capital
+    case SINGLE_PROVINCE_CAPITAL:
       population = 10000;
       wealth = 10000;
       food = 10000;
       production = 10000;
       strength = 10000;
       break;
-    case 1: // Multi-province state capital
+    case MULTI_PROVINCE_CAPITAL:
       population = 10000;
       wealth = 10000;
       food = 10000;
       production = 10000;
       strength = 10000;
       break;
-    case 2: // City
+    case CITY:
       population = 10000;
       wealth = 10000;
       food = 10000;
       production = 10000;
       strength = 10000;
       break;
-    case 3: // Town
+    case TOWN:
       population = 10000;
       wealth = 10000;
       food = 10000;
       production = 10000;
       strength = 10000;
       break;
-    case 4: // Village
+    case VILLAGE:
       population = 10000;
       wealth = 10000;
       food = 10000;
       production = 10000;
       strength = 10000;
       break;
-    case 5: // Settlement
+    case SETTLEMENT:
       population = 10000;
       wealth = 10000;
       food = 10000;
       production = 10000;
       strength = 10000;
       break;
-    case 254: // No city
-    case 255: // Wasteland
+    case NO_CITY:
+    case WASTELAND:
     default: // Unassigned
       population = 0;
       wealth = 0;
