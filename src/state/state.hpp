@@ -44,6 +44,8 @@ public:
     });
   }
 
+  [[nodiscard]] std::vector<Province> getProvinces() const { return provinces; }
+
 private:
   std::string name;
   std::vector<Province> provinces;

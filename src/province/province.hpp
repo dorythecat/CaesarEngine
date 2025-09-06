@@ -116,6 +116,11 @@ public:
   [[nodiscard]] bool isAdjacent(const Color c) const { return adjacentColors.contains(c); }
   [[nodiscard]] bool isAdjacent(Province* p) const { return isAdjacent(p->getColor()); }
 
+  [[nodiscard]] std::vector<Color> getAdjacentColors() const {
+    return { adjacentColors.begin(), adjacentColors.end() };
+  }
+  [[nodiscard]] std::unordered_set<Color, Color::HashFunction> getAdjacentColorsSet() const { return adjacentColors; }
+
 private:
   unsigned int VAO{}, VBO{}, EBO{};
   std::vector<Vertex> vertices;

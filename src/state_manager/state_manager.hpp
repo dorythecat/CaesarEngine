@@ -36,6 +36,14 @@ public:
   [[nodiscard]] Province& getProvince(const std::string& name) const { return pm->getProvince(name); }
   [[nodiscard]] State& getState(const std::string& name) { return states.at(name); }
 
+  [[nodiscard]] std::vector<State> getAllStates() const {
+    std::vector<State> stateList;
+    stateList.reserve(states.size());
+    for (const auto &state: states | std::views::values) stateList.push_back(state);
+    return stateList;
+  }
+  [[nodiscard]] std::map<std::string, State> getAllStatesMap() const { return states; }
+
 private:
   std::map<std::string, State> states;
   Text text;

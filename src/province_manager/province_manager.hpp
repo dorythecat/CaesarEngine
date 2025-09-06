@@ -31,7 +31,15 @@ public:
   [[nodiscard]] std::string clickedOnProvince(float x, float y);
   [[nodiscard]] std::string clickedOnProvince(const vec2f& pos) { return clickedOnProvince(pos.x, pos.y); }
 
-  Province& getProvince(const std::string &name) { return provinces.at(name); }
+  [[nodiscard]] Province& getProvince(const std::string &name) { return provinces.at(name); }
+
+  [[nodiscard]] std::vector<Province> getAllProvinces() const {
+    std::vector<Province> provinceList;
+    provinceList.reserve(provinces.size());
+    for (const auto &province: provinces | std::views::values) provinceList.push_back(province);
+    return provinceList;
+  }
+  [[nodiscard]] std::map<std::string, Province> getAllProvincesMap() const { return provinces; }
 
 private:
   std::map<std::string, Province> provinces;
