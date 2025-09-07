@@ -39,11 +39,14 @@ public:
     return provinceList;
   }
   [[nodiscard]] std::map<std::string, Province> getAllProvincesMap() const { return provinces; }
+  [[nodiscard]] std::map<std::string, std::vector<std::string>> getAdjacencyMap() const { return adjacencyMap; }
 
 private:
   std::map<std::string, Province> provinces;
   Text text;
   ErrorHandler* errorHandler;
+
+  std::map<std::string, std::vector<std::string>> adjacencyMap;
 };
 
 #endif // PROVINCE_MANAGER_HPP

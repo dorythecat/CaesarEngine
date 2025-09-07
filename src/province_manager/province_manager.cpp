@@ -56,6 +56,19 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
                                curProv[2],
                                city));
   }
+
+  // Generate adjacency map
+  for (const auto& [name, prov] : provinces) {
+    std::vector<std::string> adjProvs;
+    for (const auto& color : prov.getAdjacentColors()) {
+      for (const auto& [otherName, otherProv] : provinces) {
+        if (otherProv.getColor() == color) {
+          adjProvs.push_back(otherName);
+          break;
+        }
+      }
+    } adjacencyMap[name] = adjProvs;
+  }
 }
 
 void ProvinceManager::render(const Window &window, const float scale, const vec2f &offset) {
