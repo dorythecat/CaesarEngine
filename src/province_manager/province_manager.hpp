@@ -36,7 +36,7 @@ public:
 
   void render(const Window &window, float scale, const vec2f &offset);
   [[nodiscard]] std::string clickedOnProvince(float x, float y);
-  [[nodiscard]] std::string clickedOnProvince(const vec2f& pos) { return clickedOnProvince(pos.x, pos.y); }
+  [[nodiscard]] std::string clickedOnProvince(const vec2f &pos) { return clickedOnProvince(pos.x, pos.y); }
 
   [[nodiscard]] Province& getProvince(const std::string &name) { return provinces.at(name); }
 
