@@ -39,7 +39,12 @@ endif()
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp) # Get all the source files
 add_executable(${PROJECT_NAME} ${SOURCES} ${PROJECT_SOURCE_DIR}/libs/glad/src/glad.c) # Create the executable
 target_link_libraries(${PROJECT_NAME} glfw) # Link the executable with the libraries
-file(COPY ${PROJECT_SOURCE_DIR}/res DESTINATION ${PROJECT_BINARY_DIR}) # Copy the resources to the build directory
+
+# Copy all resource files to the build directory
+file(GLOB_RECURSE RESOURCE_FILES ${PROJECT_SOURCE_DIR}/res/*)
+foreach(RESOURCE_FILE ${RESOURCE_FILES})
+    configure_file(${RESOURCE_FILE} ${PROJECT_BINARY_DIR}/res/ COPYONLY)
+endforeach()
 
 # Apply warning flags to all configurations
 target_compile_options(${PROJECT_NAME} PRIVATE ${WARN_FLAGS})
