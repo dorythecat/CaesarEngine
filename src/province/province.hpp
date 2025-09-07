@@ -155,6 +155,7 @@ public:
     color = other.color;
 
     center = other.center;
+    area = other.area;
 
     adjacentColors = other.adjacentColors;
 
@@ -188,6 +189,7 @@ private:
   Color color;
   std::string name;
   vec2f center;
+  int area = 0; // The area of this province, in number of pixels
 
   std::unordered_set<Color, Color::HashFunction> adjacentColors;
 
