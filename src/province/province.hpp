@@ -70,12 +70,7 @@ public:
   // as well as maybe some other stuff down the line
   // The value goes from 0 to 255, where:
   CityCategory category;
-
-  int population;
-  int wealth;
-  int food;
-  int production;
-  int strength;
+  int population, wealth, food, production, strength;
 
   Province(ErrorHandler* errorHandler,
            const char* mapPath,
@@ -105,6 +100,8 @@ public:
     food = other.food;
     production = other.production;
     strength = other.strength;
+
+    errorHandler = other.errorHandler;
 
     generateMeshData(); // Regenerate the mesh data, otherwise it won't render
   }
