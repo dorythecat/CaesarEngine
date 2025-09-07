@@ -94,7 +94,7 @@ public:
       }
     }
 
-    // TODO: There's a bug where sometimes an unoptimal path is chosen due to the implementation
+    // TODO: There's a bug where sometimes a non-optimal path is chosen due to the implementation
     // See path from PR2 to PR6
     std::queue<std::string> toVisit;
     std::unordered_set<std::string> visited;
