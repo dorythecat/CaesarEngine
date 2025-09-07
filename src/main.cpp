@@ -80,6 +80,11 @@ void mouse_click_callback(GLFWwindow* window,
         const std::string provinceName = sm->pm->clickedOnProvince(f);
         const Province p = sm->pm->getProvince(provinceName);
         std::cout << "Clicked on province: " << p.getName() << ", on state: " << state << std::endl;
+
+        for (auto adjacencyMap = sm->pm->getAdjacencyMap();
+             const auto& adjProvName : adjacencyMap[provinceName]) {
+            std::cout << " - Adjacent province: " << sm->pm->getProvince(adjProvName).getName() << std::endl;
+        }
     }
 }
 
