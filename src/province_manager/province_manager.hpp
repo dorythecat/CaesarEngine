@@ -49,6 +49,29 @@ public:
   [[nodiscard]] std::map<std::string, Province> getAllProvincesMap() const { return provinces; }
   [[nodiscard]] std::map<std::string, std::vector<std::string>> getAdjacencyMap() const { return adjacencyMap; }
 
+  [[nodiscard]] int connected(const std::string &provinceA, const std::string &provinceB) {
+    if (provinceA == provinceB) return 0;
+    if (!provinces.contains(provinceA) || !provinces.contains(provinceB)) return -1;
+
+    std::unordered_set<std::string> visited;
+    std::vector<std::string> toVisit = { provinceA };
+    int depth = 0;
+
+    while (!toVisit.empty()) {
+      std::vector<std::string> nextToVisit;
+      for (const auto& current : toVisit) {
+        if (current == provinceB) return depth;
+        visited.insert(current);
+        for (const auto& neighbor : adjacencyMap[current]) {
+          if (!visited.contains(neighbor))
+            nextToVisit.push_back(neighbor);
+        }
+      }
+      toVisit = nextToVisit;
+      depth++;
+    } return -1; // Not connected
+  }
+
 private:
   std::map<std::string, Province> provinces;
   Text text;
