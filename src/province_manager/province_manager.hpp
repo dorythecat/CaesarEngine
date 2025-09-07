@@ -1,10 +1,14 @@
 #ifndef PROVINCE_MANAGER_HPP
 #define PROVINCE_MANAGER_HPP
 
+#include <algorithm>
 #include <string>
 #include <map>
 #include <unordered_set>
 #include <ranges>
+#include <queue>
+#include <list>
+#include <vector>
 
 #include "../utils.hpp"
 #include "../window/window.hpp"
@@ -27,7 +31,7 @@ public:
     int steps = -1; // -1 if not connected, 0 if same province, >0 if connected
 
     // What provinces to traverse
-    std::map<std::string, Province> provinces; // Should be ordered for consistency
+    std::list<std::pair<std::string, Province>> provinces; // Should be ordered for consistency
 
     Connection(Province &start, Province &end) : start(start), end(end) {}
   };
@@ -66,24 +70,32 @@ public:
       connection.steps = 0;
       return connection;
     }
-    std::map<std::string, Province> visited; // Provinces we've already visited
-    std::map<std::string, Province> toVisit; // Provinces we need to visit
-    toVisit.emplace(provinceA, provinces.at(provinceA));
+
+    // Dijkstra's algorithm
+    std::queue<std::string> toVisit;
+    std::unordered_set<std::string> visited;
+    std::list<std::pair<std::string, Province>> output;
+    toVisit.push(provinceA); // Start from province A
     while (!toVisit.empty()) {
-      std::map<std::string, Province> nextToVisit; // Provinces to visit next
-      for (const auto& [name, prov] : toVisit) {
-        visited.emplace(name, prov);
-        for (const auto& adjProvName : adjacencyMap[name]) {
-          if (visited.contains(adjProvName) || toVisit.contains(adjProvName)) continue;
-          if (adjProvName == provinceB) {
-            connection.steps = static_cast<int>(visited.size());
-            connection.provinces = visited;
-            connection.provinces.emplace(provinceB, provinces.at(provinceB));
-            return connection;
-          } nextToVisit.emplace(adjProvName, provinces.at(adjProvName));
-        }
-      } toVisit = nextToVisit;
-    } return connection; // Not connected
+      std::string cur = toVisit.front();
+      toVisit.pop();
+      visited.insert(cur);
+      output.emplace_back(cur, provinces.at(cur));
+      std::unordered_set<std::string> adjacenciesSet = adjacencyMap.at(cur);
+      std::vector<std::string> adjacencies(adjacenciesSet.begin(), adjacenciesSet.end());
+      std::ranges::sort(adjacencies, [this](const std::string &a, const std::string &b) {
+        return provinces.at(a).getArea() < provinces.at(b).getArea(); // Sort from least to most area
+      });
+      for (const auto &adj : adjacencies) {
+        if (visited.contains(adj)) continue;
+        if (adj == provinceB) {
+          connection.steps = static_cast<int>(output.size());
+          output.emplace_back(adj, provinces.at(adj));
+          connection.provinces = output;
+          return connection;
+        } toVisit.push(adj);
+      }
+    } return connection;
   }
 
 private:
