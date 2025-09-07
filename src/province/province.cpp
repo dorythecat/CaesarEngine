@@ -2,70 +2,10 @@
 
 Province::Province(ErrorHandler* errorHandler,
                    const char* mapPath,
-                   Color color,
+                   const Color color,
                    std::string name,
-                   CityCategory category) :
-  category(category), color(color), name(std::move(name)), errorHandler(errorHandler)  {
-  // TODO(Dory): Properly assign default values and state scaling
-  switch (category) {
-    case SINGLE_PROVINCE_CAPITAL:
-      population = 10000;
-      wealth = 10000;
-      food = 10000;
-      production = 10000;
-      strength = 10000;
-      break;
-    case MULTI_PROVINCE_CAPITAL:
-      population = 10000;
-      wealth = 10000;
-      food = 10000;
-      production = 10000;
-      strength = 10000;
-      break;
-    case CITY:
-      population = 10000;
-      wealth = 10000;
-      food = 10000;
-      production = 10000;
-      strength = 10000;
-      break;
-    case TOWN:
-      population = 10000;
-      wealth = 10000;
-      food = 10000;
-      production = 10000;
-      strength = 10000;
-      break;
-    case VILLAGE:
-      population = 10000;
-      wealth = 10000;
-      food = 10000;
-      production = 10000;
-      strength = 10000;
-      break;
-    case SETTLEMENT:
-      population = 10000;
-      wealth = 10000;
-      food = 10000;
-      production = 10000;
-      strength = 10000;
-      break;
-    default: // Unassigned (between UNASSIGNED_START and UNASSIGNED_END, both inclusive)
-      errorHandler->logError("Province was assigned an unassigned city category, assigning wasteland",
-        ErrorHandler::UNASSIGNED_PROVINCE_CATEGORY);
-      category = WASTELAND; // Set category to wasteland to avoid future issues
-      [[fallthrough]];
-    // We zero out everything for NO_CITY and WASTELAND, as well as for unassigned province categories
-    case NO_CITY:
-    case WASTELAND:
-      population = 0;
-      wealth = 0;
-      food = 0;
-      production = 0;
-      strength = 0;
-      break;
-  }
-
+                   const City &city) :
+city(city), color(color), name(std::move(name)), errorHandler(errorHandler)  {
   generateMesh(mapPath);
   generateMeshData();
 }

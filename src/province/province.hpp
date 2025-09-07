@@ -15,19 +15,6 @@
 
 class Province {
 public:
-  enum CityCategory {
-    SINGLE_PROVINCE_CAPITAL = 0,
-    MULTI_PROVINCE_CAPITAL = 1,
-    CITY = 2,
-    TOWN = 3,
-    VILLAGE = 4,
-    SETTLEMENT = 5,
-    UNASSIGNED_START = 6, // Inclusive
-    UNASSIGNED_END = 253, // Inclusive
-    NO_CITY = 254, // Effectively the same as wasteland, at least as of now
-    WASTELAND = 255 // Untraversable, can't be part of a state
-  };
-
   struct Color {
     unsigned char r, g, b;
 
@@ -64,19 +51,94 @@ public:
     bool operator==(const Vertex& other) const { return x == other.x && y == other.y; }
   };
 
-  // "City data"
-  // This data works as the "city" included in every Province object
-  // The "category" decides the initial values of the city variables,
-  // as well as maybe some other stuff down the line
-  // The value goes from 0 to 255, where:
-  CityCategory category;
-  int population, wealth, food, production, strength;
+  struct City { // City wrapper
+    enum CityCategory {
+      SINGLE_PROVINCE_CAPITAL = 0,
+      MULTI_PROVINCE_CAPITAL = 1,
+      CITY = 2,
+      TOWN = 3,
+      VILLAGE = 4,
+      SETTLEMENT = 5,
+      UNASSIGNED_START = 6, // Inclusive
+      UNASSIGNED_END = 253, // Inclusive
+      NO_CITY = 254, // Effectively the same as wasteland, at least as of now
+      WASTELAND = 255 // Untraversable, can't be part of a state
+    };
 
+    CityCategory category;
+    int population, wealth, food, production, strength;
+    ErrorHandler* errorHandler;
+
+    explicit City(ErrorHandler* errorHandler, CityCategory category = WASTELAND) :
+    category(category), errorHandler(errorHandler) {
+      // TODO(Dory): Properly assign default values and state scaling
+      switch (category) { // Assign default values based on category
+        case SINGLE_PROVINCE_CAPITAL:
+          population = 10000;
+          wealth = 10000;
+          food = 10000;
+          production = 10000;
+          strength = 10000;
+          break;
+        case MULTI_PROVINCE_CAPITAL:
+          population = 10000;
+          wealth = 10000;
+          food = 10000;
+          production = 10000;
+          strength = 10000;
+          break;
+        case CITY:
+          population = 10000;
+          wealth = 10000;
+          food = 10000;
+          production = 10000;
+          strength = 10000;
+          break;
+        case TOWN:
+          population = 10000;
+          wealth = 10000;
+          food = 10000;
+          production = 10000;
+          strength = 10000;
+          break;
+        case VILLAGE:
+          population = 10000;
+          wealth = 10000;
+          food = 10000;
+          production = 10000;
+          strength = 10000;
+          break;
+        case SETTLEMENT:
+          population = 10000;
+          wealth = 10000;
+          food = 10000;
+          production = 10000;
+          strength = 10000;
+          break;
+        default: // Unassigned (between UNASSIGNED_START and UNASSIGNED_END, both inclusive)
+          errorHandler->logError("Province was assigned an unassigned city category, assigning wasteland",
+            ErrorHandler::UNASSIGNED_PROVINCE_CATEGORY);
+          category = WASTELAND; // Set category to wasteland to avoid future issues
+          [[fallthrough]];
+          // We zero out everything for NO_CITY and WASTELAND, as well as for unassigned province categories
+        case NO_CITY:
+        case WASTELAND:
+          population = 0;
+          wealth = 0;
+          food = 0;
+          production = 0;
+          strength = 0;
+          break;
+      }
+    }
+  };
+
+  City city; // The city inside this province
   Province(ErrorHandler* errorHandler,
            const char* mapPath,
            Color color,
            std::string name,
-           CityCategory category);
+           const City &city);
   ~Province() noexcept {
     // Clean up the mesh data
     glDeleteVertexArrays(1, &VAO);
@@ -84,7 +146,7 @@ public:
     glDeleteBuffers(1, &EBO);
   }
 
-  Province(const Province& other) {
+  Province(const Province& other) : city(other.city) {
     name = other.name;
 
     vertices = other.vertices;
@@ -92,14 +154,6 @@ public:
     color = other.color;
 
     center = other.center;
-
-    category = other.category;
-
-    population = other.population;
-    wealth = other.wealth;
-    food = other.food;
-    production = other.production;
-    strength = other.strength;
 
     errorHandler = other.errorHandler;
 

@@ -38,7 +38,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
               mapPath.c_str(),
                       Province::Color(curProv[1]),
                       curProv[2],
-                      static_cast<Province::CityCategory>(std::stoi(curProv[3]))));
+                      Province::City(errorHandler, static_cast<Province::City::CityCategory>(std::stoi(curProv[3])))));
   }
 }
 
