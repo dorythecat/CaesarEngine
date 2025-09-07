@@ -11,9 +11,8 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
                                                                 text(errorHandler),
                                                                 errorHandler(errorHandler) {
   std::ifstream province_file(provPath);
-  if (!province_file.is_open()) {
+  if (!province_file.is_open())
     errorHandler->logFatal("Could not open file \"" + provPath + "\"", ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
-  }
 
   unsigned int i = 0; // Line number
   std::vector<QueuedProvince> queuedProvinces; // Read the provinces, queue them, and then generate them
@@ -37,23 +36,22 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
       continue;
     }
 
-    auto city = Province::City(errorHandler, static_cast<Province::City::CityCategory>(std::stoi(curProv[3])));
-    if (curProv.size() > 4) {
-      if (curProv.size() > 9) {
-        errorHandler->logWarning("Province defined at line " + std::to_string(i) + " has too many parameters.",
-          ErrorHandler::FORMAT_ERROR);
-        return;
-      }
-      if (curProv.size() >= 5) city.population = std::stoi(curProv[4]);
-      if (curProv.size() >= 6) city.wealth = std::stoi(curProv[5]);
-      if (curProv.size() >= 7) city.food = std::stoi(curProv[6]);
-      if (curProv.size() >= 8) city.production = std::stoi(curProv[7]);
-      if (curProv.size() == 9) city.strength = std::stoi(curProv[8]);
+    if (curProv.size() > 9) {
+      errorHandler->logWarning("Province defined at line " + std::to_string(i) + " has too many parameters.",
+        ErrorHandler::FORMAT_ERROR);
+      return;
     }
+
+    auto city = Province::City(errorHandler, static_cast<Province::City::CityCategory>(std::stoi(curProv[3])));
+    if (curProv.size() >= 5) city.population = std::stoi(curProv[4]);
+    if (curProv.size() >= 6) city.wealth = std::stoi(curProv[5]);
+    if (curProv.size() >= 7) city.food = std::stoi(curProv[6]);
+    if (curProv.size() >= 8) city.production = std::stoi(curProv[7]);
+    if (curProv.size() == 9) city.strength = std::stoi(curProv[8]);
 
     auto color = Province::Color(curProv[1]);
     usedColors.emplace(color); // Remember this color so we can check adjacency later
-    queuedProvinces.push_back({ // Queue this province so we can make a list of used colors
+    queuedProvinces.push_back({ // Queue this province so we can render all of them at once
       curProv[0],
       color,
       curProv[2],
@@ -62,25 +60,17 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
   }
 
   // Generate queued provinces
-  for (const auto&[id, color, name, city] : queuedProvinces) {
-    provinces.emplace(id,
-                      Province(errorHandler,
-                         mapPath.c_str(),
-                                 color,
-                                 name,
-                                 city,
-                                 usedColors));
-  }
+  for (const auto&[id, color, name, city] : queuedProvinces)
+    provinces.emplace(id, Province(errorHandler, mapPath.c_str(), color, name, city, usedColors));
 
   // Generate adjacency map
   for (const auto& [name, prov] : provinces) {
     std::vector<std::string> adjProvs;
     for (const auto& color : prov.getAdjacentColors()) {
       for (const auto& [otherName, otherProv] : provinces) {
-        if (otherProv.getColor() == color) {
-          adjProvs.push_back(otherName);
-          break;
-        }
+        if (otherProv.getColor() != color) continue;
+        adjProvs.push_back(otherName);
+        break;
       }
     } adjacencyMap[name] = adjProvs;
   }
