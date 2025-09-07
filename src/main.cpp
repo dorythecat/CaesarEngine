@@ -85,6 +85,11 @@ void mouse_click_callback(GLFWwindow* window,
              const auto& adjProvName : adjacencyMap[provinceName]) {
             std::cout << " - Adjacent province: " << sm->pm->getProvince(adjProvName).getName() << std::endl;
         }
+
+        for (const auto& [name, prov] : sm->pm->getAllProvincesMap()) {
+            std::cout << "Connected to " << name << " in: "
+                      << sm->pm->connected(provinceName, name) << std::endl;
+        }
     }
 }
 
