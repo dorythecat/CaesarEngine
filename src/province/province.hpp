@@ -174,6 +174,8 @@ public:
   [[nodiscard]] float getCenterX() const { return center.x; }
   [[nodiscard]] float getCenterY() const { return center.y; }
 
+  [[nodiscard]] int getArea() const { return area; }
+
   [[nodiscard]] bool isAdjacent(const Color c) const { return adjacentColors.contains(c); }
   [[nodiscard]] bool isAdjacent(Province* p) const { return isAdjacent(p->getColor()); }
 
