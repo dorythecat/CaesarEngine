@@ -67,7 +67,7 @@ void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color
 
     // Above rectangle adjacency
     if (i >= n * x) {
-      for (int j = (i0 - n * x); j < (i - n * x); j += n) {
+      for (int j = i0 - n * x; j < i - n * x; j += n) {
         auto c = Color(data[j], data[j + 1], data[j + 2]);
         if (usedColors.contains(c)) adjacentColors.insert(c);
       }
@@ -75,7 +75,7 @@ void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color
 
     // Below rectangle adjacency
     if (i <= n * x * (y - 1)) {
-      for (int j = (i0 + n * x); j < (i + n * x); j += n) {
+      for (int j = i0 + n * x; j < i + n * x; j += n) {
         auto c = Color(data[j], data[j + 1], data[j + 2]);
         if (usedColors.contains(c)) adjacentColors.insert(c);
       }
