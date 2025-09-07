@@ -3,7 +3,6 @@
 
 #include <string>
 #include <map>
-#include <unordered_set>
 #include <ranges>
 
 #include "../utils.hpp"
@@ -15,11 +14,21 @@
 
 class ProvinceManager {
 public:
-  struct QueuedProvince {
+  struct QueuedProvince { // Queued province for batch generation
     std::string id;
     Province::Color color;
     std::string name;
     Province::City city;
+  };
+
+  struct Connection { // Connections in between provinces
+    Province &start, &end; // Start and end provinces
+    int steps = -1; // -1 if not connected, 0 if same province, >0 if connected
+
+    // What provinces to traverse
+    std::map<std::string, Province> provinces; // Should be ordered for consistency
+
+    Connection(Province &start, Province &end) : start(start), end(end) {}
   };
 
   Shader provShader, textShader;
@@ -49,27 +58,31 @@ public:
   [[nodiscard]] std::map<std::string, Province> getAllProvincesMap() const { return provinces; }
   [[nodiscard]] std::map<std::string, std::vector<std::string>> getAdjacencyMap() const { return adjacencyMap; }
 
-  [[nodiscard]] int connected(const std::string &provinceA, const std::string &provinceB) {
-    if (provinceA == provinceB) return 0;
-    if (!provinces.contains(provinceA) || !provinces.contains(provinceB)) return -1;
-
-    std::unordered_set<std::string> visited;
-    std::vector<std::string> toVisit = { provinceA };
-    int depth = 0;
-
+  [[nodiscard]] Connection connected(const std::string &provinceA, const std::string &provinceB) {
+    Connection connection(provinces.at(provinceA), provinces.at(provinceB));
+    if (!provinces.contains(provinceA) || !provinces.contains(provinceB)) return connection;
+    if (provinceA == provinceB) {
+      connection.steps = 0;
+      return connection;
+    }
+    std::map<std::string, Province> visited; // Provinces we've already visited
+    std::map<std::string, Province> toVisit; // Provinces we need to visit
+    toVisit.emplace(provinceA, provinces.at(provinceA));
     while (!toVisit.empty()) {
-      std::vector<std::string> nextToVisit;
-      for (const auto& current : toVisit) {
-        if (current == provinceB) return depth;
-        visited.insert(current);
-        for (const auto& neighbor : adjacencyMap[current]) {
-          if (!visited.contains(neighbor))
-            nextToVisit.push_back(neighbor);
+      std::map<std::string, Province> nextToVisit; // Provinces to visit next
+      for (const auto& [name, prov] : toVisit) {
+        visited.emplace(name, prov);
+        for (const auto& adjProvName : adjacencyMap[name]) {
+          if (visited.contains(adjProvName) || toVisit.contains(adjProvName)) continue;
+          if (adjProvName == provinceB) {
+            connection.steps = static_cast<int>(visited.size());
+            connection.provinces = visited;
+            connection.provinces.emplace(provinceB, provinces.at(provinceB));
+            return connection;
+          } nextToVisit.emplace(adjProvName, provinces.at(adjProvName));
         }
-      }
-      toVisit = nextToVisit;
-      depth++;
-    } return -1; // Not connected
+      } toVisit = nextToVisit;
+    } return connection; // Not connected
   }
 
 private:

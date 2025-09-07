@@ -88,7 +88,7 @@ void mouse_click_callback(GLFWwindow* window,
 
         for (const auto& [name, prov] : sm->pm->getAllProvincesMap()) {
             std::cout << "Connected to " << name << " in: "
-                      << sm->pm->connected(provinceName, name) << std::endl;
+                      << sm->pm->connected(provinceName, name).steps << std::endl;
         }
     }
 }
