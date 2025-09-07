@@ -15,7 +15,9 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
     errorHandler->logFatal("Could not open file \"" + provPath + "\"", ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
   }
 
-  unsigned int i = 0;
+  unsigned int i = 0; // Line number
+  std::vector<QueuedProvince> queuedProvinces; // Read the provinces, queue them, and then generate them
+  std::vector<Province::Color> usedColors; // For adjacency optimizations (TODO)
   for (std::string line; std::getline(province_file, line);) {
     i++;
     if (line.empty()) continue;
@@ -49,12 +51,24 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
       if (curProv.size() == 9) city.strength = std::stoi(curProv[8]);
     }
 
-    provinces.emplace(curProv[0],
-                    Province(errorHandler,
-                               mapPath.c_str(),
-                               Province::Color(curProv[1]),
-                               curProv[2],
-                               city));
+    auto color = Province::Color(curProv[1]);
+    usedColors.push_back(color);
+    queuedProvinces.push_back({ // Queue this province so we can make a list of used colors
+      curProv[0],
+      color,
+      curProv[2],
+      city
+    });
+  }
+
+  // Generate queued provinces
+  for (const auto&[id, color, name, city] : queuedProvinces) {
+    provinces.emplace(id,
+                      Province(errorHandler,
+                         mapPath.c_str(),
+                                 color,
+                                 name,
+                                 city));
   }
 
   // Generate adjacency map

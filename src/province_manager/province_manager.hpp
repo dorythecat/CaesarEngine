@@ -14,6 +14,13 @@
 
 class ProvinceManager {
 public:
+  struct QueuedProvince {
+    std::string id;
+    Province::Color color;
+    std::string name;
+    Province::City city;
+  };
+
   Shader provShader, textShader;
 
   explicit ProvinceManager(ErrorHandler* errorHandler,
