@@ -34,11 +34,15 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
         ErrorHandler::FORMAT_ERROR);
       continue;
     }
-    provinces.emplace(curProv[0], Province(errorHandler,
-              mapPath.c_str(),
-                      Province::Color(curProv[1]),
-                      curProv[2],
-                      Province::City(errorHandler, static_cast<Province::City::CityCategory>(std::stoi(curProv[3])))));
+
+    auto city = Province::City(errorHandler, static_cast<Province::City::CityCategory>(std::stoi(curProv[3])));
+
+    provinces.emplace(curProv[0],
+                    Province(errorHandler,
+                               mapPath.c_str(),
+                               Province::Color(curProv[1]),
+                               curProv[2],
+                               city));
   }
 }
 
