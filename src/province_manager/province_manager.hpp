@@ -27,13 +27,10 @@ public:
   };
 
   struct Connection { // Connections in between provinces
-    Province &start, &end; // Start and end provinces
     int steps = -1; // -1 if not connected, 0 if same province, >0 if connected
 
     // What provinces to traverse
     std::list<std::pair<std::string, Province>> provinces; // Should be ordered for consistency
-
-    Connection(Province &start, Province &end) : start(start), end(end) {}
   };
 
   Shader provShader, textShader;
@@ -64,14 +61,13 @@ public:
   [[nodiscard]] std::map<std::string, std::unordered_set<std::string>> getAdjacencyMap() const { return adjacencyMap; }
 
   [[nodiscard]] Connection connected(const std::string &provinceA, const std::string &provinceB) {
-    Connection connection(provinces.at(provinceA), provinces.at(provinceB));
+    Connection connection;
     if (!provinces.contains(provinceA) || !provinces.contains(provinceB)) return connection;
     if (provinceA == provinceB) {
       connection.steps = 0;
       return connection;
     }
 
-    // Dijkstra's algorithm
     std::queue<std::string> toVisit;
     std::unordered_set<std::string> visited;
     std::list<std::pair<std::string, Province>> output;
@@ -88,12 +84,12 @@ public:
       });
       for (const auto &adj : adjacencies) {
         if (visited.contains(adj)) continue;
-        if (adj == provinceB) {
-          connection.steps = static_cast<int>(output.size());
-          output.emplace_back(adj, provinces.at(adj));
-          connection.provinces = output;
-          return connection;
-        } toVisit.push(adj);
+        toVisit.push(adj);
+        if (adj != provinceB) continue;
+        connection.steps = static_cast<int>(output.size());
+        output.emplace_back(adj, provinces.at(adj));
+        connection.provinces = output;
+        return connection;
       }
     } return connection;
   }
