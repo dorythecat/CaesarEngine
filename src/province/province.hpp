@@ -155,6 +155,8 @@ public:
 
     center = other.center;
 
+    adjacentColors = other.adjacentColors;
+
     errorHandler = other.errorHandler;
 
     generateMeshData(); // Regenerate the mesh data, otherwise it won't render
