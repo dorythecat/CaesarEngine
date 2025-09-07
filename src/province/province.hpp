@@ -164,6 +164,11 @@ public:
     generateMeshData(); // Regenerate the mesh data, otherwise it won't render
   }
 
+  bool operator==(const Province &other) const {
+    // In theory, this should be more than enough, and saves a lot of time
+    return name == other.name && color == other.color;
+  }
+
   void render() const;
 
   [[nodiscard]] bool clickedOn(float x, float y) const;

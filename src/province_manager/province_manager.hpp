@@ -1,6 +1,8 @@
 #ifndef PROVINCE_MANAGER_HPP
 #define PROVINCE_MANAGER_HPP
 
+#define MAX_PATH_SAVE 16 // Maximum number of path connections to save to memory
+
 #include <algorithm>
 #include <string>
 #include <map>
@@ -31,6 +33,12 @@ public:
 
     // What provinces to traverse
     std::list<std::pair<std::string, Province>> provinces; // Should be ordered for consistency
+
+    bool operator==(const Connection &other) const {
+      if (steps != other.steps) return false;
+      if (provinces != other.provinces) return false;
+      return true;
+    }
   };
 
   Shader provShader, textShader;
@@ -68,6 +76,26 @@ public:
       return connection;
     }
 
+    for (const auto &conn : connectionCache) {
+      if (conn.provinces.front().first == provinceA && conn.provinces.back().first == provinceB) {
+        // Move to front of cache
+        std::ranges::remove_if(connectionCache, [&conn](const Connection &c) {
+          return c == conn;
+        });
+        connectionCache.push_front(conn);
+        return conn; // Return cached connection
+      }
+
+      if (conn.provinces.front().first == provinceB && conn.provinces.back().first == provinceA) {
+        Connection reversedConn = conn;
+        std::ranges::reverse(reversedConn.provinces);
+        connectionCache.push_front(reversedConn); // Keep the other one in its current position
+        return reversedConn; // Return reversed cached connection
+      }
+    }
+
+    // TODO: There's a bug where sometimes an unoptimal path is chosen due to the implementation
+    // See path from PR2 to PR6
     std::queue<std::string> toVisit;
     std::unordered_set<std::string> visited;
     std::list<std::pair<std::string, Province>> output;
@@ -89,6 +117,10 @@ public:
         connection.steps = static_cast<int>(output.size());
         output.emplace_back(adj, provinces.at(adj));
         connection.provinces = output;
+
+        connectionCache.push_front(connection); // Save to cache
+        if (connectionCache.size() > MAX_PATH_SAVE) connectionCache.pop_back(); // Remove oldest entry if over limit
+
         return connection;
       }
     } return connection;
@@ -100,6 +132,8 @@ private:
   ErrorHandler* errorHandler;
 
   std::map<std::string, std::unordered_set<std::string>> adjacencyMap;
+
+  std::deque<Connection> connectionCache; // Cache of recent connections, limited to MAX_PATH_SAVE entries
 };
 
 #endif // PROVINCE_MANAGER_HPP
