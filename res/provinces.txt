@@ -1,4 +1,4 @@
-# ID,Color,Name,Category
+# ID,Color,Name,Category,(optional from here)Population,Wealth,Food,Production,Strength
 
 PR1,ff0000,Province 1,0
 PR2,770000,Province 2,0
