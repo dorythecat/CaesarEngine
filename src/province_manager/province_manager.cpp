@@ -65,11 +65,11 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
 
   // Generate adjacency map
   for (const auto& [name, prov] : provinces) {
-    std::vector<std::string> adjProvs;
+    std::unordered_set<std::string> adjProvs;
     for (const auto& color : prov.getAdjacentColors()) {
       for (const auto& [otherName, otherProv] : provinces) {
         if (otherProv.getColor() != color) continue;
-        adjProvs.push_back(otherName);
+        adjProvs.emplace(otherName);
         break;
       }
     } adjacencyMap[name] = adjProvs;

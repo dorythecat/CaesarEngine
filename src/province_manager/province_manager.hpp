@@ -3,6 +3,7 @@
 
 #include <string>
 #include <map>
+#include <unordered_set>
 #include <ranges>
 
 #include "../utils.hpp"
@@ -56,7 +57,7 @@ public:
     return provinceList;
   }
   [[nodiscard]] std::map<std::string, Province> getAllProvincesMap() const { return provinces; }
-  [[nodiscard]] std::map<std::string, std::vector<std::string>> getAdjacencyMap() const { return adjacencyMap; }
+  [[nodiscard]] std::map<std::string, std::unordered_set<std::string>> getAdjacencyMap() const { return adjacencyMap; }
 
   [[nodiscard]] Connection connected(const std::string &provinceA, const std::string &provinceB) {
     Connection connection(provinces.at(provinceA), provinces.at(provinceB));
@@ -90,7 +91,7 @@ private:
   Text text;
   ErrorHandler* errorHandler;
 
-  std::map<std::string, std::vector<std::string>> adjacencyMap;
+  std::map<std::string, std::unordered_set<std::string>> adjacencyMap;
 };
 
 #endif // PROVINCE_MANAGER_HPP
