@@ -17,7 +17,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
 
   unsigned int i = 0; // Line number
   std::vector<QueuedProvince> queuedProvinces; // Read the provinces, queue them, and then generate them
-  std::vector<Province::Color> usedColors; // For adjacency optimizations (TODO)
+  std::unordered_set<Province::Color, Province::Color::HashFunction> usedColors; // For adjacency optimizations
   for (std::string line; std::getline(province_file, line);) {
     i++;
     if (line.empty()) continue;
@@ -52,7 +52,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
     }
 
     auto color = Province::Color(curProv[1]);
-    usedColors.push_back(color);
+    usedColors.emplace(color); // Remember this color so we can check adjacency later
     queuedProvinces.push_back({ // Queue this province so we can make a list of used colors
       curProv[0],
       color,
@@ -68,7 +68,8 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
                          mapPath.c_str(),
                                  color,
                                  name,
-                                 city));
+                                 city,
+                                 usedColors));
   }
 
   // Generate adjacency map

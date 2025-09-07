@@ -138,7 +138,8 @@ public:
            const char* mapPath,
            Color color,
            std::string name,
-           const City &city);
+           const City &city,
+           const std::unordered_set<Color, Color::HashFunction> &usedColors);
   ~Province() noexcept {
     // Clean up the mesh data
     glDeleteVertexArrays(1, &VAO);
@@ -192,7 +193,7 @@ private:
 
   ErrorHandler* errorHandler;
 
-  void generateMesh(const char* mapPath);
+  void generateMesh(const char* mapPath, std::unordered_set<Color, Color::HashFunction> usedColors);
   void generateMeshData();
   void addQuad(float x0, float y0, float x1, float y1, Color c);
 };

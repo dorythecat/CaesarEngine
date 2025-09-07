@@ -4,13 +4,14 @@ Province::Province(ErrorHandler* errorHandler,
                    const char* mapPath,
                    const Color color,
                    std::string name,
-                   const City &city) :
+                   const City &city,
+                   const std::unordered_set<Color, Color::HashFunction> &usedColors) :
 city(city), color(color), name(std::move(name)), errorHandler(errorHandler)  {
-  generateMesh(mapPath);
+  generateMesh(mapPath, usedColors);
   generateMeshData();
 }
 
-void Province::generateMesh(const char* mapPath) {
+void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color::HashFunction> usedColors) {
   // If we don't do this, we'll get vertically flipped provinces
   stbi_set_flip_vertically_on_load(false);
 
@@ -42,7 +43,7 @@ void Province::generateMesh(const char* mapPath) {
     // Start of rectangle adjacency
     if (i % (n * x) > 0) {
       auto c = Color(data[i - n], data[i - n + 1], data[i - n + 2]);
-      adjacentColors.insert(c);
+      if (usedColors.contains(c)) adjacentColors.insert(c);
     }
 
     // Actual quad generation
@@ -59,14 +60,14 @@ void Province::generateMesh(const char* mapPath) {
     // End of rectangle adjacency
     if (i % (n * x) < n * (x - 1)) {
       auto c = Color(data[i + n], data[i + n + 1], data[i + n + 2]);
-      adjacentColors.insert(c);
+      if (usedColors.contains(c)) adjacentColors.insert(c);
     }
 
     // Above rectangle adjacency
     if (i >= n * x) {
       for (int j = (i0 - n * x); j < (i - n * x); j += n) {
         auto c = Color(data[j], data[j + 1], data[j + 2]);
-        adjacentColors.insert(c);
+        if (usedColors.contains(c)) adjacentColors.insert(c);
       }
     }
 
@@ -74,7 +75,7 @@ void Province::generateMesh(const char* mapPath) {
     if (i <= n * x * (y - 1)) {
       for (int j = (i0 + n * x); j < (i + n * x); j += n) {
         auto c = Color(data[j], data[j + 1], data[j + 2]);
-        adjacentColors.insert(c);
+        if (usedColors.contains(c)) adjacentColors.insert(c);
       }
     }
 
