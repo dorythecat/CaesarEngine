@@ -68,63 +68,7 @@ public:
   [[nodiscard]] std::map<std::string, Province> getAllProvincesMap() const { return provinces; }
   [[nodiscard]] std::map<std::string, std::unordered_set<std::string>> getAdjacencyMap() const { return adjacencyMap; }
 
-  [[nodiscard]] Connection connected(const std::string &provinceA, const std::string &provinceB) {
-    Connection connection;
-    if (!provinces.contains(provinceA) || !provinces.contains(provinceB)) return connection;
-    if (provinceA == provinceB) {
-      connection.steps = 0;
-      return connection;
-    }
-
-    for (const auto &conn : connectionCache) {
-      if (conn.provinces.front().first == provinceA && conn.provinces.back().first == provinceB) {
-        // Move to front of cache
-        std::ranges::remove_if(connectionCache, [&conn](const Connection &c) {
-          return c == conn;
-        });
-        connectionCache.push_front(conn);
-        return conn; // Return cached connection
-      }
-
-      if (conn.provinces.front().first == provinceB && conn.provinces.back().first == provinceA) {
-        Connection reversedConn = conn;
-        std::ranges::reverse(reversedConn.provinces);
-        connectionCache.push_front(reversedConn); // Keep the other one in its current position
-        return reversedConn; // Return reversed cached connection
-      }
-    }
-
-    // TODO: There's a bug where sometimes a non-optimal path is chosen due to the implementation
-    // See path from PR2 to PR6
-    std::queue<std::string> toVisit;
-    std::unordered_set<std::string> visited;
-    std::list<std::pair<std::string, Province>> output;
-    toVisit.push(provinceA); // Start from province A
-    while (!toVisit.empty()) {
-      std::string cur = toVisit.front();
-      toVisit.pop();
-      visited.insert(cur);
-      output.emplace_back(cur, provinces.at(cur));
-      std::unordered_set<std::string> adjacenciesSet = adjacencyMap.at(cur);
-      std::vector<std::string> adjacencies(adjacenciesSet.begin(), adjacenciesSet.end());
-      std::ranges::sort(adjacencies, [this](const std::string &a, const std::string &b) {
-        return provinces.at(a).getArea() < provinces.at(b).getArea(); // Sort from least to most area
-      });
-      for (const auto &adj : adjacencies) {
-        if (visited.contains(adj)) continue;
-        toVisit.push(adj);
-        if (adj != provinceB) continue;
-        connection.steps = static_cast<int>(output.size());
-        output.emplace_back(adj, provinces.at(adj));
-        connection.provinces = output;
-
-        connectionCache.push_front(connection); // Save to cache
-        if (connectionCache.size() > MAX_PATH_SAVE) connectionCache.pop_back(); // Remove oldest entry if over limit
-
-        return connection;
-      }
-    } return connection;
-  }
+  [[nodiscard]] Connection findPath(const std::string &provinceA, const std::string &provinceB);
 
 private:
   std::map<std::string, Province> provinces;
