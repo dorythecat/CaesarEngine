@@ -120,34 +120,45 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string &provinc
     }
   }
 
-  // TODO: There's a bug where sometimes a non-optimal path is chosen due to the implementation
-  // See path from PR2 to PR6
+  // BFS to find the shortest path
+  std::list<std::pair<std::string, std::string>> parent;
   std::queue<std::string> toVisit;
   std::unordered_set<std::string> visited;
-  std::list<std::pair<std::string, Province>> output;
+
   toVisit.push(provinceA); // Start from province A
+
+  bool found = false;
   while (!toVisit.empty()) {
+    // Get first element
     std::string cur = toVisit.front();
     toVisit.pop();
-    visited.insert(cur);
-    output.emplace_back(cur, provinces.at(cur));
-    std::unordered_set<std::string> adjacenciesSet = adjacencyMap.at(cur);
-    std::vector<std::string> adjacencies(adjacenciesSet.begin(), adjacenciesSet.end());
-    std::ranges::sort(adjacencies, [this](const std::string &a, const std::string &b) {
-      return provinces.at(a).getArea() < provinces.at(b).getArea(); // Sort from least to most area
-    });
-    for (const auto &adj : adjacencies) {
+
+    for (const auto& adj : adjacencyMap.at(cur)) {
       if (visited.contains(adj)) continue;
+      parent.emplace_back(adj, cur);
       toVisit.push(adj);
       if (adj != provinceB) continue;
-      connection.steps = static_cast<int>(output.size());
-      output.emplace_back(adj, provinces.at(adj));
-      connection.provinces = output;
+      found = true;
+      break;
+    } visited.emplace(cur);
+    if (found) break;
+  } if (!found) return connection; // Not connected
 
-      connectionCache.push_front(connection); // Save to cache
-      if (connectionCache.size() > MAX_PATH_SAVE) connectionCache.pop_back(); // Remove oldest entry if over limit
+  // Reconstruct path
+  std::list<std::pair<std::string, Province>> path;
+  for (std::string cur = provinceB; cur != provinceA;) {
+    path.emplace_front(cur, provinces.at(cur));
+    auto it = std::ranges::find_if(parent,
+      [&cur](const std::pair<std::string, std::string> &p) { return p.first == cur; });
+    if (it == parent.end()) break; // Shouldn't happen
+    cur = it->second;
+  } path.emplace_front(provinceA, provinces.at(provinceA));
 
-      return connection;
-    }
-  } return connection;
+  // Generate connection
+  connection.steps = static_cast<int>(path.size()) - 1;
+  connection.provinces = path;
+  connectionCache.push_front(connection);
+  if (connectionCache.size() > MAX_PATH_SAVE) connectionCache.pop_back(); // Limit cache size
+
+  return connection;
 }
