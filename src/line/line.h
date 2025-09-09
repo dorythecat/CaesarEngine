@@ -12,7 +12,7 @@ class Line {
 public:
   explicit Line(ErrorHandler* errorHandler) : errorHandler(errorHandler) {}
   Line(ErrorHandler* errorHandler,
-       std::vector<vec2f> points);
+       const std::vector<vec2f> &points);
   ~Line() noexcept {
     // Clean up the mesh data
     glDeleteVertexArrays(1, &VAO);
@@ -29,7 +29,7 @@ private:
 
   ErrorHandler* errorHandler;
 
-  void generateMesh(std::vector<vec2f> points);
+  void generateMesh(const std::vector<vec2f> &points);
   void generateMeshData();
   void addSegment(const vec2f& start, const vec2f& end);
 };

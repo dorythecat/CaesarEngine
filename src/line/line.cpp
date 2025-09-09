@@ -1,8 +1,8 @@
 #include "line.h"
 
 Line::Line(ErrorHandler* errorHandler,
-           std::vector<vec2f> points) : errorHandler(errorHandler) {
-  generateMesh(std::move(points));
+           const std::vector<vec2f> &points) : errorHandler(errorHandler) {
+  generateMesh(points);
   generateMeshData();
 }
 
@@ -15,7 +15,7 @@ void Line::render() const {
   glBindVertexArray(0);
 }
 
-void Line::generateMesh(std::vector<vec2f> points) {
+void Line::generateMesh(const std::vector<vec2f> &points) {
   if (points.size() < 2) {
     errorHandler->logError("Line must have at least 2 points");
     return;
