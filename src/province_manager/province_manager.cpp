@@ -3,8 +3,8 @@
 #include "../province/province.hpp"
 
 ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
-                                 const std::string &provShaderPath,
-                                 const std::string &textShaderPath,
+                                 const std::string& provShaderPath,
+                                 const std::string& textShaderPath,
                                  const std::string& mapPath,
                                  const std::string& provPath) : provShader(errorHandler, provShaderPath),
                                                                 textShader(errorHandler, textShaderPath),
@@ -76,7 +76,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
   }
 }
 
-void ProvinceManager::render(const Window &window, const float scale, const vec2f &offset) {
+void ProvinceManager::render(const Window& window, const float scale, const vec2f& offset) {
   provShader.use();
   for (auto &province: provinces | std::views::values) province.render();
 
@@ -96,7 +96,7 @@ std::string ProvinceManager::clickedOnProvince(const float x, const float y) {
   return "";
 }
 
-ProvinceManager::Connection ProvinceManager::findPath(const std::string &provinceA, const std::string &provinceB) {
+ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinceA, const std::string& provinceB) {
   Connection connection;
   if (!provinces.contains(provinceA) || !provinces.contains(provinceB)) return connection;
   if (provinceA == provinceB) {
@@ -104,7 +104,7 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string &provinc
     return connection;
   }
 
-  for (const auto &conn : connectionCache) {
+  for (const auto& conn : connectionCache) {
     if (conn.provinces.front().first == provinceA && conn.provinces.back().first == provinceB) {
       // Move to front of cache
       std::ranges::remove_if(connectionCache, [&conn](const Connection &c) { return c == conn; });
