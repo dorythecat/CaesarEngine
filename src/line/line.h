@@ -7,7 +7,6 @@
 
 #include "../utils.hpp"
 #include "../error_handler/error_handler.h"
-#include "../window/window.hpp"
 
 class Line {
 public:
