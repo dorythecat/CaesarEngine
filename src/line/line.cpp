@@ -8,10 +8,7 @@ Line::Line(ErrorHandler* errorHandler,
 
 void Line::render() const {
   glBindVertexArray(VAO);
-  glDrawElements(GL_LINES,
-                 static_cast<int>(indices.size()),
-                 GL_UNSIGNED_INT,
-                 nullptr);
+  glDrawElements(GL_TRIANGLES, static_cast<GLint>(indices.size()), GL_UNSIGNED_INT, nullptr);
   glBindVertexArray(0);
 }
 
