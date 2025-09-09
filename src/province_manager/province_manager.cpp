@@ -176,7 +176,7 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
 
   std::vector<vec2f> linePoints;
   for (const auto &prov: path | std::views::values) linePoints.push_back(prov.getCenter());
-  line = Line(errorHandler, linePoints);
+  line.setPoints(linePoints);
 
   return connection;
 }

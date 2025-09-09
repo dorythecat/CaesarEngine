@@ -20,7 +20,23 @@ public:
     glDeleteBuffers(1, &EBO);
   }
 
+  //Implement copy constructor
+  Line(const Line& other) {
+    vertices = other.vertices;
+    indices = other.indices;
+
+    errorHandler = other.errorHandler;
+
+    generateMeshData(); // Regenerate the mesh data, otherwise it won't render
+  }
+
   void render() const;
+  void setPoints(const std::vector<vec2f> &points) {
+    vertices.clear();
+    indices.clear();
+    generateMesh(points);
+    generateMeshData();
+  }
 
 private:
   unsigned int VAO{}, VBO{}, EBO{};
