@@ -22,11 +22,8 @@ void Line::generateMesh(std::vector<vec2f> points) {
   }
 
   // Very, very basic line generation
-  vertices = std::move(points);
-  indices.reserve((vertices.size() - 1) * 2);
-  for (unsigned int i = 0; i < vertices.size() - 1; i++) {
-    indices.push_back(i);
-    indices.push_back(i + 1);
+  for (size_t i = 0; i < points.size() - 1; ++i) {
+    addSegment(points[i], points[i + 1]);
   }
 }
 
@@ -59,4 +56,23 @@ void Line::generateMeshData() {
   glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
+}
+
+void Line::addSegment(const vec2f &start, const vec2f &end) {
+  // Very basic line segment addition (not handling joins or anything)
+
+  const auto i = static_cast<unsigned int>(vertices.size());
+
+  vertices.push_back(start - 0.05f);
+  vertices.push_back(start + 0.05f);
+  vertices.push_back(end - 0.05f);
+  vertices.push_back(end + 0.05f);
+
+  indices.push_back(i);
+  indices.push_back(i + 1);
+  indices.push_back(i + 2);
+
+  indices.push_back(i + 2);
+  indices.push_back(i + 1);
+  indices.push_back(i + 3);
 }

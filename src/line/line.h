@@ -31,6 +31,7 @@ private:
 
   void generateMesh(std::vector<vec2f> points);
   void generateMeshData();
+  void addSegment(const vec2f& start, const vec2f& end);
 };
 
 
