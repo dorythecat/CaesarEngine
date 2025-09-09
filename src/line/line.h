@@ -10,6 +10,7 @@
 
 class Line {
 public:
+  explicit Line(ErrorHandler* errorHandler) : errorHandler(errorHandler) {}
   Line(ErrorHandler* errorHandler,
        std::vector<vec2f> points);
   ~Line() noexcept {
