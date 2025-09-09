@@ -6,7 +6,7 @@ Line::Line(ErrorHandler *errorHandler,
            std::vector<vec2f> points,
            const std::string &shaderPath) : shader(errorHandler, shaderPath),
                                             errorHandler(errorHandler) {
-  generateMesh(points);
+  generateMesh(std::move(points));
   generateMeshData();
 }
 
