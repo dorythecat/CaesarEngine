@@ -13,7 +13,12 @@ class Line {
 public:
   Line(ErrorHandler* errorHandler,
        std::vector<vec2f> points);
-  ~Line() = default;
+  ~Line() noexcept {
+    // Clean up the mesh data
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+  }
 
   void render(const Window& window, float scale, const vec2f& offset) const;
 
