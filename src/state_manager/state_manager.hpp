@@ -21,6 +21,7 @@ public:
   explicit StateManager(ErrorHandler* errorHandler,
                         const std::string &provShaderPath = "res/shaders/default",
                         const std::string &textShaderPath = "res/shaders/text",
+                        const std::string &lineShaderPath = "res/shaders/line",
                         const std::string &mapPath = "res/test.png",
                         const std::string &provPath = "res/provinces.txt",
                         const std::string &statePath = "res/states.txt");

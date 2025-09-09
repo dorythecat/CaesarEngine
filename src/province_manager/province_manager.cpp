@@ -5,11 +5,14 @@
 ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
                                  const std::string& provShaderPath,
                                  const std::string& textShaderPath,
+                                 const std::string& lineShaderPath,
                                  const std::string& mapPath,
                                  const std::string& provPath) : provShader(errorHandler, provShaderPath),
                                                                 textShader(errorHandler, textShaderPath),
+                                                                lineShader(errorHandler, lineShaderPath),
                                                                 text(errorHandler),
-                                                                errorHandler(errorHandler) {
+                                                                errorHandler(errorHandler),
+                                                                line(errorHandler) {
   std::ifstream province_file(provPath);
   if (!province_file.is_open())
     errorHandler->logFatal("Could not open file \"" + provPath + "\"", ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
@@ -89,6 +92,9 @@ void ProvinceManager::render(const Window& window, const float scale, const vec2
     text.setText(name, 5.0f, province.getCenter(), static_cast<vec2f>(window.getDimensions()), offset);
     text.render();
   }
+
+  lineShader.use();
+  line.render();
 }
 
 std::string ProvinceManager::clickedOnProvince(const float x, const float y) {
@@ -167,6 +173,10 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
   connection.provinces = path;
   connectionCache.push_front(connection);
   if (connectionCache.size() > MAX_PATH_SAVE) connectionCache.pop_back(); // Limit cache size
+
+  std::vector<vec2f> linePoints;
+  for (const auto &prov: path | std::views::values) linePoints.push_back(prov.getCenter());
+  line = Line(errorHandler, linePoints);
 
   return connection;
 }

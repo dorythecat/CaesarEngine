@@ -168,6 +168,10 @@ int main() {
         sm.pm->textShader.setVec2f("offset", offset);
         sm.pm->textShader.setInt("tex", 0);
 
+        sm.pm->lineShader.use();
+        sm.pm->lineShader.setFloat("scale", scale);
+        sm.pm->lineShader.setVec2f("offset", offset);
+
         // Render states (and therefore provinces)
         sm.render(window, scale, offset);
 

@@ -3,12 +3,14 @@
 StateManager::StateManager(ErrorHandler* errorHandler,
                            const std::string &provShaderPath,
                            const std::string &textShaderPath,
+                           const std::string &lineShaderPath,
                            const std::string &mapPath,
                            const std::string &provPath,
                            const std::string &statePath) : text(errorHandler), errorHandler(errorHandler) {
   this->pm = std::make_unique<ProvinceManager>(errorHandler,
                                                provShaderPath,
                                                textShaderPath,
+                                               lineShaderPath,
                                                mapPath,
                                                provPath);
 

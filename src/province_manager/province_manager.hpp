@@ -18,6 +18,7 @@
 #include "../province/province.hpp"
 #include "../text/text.hpp"
 #include "../error_handler/error_handler.h"
+#include "../line/line.h"
 
 class ProvinceManager {
 public:
@@ -37,11 +38,12 @@ public:
     bool operator==(const Connection &other) const { return steps == other.steps && provinces == other.provinces; }
   };
 
-  Shader provShader, textShader;
+  Shader provShader, textShader, lineShader;
 
   explicit ProvinceManager(ErrorHandler* errorHandler,
                            const std::string& provShaderPath = "res/shaders/default",
                            const std::string& textShaderPath = "res/shaders/text",
+                           const std::string& lineShaderPath = "res/shaders/line",
                            const std::string& mapPath = "res/test.png",
                            const std::string& provPath = "res/provinces.txt");
   ~ProvinceManager() = default;
@@ -70,6 +72,7 @@ private:
   std::map<std::string, Province> provinces;
   Text text;
   ErrorHandler* errorHandler;
+  Line line; // For debugging paths
 
   std::map<std::string, std::unordered_set<std::string>> adjacencyMap;
 
