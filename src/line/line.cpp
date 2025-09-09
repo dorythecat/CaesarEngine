@@ -7,6 +7,7 @@ Line::Line(ErrorHandler* errorHandler,
 }
 
 void Line::render() const {
+  std::cout << "Rendering line with " << indices.size() / 3 << " triangles." << std::endl;
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, static_cast<GLint>(indices.size()), GL_UNSIGNED_INT, nullptr);
   glBindVertexArray(0);

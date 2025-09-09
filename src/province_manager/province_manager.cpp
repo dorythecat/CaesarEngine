@@ -83,7 +83,10 @@ void ProvinceManager::render(const Window& window, const float scale, const vec2
   provShader.use();
   for (auto &province: provinces | std::views::values) province.render();
 
-  if (scale > 0.5f) return; // Don't render text if zoomed in too far
+  lineShader.use();
+  line.render();
+
+  if (scale > 0.5f) return; // Don't render text if zoomed out too far
   // TODO(Dory): Don't render text if it's offscreen
 
   // TODO(Dory): Find a better way to do province name text
@@ -92,9 +95,6 @@ void ProvinceManager::render(const Window& window, const float scale, const vec2
     text.setText(name, 5.0f, province.getCenter(), static_cast<vec2f>(window.getDimensions()), offset);
     text.render();
   }
-
-  lineShader.use();
-  line.render();
 }
 
 std::string ProvinceManager::clickedOnProvince(const float x, const float y) {
