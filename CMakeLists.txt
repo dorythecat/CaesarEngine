@@ -44,6 +44,9 @@ target_link_libraries(${PROJECT_NAME} glfw) # Link the executable with the libra
 
 # Copy all resource files to the build directory
 file(GLOB_RECURSE RESOURCE_FILES ${PROJECT_SOURCE_DIR}/res/*)
+if(NOT EXISTS ${PROJECT_BINARY_DIR}/res/)
+    file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/res/)
+endif()
 foreach(RESOURCE_FILE ${RESOURCE_FILES})
     configure_file(${RESOURCE_FILE} ${PROJECT_BINARY_DIR}/res/ COPYONLY)
 endforeach()
