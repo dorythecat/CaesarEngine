@@ -34,11 +34,7 @@ public:
     // What provinces to traverse
     std::list<std::pair<std::string, Province>> provinces; // Should be ordered for consistency
 
-    bool operator==(const Connection &other) const {
-      if (steps != other.steps) return false;
-      if (provinces != other.provinces) return false;
-      return true;
-    }
+    bool operator==(const Connection &other) const { return steps == other.steps && provinces == other.provinces; }
   };
 
   Shader provShader, textShader;
