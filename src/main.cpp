@@ -62,6 +62,7 @@ void processInput(GLFWwindow* window) {
     if (keyPressed(window, MOVE_RIGHT)) offset.x += scale * 0.001f;
 }
 
+std::string selectedProv; // Currently selected province
 void mouse_click_callback(GLFWwindow* window,
                           const int button,
                           const int action,
@@ -86,16 +87,22 @@ void mouse_click_callback(GLFWwindow* window,
             std::cout << " - Adjacent province: " << sm->pm->getProvince(adjProvName).getName() << std::endl;
         }
 
-        for (const auto& [name, prov] : sm->pm->getAllProvincesMap()) {
-            auto [steps, pathProvs] = sm->pm->findPath(provinceName, name);
-            std::cout << "Connected to " << name << " in: " << steps << std::endl;
-            if (steps <= 0) continue;
-            std::cout << " - Path: ";
-            for (const auto &provName: pathProvs | std::views::keys) {
-                std::cout << provName;
-                if (provName != name) std::cout << " -> ";
-            } std::cout << std::endl;
+        if (selectedProv.empty()) {
+            selectedProv = provinceName;
+            std::cout << "Selected " << selectedProv << " as the starting province for pathfinding." << std::endl;
+            return;
         }
+
+        auto [steps, pathProvs] = sm->pm->findPath(selectedProv, provinceName);
+        std::cout << selectedProv << " is connected to " << provinceName << " in: " << steps << std::endl;
+        if (steps <= 0) return; // Not connected or same province
+        std::cout << " - Path: ";
+        for (const auto &provName: pathProvs | std::views::keys) {
+            std::cout << provName;
+            if (provName != provinceName) std::cout << " -> ";
+        } std::cout << std::endl;
+
+        selectedProv = ""; // Reset selected province
     }
 }
 
