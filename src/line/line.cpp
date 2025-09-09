@@ -3,9 +3,7 @@
 #include <utility>
 
 Line::Line(ErrorHandler *errorHandler,
-           std::vector<vec2f> points,
-           const std::string &shaderPath) : shader(errorHandler, shaderPath),
-                                            errorHandler(errorHandler) {
+           std::vector<vec2f> points) : errorHandler(errorHandler) {
   generateMesh(std::move(points));
   generateMeshData();
 }
