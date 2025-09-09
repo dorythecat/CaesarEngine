@@ -21,7 +21,7 @@ void Line::generateMesh(const std::vector<vec2f> &points) {
 
   // Very, very basic line generation
   for (size_t i = 0; i < points.size() - 1; ++i) {
-    addSegment(points[i], points[i + 1]);
+    addSegment(points[i] * 2.0f, points[i + 1] * 2.0f); // Scale up because we're in NDC
   }
 }
 
@@ -60,17 +60,19 @@ void Line::addSegment(const vec2f &start, const vec2f &end) {
   // Very basic line segment addition (not handling joins or anything)
 
   const auto index = static_cast<unsigned int>(vertices.size());
+  const vec2f direction = (end - start).normalized();
+  const vec2f perpendicular = vec2f(-direction.y, direction.x) * 0.002f;
 
-  vertices.push_back(start - 0.05f);
-  vertices.push_back(start + 0.05f);
-  vertices.push_back(end - 0.05f);
-  vertices.push_back(end + 0.05f);
+  vertices.push_back(start + perpendicular);
+  vertices.push_back(start - perpendicular);
+  vertices.push_back(end - perpendicular);
+  vertices.push_back(end + perpendicular);
 
   indices.push_back(index);
   indices.push_back(index + 1);
   indices.push_back(index + 2);
 
-  indices.push_back(index + 3);
+  indices.push_back(index);
   indices.push_back(index + 2);
-  indices.push_back(index + 1);
+  indices.push_back(index + 3);
 }
