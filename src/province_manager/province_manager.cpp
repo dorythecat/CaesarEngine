@@ -130,10 +130,18 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string &provinc
   bool found = false;
   while (!toVisit.empty()) {
     // Get first element
+
     std::string cur = toVisit.front();
     toVisit.pop();
 
-    for (const auto& adj : adjacencyMap.at(cur)) {
+    // Sort for optimization
+    std::unordered_set<std::string> adjMap = adjacencyMap.at(cur);
+    std::vector<std::string> adjProvs(adjMap.begin(), adjMap.end());
+    std::ranges::sort(adjProvs, [&provinces = this->provinces](const std::string &a, const std::string &b) {
+      return provinces.at(a).getArea() < provinces.at(b).getArea();
+    });
+
+    for (const auto& adj : adjProvs) {
       if (visited.contains(adj)) continue;
       parent.emplace_back(adj, cur);
       toVisit.push(adj);
