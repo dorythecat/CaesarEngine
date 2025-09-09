@@ -6,7 +6,7 @@ Line::Line(ErrorHandler* errorHandler,
   generateMeshData();
 }
 
-void Line::render(const Window &window, float scale, const vec2f &offset) const {
+void Line::render() const {
   glBindVertexArray(VAO);
   glDrawElements(GL_LINES,
                  static_cast<int>(indices.size()),

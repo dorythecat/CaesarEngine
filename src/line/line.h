@@ -20,7 +20,7 @@ public:
     glDeleteBuffers(1, &EBO);
   }
 
-  void render(const Window& window, float scale, const vec2f& offset) const;
+  void render() const;
 
 private:
   unsigned int VAO{}, VBO{}, EBO{};
