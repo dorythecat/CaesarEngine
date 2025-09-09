@@ -60,7 +60,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
       curProv[2],
       city
     });
-  }
+  } province_file.close();
 
   // Generate queued provinces
   for (const auto&[id, color, name, city] : queuedProvinces)

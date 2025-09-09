@@ -58,18 +58,18 @@ void Line::generateMeshData() {
 void Line::addSegment(const vec2f &start, const vec2f &end) {
   // Very basic line segment addition (not handling joins or anything)
 
-  const auto i = static_cast<unsigned int>(vertices.size());
+  const auto index = static_cast<unsigned int>(vertices.size());
 
   vertices.push_back(start - 0.05f);
   vertices.push_back(start + 0.05f);
   vertices.push_back(end - 0.05f);
   vertices.push_back(end + 0.05f);
 
-  indices.push_back(i);
-  indices.push_back(i + 1);
-  indices.push_back(i + 2);
+  indices.push_back(index);
+  indices.push_back(index + 1);
+  indices.push_back(index + 2);
 
-  indices.push_back(i + 2);
-  indices.push_back(i + 1);
-  indices.push_back(i + 3);
+  indices.push_back(index + 3);
+  indices.push_back(index + 2);
+  indices.push_back(index + 1);
 }
