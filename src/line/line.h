@@ -8,6 +8,7 @@ constexpr float CURVE_SEGMENTS_INVERSE = 1.0f / CURVE_SEGMENTS; // Precomputed i
 #include <glad/glad.h>
 
 #include <vector>
+#include <algorithm>
 
 #include "../utils.hpp"
 #include "../error_handler/error_handler.h"
