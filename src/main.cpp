@@ -103,13 +103,8 @@ void mouse_click_callback(GLFWwindow* window,
 }
 
 void scroll_callback(GLFWwindow* window, const double xoffset, const double yoffset) {
-    if (yoffset < 0.0) {
-        if (scale > 10.0f) return;
-        scale += 0.1f;
-        return;
-    }
-    if (scale < 0.1f) return;
-    scale -= 0.1f;
+    if (yoffset < 0.0 && scale <= 10.0f) scale += 0.1f;
+    else if (scale >= 0.1f) scale -= 0.1f;
 }
 
 vec2f lastMousePos;
