@@ -77,7 +77,7 @@ void mouse_click_callback(GLFWwindow* window,
     // At some point we could change the system to work with double-precision floats,
     // which would be more accurate but use more memory
     vec2f f = static_cast<vec2f>(position) * 2.0f * scale / static_cast<vec2f>(dimensions);
-    f = (f - scale) * vec2f(1.0f, -1.0f) + offset;
+    f = (f - scale).negateY() + offset;
     const auto *sm = static_cast<StateManager *>(glfwGetWindowUserPointer(window));
     if (const std::string state = sm->clickedOnState(f); !state.empty()) {
         const std::string provinceName = sm->pm->clickedOnProvince(f);
