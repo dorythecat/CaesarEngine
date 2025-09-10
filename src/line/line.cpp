@@ -70,7 +70,6 @@ void Line::addSegment(const vec2f &start, const vec2f &end, const bool final) {
   // Final segment, add an arrow pointing to the final point
   vertices.push_back(end);
   vertices.push_back(end - direction * 0.01f + perpendicular * 2.0f);
-  vertices.push_back(end);
   vertices.push_back(end - direction * 0.01f - perpendicular * 2.0f);
 }
 
