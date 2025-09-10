@@ -110,6 +110,10 @@ struct vec2 {
         return vec2(x / len, y / len);
     }
     [[nodiscard]] vec2 perpendicular() const { return vec2(-y, x); } // 90 degree rotation
+
+    // Other useful functions
+    [[nodiscard]] vec2 negateX() { return vec2(-x, y); }
+    [[nodiscard]] vec2 negateY() { return vec2(x, -y); }
   
     // Output
     friend std::ostream& operator<<(std::ostream& os, const vec2& v) {
