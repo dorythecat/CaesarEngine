@@ -37,8 +37,6 @@ std::unordered_map<KEYBINDS_ENUM, int> keybinds = {
     {DRAG_KEY, GLFW_MOUSE_BUTTON_RIGHT},
 };
 
-ErrorHandler errorHandler; // Global error handler
-
 float scale = 1.0f;
 vec2f offset;
 
@@ -123,6 +121,8 @@ void mouse_cursor_callback(GLFWwindow* window, const double xpos, const double y
 }
 
 int main() {
+    ErrorHandler errorHandler; // Global error handler
+
     const Window window(800, 600, "Caesar Engine", &errorHandler);
 
     StateManager sm(&errorHandler);
