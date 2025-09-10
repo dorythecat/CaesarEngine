@@ -79,9 +79,9 @@ vec2f Line::catmullRom(const vec2f &p0, const vec2f &p1, const vec2f &p2, const 
 
   // Knot parameters
   constexpr float t0 = 0.0f;
-  const float t1 = t0 + std::pow((p1 - p0).length(), 0.5f);
-  const float t2 = t1 + std::pow((p2 - p1).length(), 0.5f);
-  const float t3 = t2 + std::pow((p3 - p2).length(), 0.5f);
+  const float t1 = t0 + std::sqrt((p1 - p0).length());
+  const float t2 = t1 + std::sqrt((p2 - p1).length());
+  const float t3 = t2 + std::sqrt((p3 - p2).length());
 
   // Clamp and rescale t to the range [t1, t2], so it goes from P1 to P2
   std::clamp(t, 0.0f, 1.0f);
