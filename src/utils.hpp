@@ -95,9 +95,12 @@ struct vec2 {
 
     // Special vector functions
     [[nodiscard]] T length() const {
+        const T absx = std::abs(x), absy = std::abs(y);
+
         if (x == 0 && y == 0) return 0;
-        if (x == 0) return std::abs(y);
-        if (y == 0) return std::abs(x);
+        if (x == 0) return absy;
+        if (y == 0) return absx;
+        if (absx == absy) return std::sqrt(2) * absx;
         return std::sqrt(x * x + y * y);
     }
     [[nodiscard]] T dot(const vec2& other) const { return x * other.x + y * other.y; }
