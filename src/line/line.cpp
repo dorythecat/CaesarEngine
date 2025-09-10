@@ -81,14 +81,14 @@ void Line::addSegment(const vec2f &start, const vec2f &end) {
 
   vertices.push_back(start + perpendicular);
   vertices.push_back(start - perpendicular);
-  vertices.push_back(end - perpendicular);
   vertices.push_back(end + perpendicular);
+  vertices.push_back(end - perpendicular);
 
   indices.push_back(index);
   indices.push_back(index + 1);
-  indices.push_back(index + 2);
+  indices.push_back(index + 3);
 
   indices.push_back(index);
-  indices.push_back(index + 2);
   indices.push_back(index + 3);
+  indices.push_back(index + 2);
 }
