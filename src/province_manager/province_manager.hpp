@@ -1,8 +1,6 @@
 #ifndef PROVINCE_MANAGER_HPP
 #define PROVINCE_MANAGER_HPP
 
-#define MAX_PATH_SAVE 16 // Maximum number of path connections to save to memory
-
 #include <algorithm>
 #include <string>
 #include <map>
@@ -75,8 +73,6 @@ private:
   Line line; // For debugging paths
 
   std::map<std::string, std::unordered_set<std::string>> adjacencyMap;
-
-  std::deque<Connection> connectionCache; // Cache of recent connections, limited to MAX_PATH_SAVE entries
 };
 
 #endif // PROVINCE_MANAGER_HPP

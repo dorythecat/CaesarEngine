@@ -110,32 +110,6 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
     return connection;
   }
 
-  for (const auto& conn : connectionCache) {
-    if (conn.provinces.front().first == provinceA && conn.provinces.back().first == provinceB) {
-      // Move to front of cache
-      std::ranges::remove_if(connectionCache, [&conn](const Connection &c) { return c == conn; });
-      connectionCache.push_front(conn);
-
-      std::vector<vec2f> linePoints;
-      for (const auto &prov: conn.provinces | std::views::values) linePoints.push_back(prov.getCenter());
-      line.setPoints(linePoints);
-
-      return conn; // Return cached connection
-    }
-
-    if (conn.provinces.front().first == provinceB && conn.provinces.back().first == provinceA) {
-      Connection reversedConn = conn;
-      std::ranges::reverse(reversedConn.provinces);
-      connectionCache.push_front(reversedConn); // Keep the other one in its current position
-
-      std::vector<vec2f> linePoints;
-      for (const auto &prov: reversedConn.provinces | std::views::values) linePoints.push_back(prov.getCenter());
-      line.setPoints(linePoints);
-
-      return reversedConn; // Return reversed cached connection
-    }
-  }
-
   // BFS to find the shortest path
   std::list<std::pair<std::string, std::string>> parent;
   std::queue<std::string> toVisit;
@@ -180,8 +154,6 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
   // Generate connection
   connection.steps = static_cast<int>(path.size()) - 1;
   connection.provinces = path;
-  connectionCache.push_front(connection);
-  if (connectionCache.size() > MAX_PATH_SAVE) connectionCache.pop_back(); // Limit cache size
 
   std::vector<vec2f> linePoints;
   for (const auto &prov: path | std::views::values) linePoints.push_back(prov.getCenter());
