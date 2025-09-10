@@ -115,6 +115,11 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
       // Move to front of cache
       std::ranges::remove_if(connectionCache, [&conn](const Connection &c) { return c == conn; });
       connectionCache.push_front(conn);
+
+      std::vector<vec2f> linePoints;
+      for (const auto &prov: conn.provinces | std::views::values) linePoints.push_back(prov.getCenter());
+      line.setPoints(linePoints);
+
       return conn; // Return cached connection
     }
 
@@ -122,6 +127,11 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
       Connection reversedConn = conn;
       std::ranges::reverse(reversedConn.provinces);
       connectionCache.push_front(reversedConn); // Keep the other one in its current position
+
+      std::vector<vec2f> linePoints;
+      for (const auto &prov: reversedConn.provinces | std::views::values) linePoints.push_back(prov.getCenter());
+      line.setPoints(linePoints);
+
       return reversedConn; // Return reversed cached connection
     }
   }
