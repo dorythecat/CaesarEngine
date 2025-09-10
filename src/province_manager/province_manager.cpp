@@ -169,23 +169,23 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
 
   // Reconstruct path
   std::list<std::pair<std::string, Province>> path;
-  std::vector<vec2f> linePoints;
   for (std::string cur = provinceB; cur != provinceA;) {
-    Province prov = provinces.at(cur);
-    path.emplace_front(cur, prov);
-    linePoints.push_back(prov.getCenter());
+    path.emplace_front(cur, provinces.at(cur));
     auto it = std::ranges::find_if(parent,
       [&cur](const std::pair<std::string, std::string> &p) { return p.first == cur; });
     if (it == parent.end()) break; // Shouldn't happen
     cur = it->second;
   } path.emplace_front(provinceA, provinces.at(provinceA));
-  line.setPoints(linePoints); // Generate line points
 
   // Generate connection
   connection.steps = static_cast<int>(path.size()) - 1;
   connection.provinces = path;
   connectionCache.push_front(connection);
   if (connectionCache.size() > MAX_PATH_SAVE) connectionCache.pop_back(); // Limit cache size
+
+  std::vector<vec2f> linePoints;
+  for (const auto &prov: path | std::views::values) linePoints.push_back(prov.getCenter());
+  line.setPoints(linePoints);
 
   return connection;
 }
