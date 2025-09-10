@@ -115,11 +115,10 @@ void mouse_cursor_callback(GLFWwindow* window, const double xpos, const double y
         return;
     }
 
-    const vec2f delta = mousePos - lastMousePos;
-    if (delta == vec2f()) return; // No movement
+    if (mousePos == lastMousePos) return; // No movement
     // Remember 1: We need to subtract the delta because the movement is inverted
     // Remember 2: The y-axis is inverted in window coordinates
-    offset -= delta * scale * vec2f(0.002f, -0.002f);
+    offset -= (mousePos - lastMousePos).negateY() * scale * 0.002f;
     lastMousePos = mousePos;
 }
 
