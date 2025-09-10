@@ -7,9 +7,9 @@ Line::Line(ErrorHandler* errorHandler,
 }
 
 void Line::render() const {
-  if (indices.empty()) return; // Nothing to render
+  if (vertices.empty()) return; // Nothing to render
   glBindVertexArray(VAO);
-  glDrawElements(GL_TRIANGLE_STRIP, static_cast<GLint>(indices.size()), GL_UNSIGNED_INT, nullptr);
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, static_cast<GLint>(vertices.size()));
   glBindVertexArray(0);
 }
 
@@ -44,7 +44,6 @@ void Line::generateMesh(const std::vector<vec2f> &points) {
 void Line::generateMeshData() {
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
-  glGenBuffers(1, &EBO);
 
   // Bind VAO
   glBindVertexArray(VAO);
@@ -54,12 +53,6 @@ void Line::generateMeshData() {
                &vertices[0],
                GL_STATIC_DRAW);
 
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-               static_cast<GLsizeiptr>(indices.size() * sizeof(unsigned int)),
-               &indices[0],
-               GL_STATIC_DRAW);
-
   glVertexAttribPointer(0,
                         2,
                         GL_FLOAT,
@@ -67,7 +60,6 @@ void Line::generateMeshData() {
                         sizeof(vec2f),
                         nullptr);
   glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
 }
@@ -83,9 +75,4 @@ void Line::addSegment(const vec2f &start, const vec2f &end) {
   const auto index = static_cast<unsigned int>(vertices.size());
   vertices.push_back(end + perpendicular);
   vertices.push_back(end - perpendicular);
-
-  indices.push_back(index - 2);
-  indices.push_back(index - 1);
-  indices.push_back(index);
-  indices.push_back(index + 1);
 }

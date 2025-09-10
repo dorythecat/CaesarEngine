@@ -17,13 +17,11 @@ public:
     // Clean up the mesh data
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
   }
 
   //Implement copy constructor
   Line(const Line& other) {
     vertices = other.vertices;
-    indices = other.indices;
 
     errorHandler = other.errorHandler;
 
@@ -33,15 +31,13 @@ public:
   void render() const;
   void setPoints(const std::vector<vec2f> &points) {
     vertices.clear();
-    indices.clear();
     generateMesh(points);
     generateMeshData();
   }
 
 private:
-  unsigned int VAO{}, VBO{}, EBO{};
+  unsigned int VAO{}, VBO{};
   std::vector<vec2f> vertices;
-  std::vector<unsigned int> indices;
 
   ErrorHandler* errorHandler;
 
