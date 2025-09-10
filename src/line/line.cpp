@@ -15,7 +15,8 @@ void Line::render() const {
 
 void Line::generateMesh(const std::vector<vec2f> &points) {
   if (points.size() < 2) {
-    errorHandler->logError("Line must have at least 2 points");
+    errorHandler->logError("Line must have at least 2 points",
+      ErrorHandler::ErrorCode::NOT_ENOUGH_LINE_ELEMENTS);
     return;
   }
 
