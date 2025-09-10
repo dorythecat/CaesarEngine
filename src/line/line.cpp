@@ -27,9 +27,9 @@ void Line::generateMesh(const std::vector<vec2f> &points) {
     const vec2f& p2 = points[i + 1];
     const vec2f& p3 = i + 2 < n ? points[i + 2] : points[i + 1] + (points[i + 1] - points[i]).normalized();
     for (int j = 0; j < CURVE_SEGMENTS; j++) {
-      const float t = static_cast<float>(j) * CURVE_SEGMENTS_INVERSE;
+      const float t = static_cast<float>(j) * CURVE_STEP;
       vec2f pointA = catmullRom(p0, p1, p2, p3, t) * 2.0f; // Scale up because we're in NDC
-      vec2f pointB = catmullRom(p0, p1, p2, p3, t + CURVE_SEGMENTS_INVERSE) * 2.0f;
+      vec2f pointB = catmullRom(p0, p1, p2, p3, t + CURVE_STEP) * 2.0f;
       addSegment(pointA, pointB, j == CURVE_SEGMENTS - 1 && i == n - 2);
     }
   }
