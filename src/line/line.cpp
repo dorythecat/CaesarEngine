@@ -47,12 +47,7 @@ void Line::generateMeshData() {
                &vertices[0],
                GL_STATIC_DRAW);
 
-  glVertexAttribPointer(0,
-                        2,
-                        GL_FLOAT,
-                        GL_FALSE,
-                        sizeof(vec2f),
-                        nullptr);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(vec2f), nullptr);
   glEnableVertexAttribArray(0);
 
   glBindVertexArray(0);
@@ -62,11 +57,10 @@ void Line::addSegment(const vec2f &start, const vec2f &end) {
   const vec2f direction = (end - start).normalized();
   const vec2f perpendicular = vec2f(-direction.y, direction.x) * 0.002f;
 
-  if (vertices.empty()) {
+  if (vertices.empty()) { // Only needed for the first segment
     vertices.push_back(start + perpendicular);
     vertices.push_back(start - perpendicular);
   }
-  const auto index = static_cast<unsigned int>(vertices.size());
   vertices.push_back(end + perpendicular);
   vertices.push_back(end - perpendicular);
 }
