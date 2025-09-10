@@ -23,25 +23,25 @@ struct vec2 {
     }
   
     // Comparison
-    bool operator==(const vec2& other) const { return x == other.x && y == other.y; }
-    bool operator!=(const vec2& other) const { return x != other.x || y != other.y; }
-    bool operator<(const vec2& other) const { return (x < other.x) || (x == other.x && y < other.y); }
-    bool operator<=(const vec2& other) const { return (x < other.x) || (x == other.x && y <= other.y); }
-    bool operator>(const vec2& other) const { return (x > other.x) || (x == other.x && y > other.y); }
-    bool operator>=(const vec2& other) const { return (x > other.x) || (x == other.x && y >= other.y); }
+    [[nodiscard]] bool operator==(const vec2& other) const { return x == other.x && y == other.y; }
+    [[nodiscard]] bool operator!=(const vec2& other) const { return x != other.x || y != other.y; }
+    [[nodiscard]] bool operator<(const vec2& other) const { return (x < other.x) || (x == other.x && y < other.y); }
+    [[nodiscard]] bool operator<=(const vec2& other) const { return (x < other.x) || (x == other.x && y <= other.y); }
+    [[nodiscard]] bool operator>(const vec2& other) const { return (x > other.x) || (x == other.x && y > other.y); }
+    [[nodiscard]] bool operator>=(const vec2& other) const { return (x > other.x) || (x == other.x && y >= other.y); }
 
     // Basic arithmetic
-    vec2 operator+(const vec2& other) const { return vec2(x + other.x, y + other.y); }
-    vec2 operator+(const T& scalar) const { return vec2(x + scalar, y + scalar); }
-    vec2 operator-(const vec2& other) const { return vec2(x - other.x, y - other.y); }
-    vec2 operator-(const T& scalar) const { return vec2(x - scalar, y - scalar); }
-    vec2 operator*(const vec2& other) const { return vec2(x * other.x, y * other.y); }
-    vec2 operator*(const T& scalar) const { return vec2(x * scalar, y * scalar); }
-    vec2 operator/(const vec2& other) const {
+    [[nodiscard]] vec2 operator+(const vec2& other) const { return vec2(x + other.x, y + other.y); }
+    [[nodiscard]] vec2 operator+(const T& scalar) const { return vec2(x + scalar, y + scalar); }
+    [[nodiscard]] vec2 operator-(const vec2& other) const { return vec2(x - other.x, y - other.y); }
+    [[nodiscard]] vec2 operator-(const T& scalar) const { return vec2(x - scalar, y - scalar); }
+    [[nodiscard]] vec2 operator*(const vec2& other) const { return vec2(x * other.x, y * other.y); }
+    [[nodiscard]] vec2 operator*(const T& scalar) const { return vec2(x * scalar, y * scalar); }
+    [[nodiscard]] vec2 operator/(const vec2& other) const {
         if (other.x == 0 || other.y == 0) throw std::runtime_error("Division by zero in vec2 division");
         return vec2(x / other.x, y / other.y);
     }
-    vec2 operator/(const T& scalar) const {
+    [[nodiscard]] vec2 operator/(const T& scalar) const {
         if (scalar == 0) throw std::runtime_error("Division by zero in vec2 division");
         return vec2(x / scalar, y / scalar);
     }
