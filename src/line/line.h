@@ -16,8 +16,7 @@ constexpr float CURVE_SEGMENTS_INVERSE = 1.0f / CURVE_SEGMENTS; // Precomputed i
 class Line {
 public:
   explicit Line(ErrorHandler* errorHandler) : errorHandler(errorHandler) {}
-  Line(ErrorHandler* errorHandler,
-       const std::vector<vec2f> &points);
+  Line(ErrorHandler* errorHandler, const std::vector<vec2f> &points);
   ~Line() noexcept {
     // Clean up the mesh data
     glDeleteVertexArrays(1, &VAO);
@@ -27,9 +26,7 @@ public:
   //Implement copy constructor
   Line(const Line& other) {
     vertices = other.vertices;
-
     errorHandler = other.errorHandler;
-
     generateMeshData(); // Regenerate the mesh data, otherwise it won't render
   }
 

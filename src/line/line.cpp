@@ -1,7 +1,6 @@
 #include "line.h"
 
-Line::Line(ErrorHandler* errorHandler,
-           const std::vector<vec2f> &points) : errorHandler(errorHandler) {
+Line::Line(ErrorHandler* errorHandler, const std::vector<vec2f> &points) : errorHandler(errorHandler) {
   generateMesh(points);
   generateMeshData();
 }
