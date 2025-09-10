@@ -1,6 +1,8 @@
 #ifndef LINE_H
 #define LINE_H
 
+#define CURVE_SEGMENTS 16 // Number of segments to use per curve (higher = smoother, but more expensive)
+
 #include <glad/glad.h>
 
 #include <vector>

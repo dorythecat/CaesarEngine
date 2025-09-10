@@ -19,23 +19,17 @@ void Line::generateMesh(const std::vector<vec2f> &points) {
     return;
   }
 
-  // Very, very basic line generation
-  /*for (size_t i = 0; i < points.size() - 1; ++i) {
-    addSegment(points[i] * 2.0f, points[i + 1] * 2.0f); // Scale up because we're in NDC
-  }*/
-
-  // Implement Catmull-Rom spline for smooth lines
+  // Catmull-Rom spline for smooth lines
   const size_t n = points.size();
   for (size_t i = 0; i < n - 1; ++i) {
-    constexpr int segmentsPerCurve = 8; // More segments = smoother curve
     const vec2f& p0 = (i == 0) ? vec2f() : points[i - 1];
     const vec2f& p1 = points[i];
     const vec2f& p2 = points[i + 1];
     const vec2f& p3 = (i + 2 < n) ? points[i + 2] : vec2f();
-    for (int j = 0; j < segmentsPerCurve; ++j) {
-      const float t = static_cast<float>(j) / segmentsPerCurve;
+    for (int j = 0; j < CURVE_SEGMENTS; ++j) {
+      const float t = static_cast<float>(j) / CURVE_SEGMENTS;
       vec2f pointA = catmullRom(p0, p1, p2, p3, t) * 2.0f; // Scale up because we're in NDC
-      vec2f pointB = catmullRom(p0, p1, p2, p3, t + 1.0f / segmentsPerCurve) * 2.0f;
+      vec2f pointB = catmullRom(p0, p1, p2, p3, t + 1.0f / CURVE_SEGMENTS) * 2.0f;
       addSegment(pointA, pointB);
     }
   }
