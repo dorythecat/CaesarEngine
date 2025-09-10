@@ -82,16 +82,10 @@ void mouse_click_callback(GLFWwindow* window,
     if (const std::string state = sm->clickedOnState(f); !state.empty()) {
         const std::string provinceName = sm->pm->clickedOnProvince(f);
         const Province p = sm->pm->getProvince(provinceName);
-        std::cout << "Clicked on province: " << provinceName << ", on state: " << state << std::endl;
-
-        for (auto adjacencyMap = sm->pm->getAdjacencyMap();
-             const auto& adjProvName : adjacencyMap[provinceName]) {
-            std::cout << " - Adjacent province: " << sm->pm->getProvince(adjProvName).getName() << std::endl;
-        }
-
         if (selectedProv.empty()) {
             selectedProv = provinceName;
-            std::cout << "Selected " << selectedProv << " as the starting province for pathfinding." << std::endl;
+            std::cout << "Selected " << selectedProv << ", on state: " << state <<
+                " as the starting province for pathfinding." << std::endl;
             return;
         }
 
