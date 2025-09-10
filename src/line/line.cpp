@@ -54,8 +54,7 @@ void Line::generateMeshData() {
 }
 
 void Line::addSegment(const vec2f &start, const vec2f &end) {
-  const vec2f direction = (end - start).normalized();
-  const vec2f perpendicular = vec2f(-direction.y, direction.x) * 0.002f;
+  const vec2f perpendicular = (end - start).normalized().perpendicular() * 0.002f;
 
   if (vertices.empty()) { // Only needed for the first segment
     vertices.push_back(start + perpendicular);
