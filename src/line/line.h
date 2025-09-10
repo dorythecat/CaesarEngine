@@ -47,7 +47,7 @@ private:
 
   void generateMesh(const std::vector<vec2f> &points);
   void generateMeshData();
-  void addSegment(const vec2f& start, const vec2f& end);
+  void addSegment(const vec2f& start, const vec2f& end, bool final);
 
   static vec2f catmullRom(const vec2f& p0, const vec2f& p1, const vec2f& p2, const vec2f& p3, float t);
 };

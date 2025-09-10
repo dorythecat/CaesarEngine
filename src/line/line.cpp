@@ -30,7 +30,7 @@ void Line::generateMesh(const std::vector<vec2f> &points) {
       const float t = static_cast<float>(j) * CURVE_SEGMENTS_INVERSE;
       vec2f pointA = catmullRom(p0, p1, p2, p3, t) * 2.0f; // Scale up because we're in NDC
       vec2f pointB = catmullRom(p0, p1, p2, p3, t + CURVE_SEGMENTS_INVERSE) * 2.0f;
-      addSegment(pointA, pointB);
+      addSegment(pointA, pointB, j == CURVE_SEGMENTS - 1 && i == n - 2);
     }
   }
 }
@@ -53,15 +53,25 @@ void Line::generateMeshData() {
   glBindVertexArray(0);
 }
 
-void Line::addSegment(const vec2f &start, const vec2f &end) {
-  const vec2f perpendicular = (end - start).normalized().perpendicular() * 0.002f;
+void Line::addSegment(const vec2f &start, const vec2f &end, const bool final) {
+  const vec2f direction = (end - start).normalized();
+  const vec2f perpendicular = direction.perpendicular() * 0.002f;
 
   if (vertices.empty()) { // Only needed for the first segment
     vertices.push_back(start + perpendicular);
     vertices.push_back(start - perpendicular);
   }
-  vertices.push_back(end + perpendicular);
-  vertices.push_back(end - perpendicular);
+  if (!final) {
+    vertices.push_back(end + perpendicular);
+    vertices.push_back(end - perpendicular);
+    return;
+  }
+
+  // Final segment, add an arrow pointing to the final point
+  vertices.push_back(end);
+  vertices.push_back(end - direction * 0.01f + perpendicular * 2.0f);
+  vertices.push_back(end);
+  vertices.push_back(end - direction * 0.01f - perpendicular * 2.0f);
 }
 
 vec2f Line::catmullRom(const vec2f &p0, const vec2f &p1, const vec2f &p2, const vec2f &p3, float t) {
