@@ -3,6 +3,8 @@
 
 #define CURVE_SEGMENTS 16 // Number of segments to use per curve (higher = smoother, but more expensive)
 
+constexpr float CURVE_SEGMENTS_INVERSE = 1.0f / CURVE_SEGMENTS; // Precomputed inverse for efficiency
+
 #include <glad/glad.h>
 
 #include <vector>
