@@ -100,8 +100,8 @@ struct vec2 {
         if (x == 0 && y == 0) return 0;
         if (x == 0) return absy;
         if (y == 0) return absx;
-        if (absx == absy) return std::sqrt(2) * absx;
-        return std::sqrt(x * x + y * y);
+        if (absx == absy) return static_cast<T>(std::sqrt(2)) * absx;
+        return static_cast<T>(std::sqrt(x * x + y * y));
     }
     [[nodiscard]] T dot(const vec2& other) const { return x * other.x + y * other.y; }
     [[nodiscard]] vec2 normalized() const {
