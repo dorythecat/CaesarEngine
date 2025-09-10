@@ -155,7 +155,7 @@ int main() {
         sm.pm->textShader.setFloat("scale", scale);
         sm.pm->textShader.setVec2f("offset", offset);
         sm.pm->textShader.setInt("tex", 0);
-        sm.pm->textShader.setFloat("alpha", 1.0f);
+        sm.pm->textShader.setFloat("alpha", scale < 0.5f ? scale + 0.5f : 1.0f);
 
         sm.pm->lineShader.use();
         sm.pm->lineShader.setFloat("scale", scale);
