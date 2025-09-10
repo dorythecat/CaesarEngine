@@ -90,6 +90,9 @@ struct vec2 {
         return *this;
     }
 
+    // Unary negation
+    vec2 operator-() const { return vec2(-x, -y); }
+
     // Special vector functions
     [[nodiscard]] T length() const {
         if (x == 0 && y == 0) return 0;
@@ -103,6 +106,7 @@ struct vec2 {
         if (len == 0) throw std::runtime_error("Normalization of zero-length vector");
         return vec2(x / len, y / len);
     }
+    [[nodiscard]] vec2 perpendicular() const { return vec2(-y, x); } // 90 degree rotation
   
     // Output
     friend std::ostream& operator<<(std::ostream& os, const vec2& v) {
