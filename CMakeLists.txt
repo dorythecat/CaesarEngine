@@ -44,11 +44,18 @@ target_link_libraries(${PROJECT_NAME} glfw) # Link the executable with the libra
 
 # Copy all resource files to the build directory
 file(GLOB_RECURSE RESOURCE_FILES ${PROJECT_SOURCE_DIR}/res/*)
-if(NOT EXISTS ${PROJECT_BINARY_DIR}/res/)
+file(GLOB_RECURSE SHADER_FILES ${PROJECT_SOURCE_DIR}/res/shaders/*)
+if(NOT EXISTS ${PROJECT_BINARY_DIR}/res/) # Create resource directory if it doesn't exist already
     file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/res/)
+endif()
+if(NOT EXISTS ${PROJECT_BINARY_DIR}/res/shaders)
+    file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/res/shaders)
 endif()
 foreach(RESOURCE_FILE ${RESOURCE_FILES})
     configure_file(${RESOURCE_FILE} ${PROJECT_BINARY_DIR}/res/ COPYONLY)
+endforeach()
+foreach(SHADER_FILE ${SHADER_FILES})
+    configure_file(${SHADER_FILE} ${PROJECT_BINARY_DIR}/res/shaders COPYONLY)
 endforeach()
 
 # Apply warning flags to all configurations
