@@ -73,22 +73,22 @@ void Line::generateMeshData() {
 }
 
 void Line::addSegment(const vec2f &start, const vec2f &end) {
-  // Very basic line segment addition (not handling joins or anything)
-
-  const auto index = static_cast<unsigned int>(vertices.size());
   const vec2f direction = (end - start).normalized();
   const vec2f perpendicular = vec2f(-direction.y, direction.x) * 0.002f;
 
-  vertices.push_back(start + perpendicular);
-  vertices.push_back(start - perpendicular);
+  if (vertices.empty()) {
+    vertices.push_back(start + perpendicular);
+    vertices.push_back(start - perpendicular);
+  }
+  const auto index = static_cast<unsigned int>(vertices.size());
   vertices.push_back(end + perpendicular);
   vertices.push_back(end - perpendicular);
 
-  indices.push_back(index);
+  indices.push_back(index - 2);
+  indices.push_back(index - 1);
   indices.push_back(index + 1);
-  indices.push_back(index + 3);
 
+  indices.push_back(index - 2);
+  indices.push_back(index + 1);
   indices.push_back(index);
-  indices.push_back(index + 3);
-  indices.push_back(index + 2);
 }
