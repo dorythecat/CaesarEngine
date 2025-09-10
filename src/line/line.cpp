@@ -9,7 +9,7 @@ Line::Line(ErrorHandler* errorHandler,
 void Line::render() const {
   if (indices.empty()) return; // Nothing to render
   glBindVertexArray(VAO);
-  glDrawElements(GL_TRIANGLES, static_cast<GLint>(indices.size()), GL_UNSIGNED_INT, nullptr);
+  glDrawElements(GL_TRIANGLE_STRIP, static_cast<GLint>(indices.size()), GL_UNSIGNED_INT, nullptr);
   glBindVertexArray(0);
 }
 
@@ -86,9 +86,6 @@ void Line::addSegment(const vec2f &start, const vec2f &end) {
 
   indices.push_back(index - 2);
   indices.push_back(index - 1);
-  indices.push_back(index + 1);
-
-  indices.push_back(index - 2);
-  indices.push_back(index + 1);
   indices.push_back(index);
+  indices.push_back(index + 1);
 }
