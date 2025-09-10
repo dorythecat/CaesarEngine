@@ -76,6 +76,10 @@ void Line::addSegment(const vec2f &start, const vec2f &end, const bool final) {
 vec2f Line::catmullRom(const vec2f &p0, const vec2f &p1, const vec2f &p2, const vec2f &p3, float t) {
   // See https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
 
+  // Clamp t to [0, 1]
+  if (t < 0.0f) t = 0.0f;
+  else if (t > 1.0f) t = 1.0f;
+
   // Knot parameters
   constexpr float t0 = 0.0f;
   const float t1 = t0 + std::pow((p1 - p0).length(), 0.5f);
