@@ -20,6 +20,7 @@ public:
         glClear(GL_COLOR_BUFFER_BIT);
     }
     static void clear(const float grey, const float a = 1.0f) { clear(grey, grey, grey, a); }
+    static void clear() { clear(0.0f); }
 
     void swapBuffers() const { glfwSwapBuffers(_window); }
 
