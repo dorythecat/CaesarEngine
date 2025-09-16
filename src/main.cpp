@@ -20,21 +20,27 @@ enum KEYBINDS_ENUM {
     MOVE_UP = 3,
     MOVE_DOWN = 4,
     MOVE_LEFT = 5,
-    MOVE_RIGHT = 6,
-    CLICK_KEY = 7,
-    DRAG_KEY = 8
+    MOVE_RIGHT = 6
 };
 
-std::unordered_map<KEYBINDS_ENUM, int> keybinds = {
-    {EXIT, GLFW_KEY_ESCAPE},
-    {DEBUG_WIREFRAME_ON, GLFW_KEY_F5},
-    {DEBUG_WIREFRAME_OFF, GLFW_KEY_F6},
-    {MOVE_UP, GLFW_KEY_W},
-    {MOVE_DOWN, GLFW_KEY_S},
-    {MOVE_LEFT, GLFW_KEY_A},
-    {MOVE_RIGHT, GLFW_KEY_D},
+enum MOUSE_KEYBINDS_ENUM {
+    CLICK_KEY = 0,
+    DRAG_KEY = 1
+};
+
+static std::unordered_map<KEYBINDS_ENUM, std::vector<int>> keybinds = {
+    {EXIT, {GLFW_KEY_ESCAPE}},
+    {DEBUG_WIREFRAME_ON, {GLFW_KEY_F5}},
+    {DEBUG_WIREFRAME_OFF, {GLFW_KEY_F6}},
+    {MOVE_UP, {GLFW_KEY_W, GLFW_KEY_UP}},
+    {MOVE_DOWN, {GLFW_KEY_S, GLFW_KEY_DOWN}},
+    {MOVE_LEFT, {GLFW_KEY_A, GLFW_KEY_LEFT}},
+    {MOVE_RIGHT, {GLFW_KEY_D, GLFW_KEY_RIGHT}}
+};
+
+static std::unordered_map<MOUSE_KEYBINDS_ENUM, int> mouseKeybinds = {
     {CLICK_KEY, GLFW_MOUSE_BUTTON_LEFT},
-    {DRAG_KEY, GLFW_MOUSE_BUTTON_RIGHT},
+    {DRAG_KEY, GLFW_MOUSE_BUTTON_RIGHT}
 };
 
 
@@ -50,7 +56,8 @@ vec2f offset;
 
 // Keybind utilities
 bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
-    return glfwGetKey(window, keybinds[key]) == GLFW_PRESS;
+    for (const int k : keybinds[key]) if (glfwGetKey(window, k) == GLFW_PRESS) return true;
+    return false;
 }
 
 void processInput(GLFWwindow* window) {
@@ -75,7 +82,7 @@ void mouse_click_callback(GLFWwindow* window,
                           const int button,
                           const int action,
                           int mods) {
-    if (button != keybinds[CLICK_KEY] || action != GLFW_PRESS) return;
+    if (button != mouseKeybinds[CLICK_KEY] || action != GLFW_PRESS) return;
     vec2d position;
     glfwGetCursorPos(window, &position.x, &position.y);
     vec2i dimensions;
@@ -122,7 +129,7 @@ void scroll_callback(GLFWwindow* window, const double xoffset, const double yoff
 vec2f lastMousePos;
 void mouse_cursor_callback(GLFWwindow* window, const double xpos, const double ypos) {
     const auto mousePos = static_cast<vec2f>(vec2d(xpos, ypos));
-    if (glfwGetMouseButton(window, keybinds[DRAG_KEY]) == GLFW_RELEASE) {
+    if (glfwGetMouseButton(window, mouseKeybinds[DRAG_KEY]) == GLFW_RELEASE) {
         lastMousePos = mousePos;
         return;
     }
