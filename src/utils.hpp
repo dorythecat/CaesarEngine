@@ -19,7 +19,8 @@ struct vec2 {
         if (this != &other) {
             x = other.x;
             y = other.y;
-        } return *this;
+        }
+        return *this;
     }
   
     // Comparison
@@ -95,7 +96,7 @@ struct vec2 {
 
     // Special vector functions
     [[nodiscard]] T length() const {
-        const T absx = std::abs(x), absy = std::abs(y);
+        const T absx = static_cast<T>(std::abs(x)), absy = static_cast<T>(std::abs(y));
 
         if (x == 0 && y == 0) return 0;
         if (x == 0) return absy;
@@ -114,6 +115,7 @@ struct vec2 {
     // Other useful functions
     [[nodiscard]] vec2 negateX() { return vec2(-x, y); }
     [[nodiscard]] vec2 negateY() { return vec2(x, -y); }
+    [[nodiscard]] bool zero() const { return std::fpclassify(x) == FP_ZERO && std::fpclassify(y) == FP_ZERO; }
   
     // Output
     friend std::ostream& operator<<(std::ostream& os, const vec2& v) {

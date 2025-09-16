@@ -20,29 +20,44 @@ enum KEYBINDS_ENUM {
     MOVE_UP = 3,
     MOVE_DOWN = 4,
     MOVE_LEFT = 5,
-    MOVE_RIGHT = 6,
-    CLICK_KEY = 7,
-    DRAG_KEY = 8
+    MOVE_RIGHT = 6
 };
 
-std::unordered_map<KEYBINDS_ENUM, int> keybinds = {
-    {EXIT, GLFW_KEY_ESCAPE},
-    {DEBUG_WIREFRAME_ON, GLFW_KEY_F5},
-    {DEBUG_WIREFRAME_OFF, GLFW_KEY_F6},
-    {MOVE_UP, GLFW_KEY_W},
-    {MOVE_DOWN, GLFW_KEY_S},
-    {MOVE_LEFT, GLFW_KEY_A},
-    {MOVE_RIGHT, GLFW_KEY_D},
-    {CLICK_KEY, GLFW_MOUSE_BUTTON_LEFT},
-    {DRAG_KEY, GLFW_MOUSE_BUTTON_RIGHT},
+enum MOUSE_KEYBINDS_ENUM {
+    CLICK_KEY = 0,
+    DRAG_KEY = 1
 };
+
+static std::unordered_map<KEYBINDS_ENUM, std::vector<int>> keybinds = {
+    {EXIT, {GLFW_KEY_ESCAPE}},
+    {DEBUG_WIREFRAME_ON, {GLFW_KEY_F5}},
+    {DEBUG_WIREFRAME_OFF, {GLFW_KEY_F6}},
+    {MOVE_UP, {GLFW_KEY_W, GLFW_KEY_UP}},
+    {MOVE_DOWN, {GLFW_KEY_S, GLFW_KEY_DOWN}},
+    {MOVE_LEFT, {GLFW_KEY_A, GLFW_KEY_LEFT}},
+    {MOVE_RIGHT, {GLFW_KEY_D, GLFW_KEY_RIGHT}}
+};
+
+static std::unordered_map<MOUSE_KEYBINDS_ENUM, int> mouseKeybinds = {
+    {CLICK_KEY, GLFW_MOUSE_BUTTON_LEFT},
+    {DRAG_KEY, GLFW_MOUSE_BUTTON_RIGHT}
+};
+
+
+#ifdef DEBUG
+    ErrorHandler::LogLevel logLevel = ErrorHandler::LOG_ALL;
+#else
+    auto logLevel = static_cast<ErrorHandler::LogLevel>(ErrorHandler::LOG_WARNING | ErrorHandler::LOG_ERROR);
+#endif
+ErrorHandler errorHandler(logLevel); // Global error handler
 
 float scale = 1.0f;
 vec2f offset;
 
 // Keybind utilities
 bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
-    return glfwGetKey(window, keybinds[key]) == GLFW_PRESS;
+    for (const int k : keybinds[key]) if (glfwGetKey(window, k) == GLFW_PRESS) return true;
+    return false;
 }
 
 void processInput(GLFWwindow* window) {
@@ -50,10 +65,8 @@ void processInput(GLFWwindow* window) {
     if (keyPressed(window, EXIT)) glfwSetWindowShouldClose(window, true);
 
     // Debug wireframe mode (on with F5, off with F6)
-    if (keyPressed(window, DEBUG_WIREFRAME_ON))
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    if (keyPressed(window, DEBUG_WIREFRAME_OFF))
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    if (keyPressed(window, DEBUG_WIREFRAME_ON)) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    if (keyPressed(window, DEBUG_WIREFRAME_OFF)) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Move the view with WASD keys
     if (keyPressed(window, MOVE_UP)) offset.y += scale * 0.001f;
@@ -67,7 +80,7 @@ void mouse_click_callback(GLFWwindow* window,
                           const int button,
                           const int action,
                           int mods) {
-    if (button != keybinds[CLICK_KEY] || action != GLFW_PRESS) return;
+    if (button != mouseKeybinds[CLICK_KEY] || action != GLFW_PRESS) return;
     vec2d position;
     glfwGetCursorPos(window, &position.x, &position.y);
     vec2i dimensions;
@@ -80,21 +93,30 @@ void mouse_click_callback(GLFWwindow* window,
     if (const std::string state = sm->clickedOnState(f); !state.empty()) {
         const std::string provinceName = sm->pm->clickedOnProvince(f);
         const Province p = sm->pm->getProvince(provinceName);
+        errorHandler.logDebug("Clicked on province: " + provinceName + ", on state: " + state);
+
+#ifdef DEBUG
+        for (auto adjacencyMap = sm->pm->getAdjacencyMap();
+            const auto& adjProvName : adjacencyMap[provinceName]) {
+            errorHandler.logDebug(" - Adjacent province: " + sm->pm->getProvince(adjProvName).getName());
+        }
+#endif
+
         if (selectedProv.empty()) {
             selectedProv = provinceName;
-            std::cout << "Selected " << selectedProv << ", on state: " << state <<
-                " as the starting province for pathfinding." << std::endl;
+            errorHandler.logDebug("Selected " + selectedProv + " as the starting province for pathfinding.");
             return;
         }
 
         auto [steps, pathProvs] = sm->pm->findPath(selectedProv, provinceName);
-        std::cout << selectedProv << " is connected to " << provinceName << " in: " << steps << std::endl;
+#ifdef DEBUG
+        errorHandler.logDebug(selectedProv + " is connected to " + provinceName + " in: " + std::to_string(steps) + " steps.");
         if (steps <= 0) return; // Not connected or same province
-        std::cout << " - Path: ";
-        for (const auto &provName: pathProvs | std::views::keys) {
-            std::cout << provName;
-            if (provName != provinceName) std::cout << " -> ";
-        } std::cout << std::endl;
+        std::string path = " - Path: ";
+        for (const auto &provName: pathProvs | std::views::keys)
+            path += provName + (provName != provinceName ? " -> " : "\n");
+        errorHandler.logDebug(path);
+#endif
 
         selectedProv = ""; // Reset selected province
     }
@@ -108,21 +130,20 @@ void scroll_callback(GLFWwindow* window, const double xoffset, const double yoff
 vec2f lastMousePos;
 void mouse_cursor_callback(GLFWwindow* window, const double xpos, const double ypos) {
     const auto mousePos = static_cast<vec2f>(vec2d(xpos, ypos));
-    if (glfwGetMouseButton(window, keybinds[DRAG_KEY]) == GLFW_RELEASE) {
+    if (glfwGetMouseButton(window, mouseKeybinds[DRAG_KEY]) == GLFW_RELEASE) {
         lastMousePos = mousePos;
         return;
     }
 
-    if (mousePos == lastMousePos) return; // No movement
+    const vec2f delta = mousePos - lastMousePos;
+    if (delta.zero()) return; // No movement
     // Remember 1: We need to subtract the delta because the movement is inverted
     // Remember 2: The y-axis is inverted in window coordinates
-    offset -= (mousePos - lastMousePos).negateY() * scale * 0.002f;
+    offset -= delta * scale * vec2f(0.002f, -0.002f);
     lastMousePos = mousePos;
 }
 
 int main() {
-    ErrorHandler errorHandler; // Global error handler
-
     const Window window(800, 600, "Caesar Engine", &errorHandler);
 
     StateManager sm(&errorHandler);
@@ -143,7 +164,7 @@ int main() {
         //double deltaTime = time - lastFrame;
         //lastFrame = time;
 
-        Window::clear(0.5f, 0.5f, 0.5f, 1.0f);
+        Window::clear(0.5f);
         processInput(window.window());
 
         // Setup shaders

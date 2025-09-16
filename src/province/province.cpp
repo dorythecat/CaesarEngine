@@ -18,7 +18,7 @@ void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color
   int x, y, n;
   unsigned char* data = stbi_load(mapPath, &x, &y, &n, 0);
   if (!data) {
-    std::cout << "Failed to load texture" << std::endl;
+    errorHandler->logError("Failed to load map texture", ErrorHandler::FILE_NOT_SUCCESSFULLY_READ_ERROR);
     return;
   }
 
@@ -93,8 +93,8 @@ void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color
   vertices.shrink_to_fit();
   indices.shrink_to_fit();
 
-  std::cout << "Vertices: " << vertices.size() << std::endl;
-  std::cout << "Indices: " << indices.size() << std::endl;
+  errorHandler->logDebug("Vertices: " + std::to_string(vertices.size()));
+  errorHandler->logDebug("Indices: " + std::to_string(indices.size()));
 
   center /= static_cast<float>(vertices.size());
 }
