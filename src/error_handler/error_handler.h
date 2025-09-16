@@ -1,8 +1,8 @@
 #ifndef ERROR_HANDLER_H
 #define ERROR_HANDLER_H
 
+#include <array>
 #include <string>
-#include <vector>
 #include <iostream>
 
 // Just a simple error handler that can be set for different warning levels
@@ -29,7 +29,7 @@ public:
     NOT_ENOUGH_LINE_ELEMENTS = 8
   };
 
-  std::vector<std::string> errorMessages = {
+  const std::array<std::string, 9> errorMessages = {
     "CODE 0 | Unknown error",
     "CODE 1 | Window creation error",
     "CODE 2 | Could not open file error",
