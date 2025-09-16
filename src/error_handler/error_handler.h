@@ -54,30 +54,31 @@ public:
 
   void logFatal(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
     // Every fatal error should be logged
-    if (!message.empty()) message = ": " + message;
-    std::cerr << "[FATAL] (" << errorMessages[errorCode] << ")" << message << std::endl;
+    log("[FATAL]", message, errorCode, true);
     std::exit(EXIT_FAILURE);
   }
   void logInfo(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (!message.empty()) message = ": " + message;
-    if (logLevel & LOG_INFO) std::cout << "[INFO] (" << errorMessages[errorCode] << ")" << message << std::endl;
+    if (logLevel & LOG_INFO) log("[INFO]", message, errorCode);
   }
   void logWarning(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (!message.empty()) message = ": " + message;
     if (logLevel & LOG_WARNING) std::cerr << "[WARNING] (" << errorMessages[errorCode] << ")" << message << std::endl;
   }
   void logError(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (!message.empty()) message = ": " + message;
-    if (logLevel & LOG_ERROR) std::cerr << "[ERROR] (" << errorMessages[errorCode] << ")" << message << std::endl;
+    if (logLevel & LOG_ERROR) log("[ERROR]", message, errorCode, true);
   }
   void logDebug(std::string message = "", const ErrorCode errorCode = DEBUG_MESSAGE) const {
     if (errorCode != DEBUG_MESSAGE) std::cout << "Note: Debug logging function used incorrectly. Proceeding anyways." << std::endl;
-    if (!message.empty()) message = ": " + message;
-    if (logLevel & LOG_DEBUG) std::cout << "[DEBUG] (" << errorMessages[errorCode] << ")" << message << std::endl;
+    if (logLevel & LOG_DEBUG) log("[DEBUG]", message, errorCode);
   }
 
 private:
   LogLevel logLevel;
+
+  void log(const std::string &prefix, std::string message, const ErrorCode errorCode, bool error = false) const {
+    if (!message.empty()) message = ": " + message;
+    if (error) std::cerr << prefix << " (" << errorMessages[errorCode] << ")" << message << std::endl;
+    else std::cout << prefix << " (" << errorMessages[errorCode] << ")" << message << std::endl;
+  }
 };
 
 
