@@ -36,7 +36,9 @@ public:
     "CODE 3 | Format error",
     "CODE 4 | File not successfully read",
     "CODE 5 | Shader compilation error",
-    "CODE 6 | Program linking error"
+    "CODE 6 | Program linking error",
+    "CODE 7 | Unassigned province category",
+    "CODE 8 | Not enough line elements"
   };
 
   explicit ErrorHandler(const LogLevel logLevel = LOG_ALL) : logLevel(logLevel) {}
