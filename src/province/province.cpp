@@ -93,10 +93,8 @@ void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color
   vertices.shrink_to_fit();
   indices.shrink_to_fit();
 
-#ifdef DEBUG
-  std::cout << "Vertices: " << vertices.size() << std::endl;
-  std::cout << "Indices: " << indices.size() << std::endl;
-#endif
+  errorHandler->logDebug("Vertices: " + std::to_string(vertices.size()));
+  errorHandler->logDebug("Indices: " + std::to_string(indices.size()));
 
   center /= static_cast<float>(vertices.size());
 }
