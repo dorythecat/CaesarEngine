@@ -65,10 +65,8 @@ void processInput(GLFWwindow* window) {
     if (keyPressed(window, EXIT)) glfwSetWindowShouldClose(window, true);
 
     // Debug wireframe mode (on with F5, off with F6)
-    if (keyPressed(window, DEBUG_WIREFRAME_ON))
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    if (keyPressed(window, DEBUG_WIREFRAME_OFF))
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    if (keyPressed(window, DEBUG_WIREFRAME_ON)) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    if (keyPressed(window, DEBUG_WIREFRAME_OFF)) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Move the view with WASD keys
     if (keyPressed(window, MOVE_UP)) offset.y += scale * 0.001f;
@@ -98,7 +96,7 @@ void mouse_click_callback(GLFWwindow* window,
         std::cout << "Clicked on province: " << provinceName << ", on state: " << state << std::endl;
 
         for (auto adjacencyMap = sm->pm->getAdjacencyMap();
-             const auto& adjProvName : adjacencyMap[provinceName]) {
+            const auto& adjProvName : adjacencyMap[provinceName]) {
             std::cout << " - Adjacent province: " << sm->pm->getProvince(adjProvName).getName() << std::endl;
         }
 
@@ -112,10 +110,8 @@ void mouse_click_callback(GLFWwindow* window,
         std::cout << selectedProv << " is connected to " << provinceName << " in: " << steps << std::endl;
         if (steps <= 0) return; // Not connected or same province
         std::cout << " - Path: ";
-        for (const auto &provName: pathProvs | std::views::keys) {
-            std::cout << provName;
-            if (provName != provinceName) std::cout << " -> ";
-        } std::cout << std::endl;
+        for (const auto &provName: pathProvs | std::views::keys)
+            std::cout << provName << (provName != provinceName ? " -> " : "\n");
 
         selectedProv = ""; // Reset selected province
     }
