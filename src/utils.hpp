@@ -95,7 +95,7 @@ struct vec2 {
 
     // Special vector functions
     [[nodiscard]] T length() const {
-        const T absx = std::abs(x), absy = std::abs(y);
+        const T absx = static_cast<T>(std::abs(x)), absy = static_cast<T>(std::abs(y));
 
         if (x == 0 && y == 0) return 0;
         if (x == 0) return absy;
