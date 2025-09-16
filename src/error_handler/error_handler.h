@@ -54,20 +54,16 @@ public:
     std::exit(EXIT_FAILURE);
   }
   void logInfo(const std::string &message, const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (!(logLevel & LOG_INFO)) return;
-    std::cout << "[INFO] (" << errorMessages[errorCode] << "): " << message << std::endl;
+    if (logLevel & LOG_INFO) std::cout << "[INFO] (" << errorMessages[errorCode] << "): " << message << std::endl;
   }
   void logWarning(const std::string &message, const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (!(logLevel & LOG_WARNING)) return;
-    std::cerr << "[WARNING] (" << errorMessages[errorCode] << "): " << message << std::endl;
+    if (logLevel & LOG_WARNING) std::cerr << "[WARNING] (" << errorMessages[errorCode] << "): " << message << std::endl;
   }
   void logError(const std::string &message, const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (!(logLevel & LOG_ERROR)) return;
-    std::cerr << "[ERROR] (" << errorMessages[errorCode] << "): " << message << std::endl;
+    if (logLevel & LOG_ERROR) std::cerr << "[ERROR] (" << errorMessages[errorCode] << "): " << message << std::endl;
   }
   void logDebug(const std::string &message, const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (!(logLevel & LOG_DEBUG)) return;
-    std::cout << "[DEBUG] (" << errorMessages[errorCode] << "): " << message << std::endl;
+    if (logLevel & LOG_DEBUG) std::cout << "[DEBUG] (" << errorMessages[errorCode] << "): " << message << std::endl;
   }
 
 private:
