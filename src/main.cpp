@@ -150,7 +150,7 @@ int main() {
         //double deltaTime = time - lastFrame;
         //lastFrame = time;
 
-        Window::clear(0.5f, 0.5f, 0.5f, 1.0f);
+        Window::clear(0.5f);
         processInput(window.window());
 
         // Setup shaders

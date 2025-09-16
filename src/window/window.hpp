@@ -15,10 +15,11 @@ public:
       glfwTerminate();
   }
 
-  static void clear(const float r, const float g, const float b, const float a) {
+  static void clear(const float r, const float g, const float b, const float a = 1.0f) {
       glClearColor(r, g, b, a);
       glClear(GL_COLOR_BUFFER_BIT);
   }
+  static void clear(const float grey, const float a = 1.0f) { clear(grey, grey, grey, a); }
 
   void swapBuffers() const { glfwSwapBuffers(_window); }
 
