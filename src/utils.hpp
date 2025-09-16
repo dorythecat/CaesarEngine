@@ -16,7 +16,10 @@ struct vec2 {
     vec2(T x, T y) : x(x), y(y) {}
     vec2(const vec2& other) : x(other.x), y(other.y) {}
     vec2& operator=(const vec2& other) {
-        if (this != &other) *this = vec2(other);
+        if (this != &other) {
+            x = other.x;
+            y = other.y;
+        }
         return *this;
     }
   
