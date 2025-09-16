@@ -37,7 +37,13 @@ std::unordered_map<KEYBINDS_ENUM, int> keybinds = {
     {DRAG_KEY, GLFW_MOUSE_BUTTON_RIGHT},
 };
 
-ErrorHandler errorHandler; // Global error handler
+
+#ifdef DEBUG
+    ErrorHandler::LogLevel logLevel = ErrorHandler::LOG_ALL;
+#else
+    ErrorHandler::LogLevel logLevel = ErrorHandler::LOG_LOG_WARNING | ErrorHandler::LOG_ERROR;
+#endif
+ErrorHandler errorHandler(logLevel); // Global error handler
 
 float scale = 1.0f;
 vec2f offset;

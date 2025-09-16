@@ -10,10 +10,11 @@ class ErrorHandler {
 public:
   // Using bitfields so we can combine levels if needed
   enum LogLevel {
-    INFO = 0b001,
-    WARNING = 0b010,
-    ERROR = 0b100,
-    ALL = 0b111
+    LOG_INFO = 0b0001,
+    LOG_WARNING = 0b0010,
+    LOG_ERROR = 0b0100,
+    LOG_DEBUG = 0b1000,
+    LOG_ALL = 0b1111
   };
 
   enum ErrorCode {
@@ -38,7 +39,7 @@ public:
     "CODE 6 | Program linking error"
   };
 
-  explicit ErrorHandler(const LogLevel logLevel = ALL) : logLevel(logLevel) {}
+  explicit ErrorHandler(const LogLevel logLevel = LOG_ALL) : logLevel(logLevel) {}
   ~ErrorHandler() = default;
 
   ErrorHandler(const ErrorHandler&) = delete;
@@ -52,17 +53,21 @@ public:
     std::cerr << "[FATAL] (" << errorMessages[errorCode] << "): " << message << std::endl;
     std::exit(EXIT_FAILURE);
   }
-  void logError(const std::string &message, const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (!(logLevel & ERROR)) return;
-    std::cerr << "[ERROR] (" << errorMessages[errorCode] << "): " << message << std::endl;
+  void logInfo(const std::string &message, const ErrorCode errorCode = UNKNOWN_ERROR) const {
+    if (!(logLevel & LOG_INFO)) return;
+    std::cout << "[INFO] (" << errorMessages[errorCode] << "): " << message << std::endl;
   }
   void logWarning(const std::string &message, const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (!(logLevel & WARNING)) return;
+    if (!(logLevel & LOG_WARNING)) return;
     std::cerr << "[WARNING] (" << errorMessages[errorCode] << "): " << message << std::endl;
   }
-  void logInfo(const std::string &message, const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (!(logLevel & INFO)) return;
-    std::cout << "[INFO] (" << errorMessages[errorCode] << "): " << message << std::endl;
+  void logError(const std::string &message, const ErrorCode errorCode = UNKNOWN_ERROR) const {
+    if (!(logLevel & LOG_ERROR)) return;
+    std::cerr << "[ERROR] (" << errorMessages[errorCode] << "): " << message << std::endl;
+  }
+  void logDebug(const std::string &message, const ErrorCode errorCode = UNKNOWN_ERROR) const {
+    if (!(logLevel & LOG_DEBUG)) return;
+    std::cout << "[DEBUG] (" << errorMessages[errorCode] << "): " << message << std::endl;
   }
 
 private:
