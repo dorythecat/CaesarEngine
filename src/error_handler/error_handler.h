@@ -19,26 +19,28 @@ public:
 
   enum ErrorCode {
     UNKNOWN_ERROR = 0,
-    WINDOW_CREATION_ERROR = 1,
-    COULD_NOT_OPEN_FILE_ERROR = 2,
-    FORMAT_ERROR = 3,
-    FILE_NOT_SUCCESSFULLY_READ_ERROR = 4,
-    SHADER_COMPILATION_ERROR = 5,
-    PROGRAM_LINKING_ERROR = 6,
-    UNASSIGNED_PROVINCE_CATEGORY = 7,
-    NOT_ENOUGH_LINE_ELEMENTS = 8
+    DEBUG_MESSAGE = 1,
+    WINDOW_CREATION_ERROR = 2,
+    COULD_NOT_OPEN_FILE_ERROR = 3,
+    FORMAT_ERROR = 4,
+    FILE_NOT_SUCCESSFULLY_READ_ERROR = 5,
+    SHADER_COMPILATION_ERROR = 6,
+    PROGRAM_LINKING_ERROR = 7,
+    UNASSIGNED_PROVINCE_CATEGORY = 8,
+    NOT_ENOUGH_LINE_ELEMENTS = 9
   };
 
-  const std::array<std::string, 9> errorMessages = {
+  const std::array<std::string, 10> errorMessages = {
     "CODE 0 | Unknown error",
-    "CODE 1 | Window creation error",
-    "CODE 2 | Could not open file error",
-    "CODE 3 | Format error",
-    "CODE 4 | File not successfully read",
-    "CODE 5 | Shader compilation error",
-    "CODE 6 | Program linking error",
-    "CODE 7 | Unassigned province category",
-    "CODE 8 | Not enough line elements"
+    "CODE 1 | Debug message",
+    "CODE 2 | Window creation error",
+    "CODE 3 | Could not open file error",
+    "CODE 4 | Format error",
+    "CODE 5 | File not successfully read",
+    "CODE 6 | Shader compilation error",
+    "CODE 7 | Program linking error",
+    "CODE 8 | Unassigned province category",
+    "CODE 9 | Not enough line elements"
   };
 
   explicit ErrorHandler(const LogLevel logLevel = LOG_ALL) : logLevel(logLevel) {}
@@ -68,7 +70,8 @@ public:
     if (!message.empty()) message = ": " + message;
     if (logLevel & LOG_ERROR) std::cerr << "[ERROR] (" << errorMessages[errorCode] << ")" << message << std::endl;
   }
-  void logDebug(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
+  void logDebug(std::string message = "", const ErrorCode errorCode = DEBUG_MESSAGE) const {
+    if (errorCode != DEBUG_MESSAGE) std::cout << "Note: Debug logging function used incorrectly. Proceeding anyways." << std::endl;
     if (!message.empty()) message = ": " + message;
     if (logLevel & LOG_DEBUG) std::cout << "[DEBUG] (" << errorMessages[errorCode] << ")" << message << std::endl;
   }
