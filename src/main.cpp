@@ -47,7 +47,7 @@ static std::unordered_map<MOUSE_KEYBINDS_ENUM, int> mouseKeybinds = {
 #ifdef DEBUG
     ErrorHandler::LogLevel logLevel = ErrorHandler::LOG_ALL;
 #else
-    ErrorHandler::LogLevel logLevel = ErrorHandler::LOG_LOG_WARNING | ErrorHandler::LOG_ERROR;
+    auto logLevel = static_cast<ErrorHandler::LogLevel>(ErrorHandler::LOG_WARNING | ErrorHandler::LOG_ERROR);
 #endif
 ErrorHandler errorHandler(logLevel); // Global error handler
 
@@ -93,25 +93,31 @@ void mouse_click_callback(GLFWwindow* window,
     if (const std::string state = sm->clickedOnState(f); !state.empty()) {
         const std::string provinceName = sm->pm->clickedOnProvince(f);
         const Province p = sm->pm->getProvince(provinceName);
+#ifdef DEBUG
         std::cout << "Clicked on province: " << provinceName << ", on state: " << state << std::endl;
 
         for (auto adjacencyMap = sm->pm->getAdjacencyMap();
             const auto& adjProvName : adjacencyMap[provinceName]) {
             std::cout << " - Adjacent province: " << sm->pm->getProvince(adjProvName).getName() << std::endl;
         }
+#endif
 
         if (selectedProv.empty()) {
             selectedProv = provinceName;
+#ifdef DEBUG
             std::cout << "Selected " << selectedProv << " as the starting province for pathfinding." << std::endl;
+#endif
             return;
         }
 
         auto [steps, pathProvs] = sm->pm->findPath(selectedProv, provinceName);
+#ifdef DEBUG
         std::cout << selectedProv << " is connected to " << provinceName << " in: " << steps << std::endl;
         if (steps <= 0) return; // Not connected or same province
         std::cout << " - Path: ";
         for (const auto &provName: pathProvs | std::views::keys)
             std::cout << provName << (provName != provinceName ? " -> " : "\n");
+#endif
 
         selectedProv = ""; // Reset selected province
     }
