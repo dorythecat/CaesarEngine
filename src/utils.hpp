@@ -16,10 +16,8 @@ struct vec2 {
     vec2(T x, T y) : x(x), y(y) {}
     vec2(const vec2& other) : x(other.x), y(other.y) {}
     vec2& operator=(const vec2& other) {
-        if (this != &other) {
-            x = other.x;
-            y = other.y;
-        } return *this;
+        if (this != &other) *this = vec2(other);
+        return *this;
     }
   
     // Comparison
@@ -114,6 +112,7 @@ struct vec2 {
     // Other useful functions
     [[nodiscard]] vec2 negateX() { return vec2(-x, y); }
     [[nodiscard]] vec2 negateY() { return vec2(x, -y); }
+    [[nodiscard]] bool zero() const { return std::fpclassify(x) == FP_ZERO && std::fpclassify(y) == FP_ZERO; }
   
     // Output
     friend std::ostream& operator<<(std::ostream& os, const vec2& v) {
