@@ -4,6 +4,7 @@
 #include <array>
 #include <string>
 #include <iostream>
+#include <utility>
 
 // Just a simple error handler that can be set for different warning levels
 class ErrorHandler {
@@ -50,23 +51,23 @@ public:
   ErrorHandler& operator=(const ErrorHandler&) = delete;
 
   ErrorHandler(ErrorHandler&&) = default;
-  ErrorHandler& operator=(ErrorHandler&&) = default;
+  ErrorHandler& operator=(ErrorHandler&&) = delete;
 
   void logFatal(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
     // Every fatal error should be logged
-    log("[FATAL]", message, errorCode, true);
+    log("[FATAL]", std::move(message), errorCode, true);
     std::exit(EXIT_FAILURE);
   }
-  void logInfo(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
+  void logInfo(const std::string &message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
     if (logLevel & LOG_INFO) log("[INFO]", message, errorCode);
   }
-  void logWarning(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
+  void logWarning(const std::string &message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
     if (logLevel & LOG_WARNING) std::cerr << "[WARNING] (" << errorMessages[errorCode] << ")" << message << std::endl;
   }
-  void logError(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
+  void logError(const std::string &message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
     if (logLevel & LOG_ERROR) log("[ERROR]", message, errorCode, true);
   }
-  void logDebug(std::string message = "", const ErrorCode errorCode = DEBUG_MESSAGE) const {
+  void logDebug(const std::string &message = "", const ErrorCode errorCode = DEBUG_MESSAGE) const {
     if (errorCode != DEBUG_MESSAGE) std::cout << "Note: Debug logging function used incorrectly. Proceeding anyways." << std::endl;
     if (logLevel & LOG_DEBUG) log("[DEBUG]", message, errorCode);
   }
