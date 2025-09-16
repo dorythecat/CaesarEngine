@@ -93,30 +93,29 @@ void mouse_click_callback(GLFWwindow* window,
     if (const std::string state = sm->clickedOnState(f); !state.empty()) {
         const std::string provinceName = sm->pm->clickedOnProvince(f);
         const Province p = sm->pm->getProvince(provinceName);
-#ifdef DEBUG
-        std::cout << "Clicked on province: " << provinceName << ", on state: " << state << std::endl;
+        errorHandler.logDebug("Clicked on province: " + provinceName + ", on state: " + state);
 
+#ifdef DEBUG
         for (auto adjacencyMap = sm->pm->getAdjacencyMap();
             const auto& adjProvName : adjacencyMap[provinceName]) {
-            std::cout << " - Adjacent province: " << sm->pm->getProvince(adjProvName).getName() << std::endl;
+            errorHandler.logDebug(" - Adjacent province: " + sm->pm->getProvince(adjProvName).getName());
         }
 #endif
 
         if (selectedProv.empty()) {
             selectedProv = provinceName;
-#ifdef DEBUG
-            std::cout << "Selected " << selectedProv << " as the starting province for pathfinding." << std::endl;
-#endif
+            errorHandler.logDebug("Selected " + selectedProv + " as the starting province for pathfinding.");
             return;
         }
 
         auto [steps, pathProvs] = sm->pm->findPath(selectedProv, provinceName);
 #ifdef DEBUG
-        std::cout << selectedProv << " is connected to " << provinceName << " in: " << steps << std::endl;
+        errorHandler.logDebug(selectedProv + " is connected to " + provinceName + " in: " + std::to_string(steps) + " steps.");
         if (steps <= 0) return; // Not connected or same province
-        std::cout << " - Path: ";
+        std::string path = " - Path: ";
         for (const auto &provName: pathProvs | std::views::keys)
-            std::cout << provName << (provName != provinceName ? " -> " : "\n");
+            path += provName + (provName != provinceName ? " -> " : "\n");
+        errorHandler.logDebug(path);
 #endif
 
         selectedProv = ""; // Reset selected province
