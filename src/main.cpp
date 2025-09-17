@@ -86,8 +86,6 @@ void mouse_click_callback(GLFWwindow* window,
     glfwGetCursorPos(window, &position.x, &position.y);
     vec2i dimensions;
     glfwGetWindowSize(window, &dimensions.x, &dimensions.y);
-    // At some point we could change the system to work with double-precision floats,
-    // which would be more accurate but use more memory
     vec2f f = static_cast<vec2f>(position) * 2.0f * scale / static_cast<vec2f>(dimensions);
     f = (f - scale).negateY() + offset;
     const auto *sm = static_cast<StateManager *>(glfwGetWindowUserPointer(window));
