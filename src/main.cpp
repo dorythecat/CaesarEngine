@@ -65,9 +65,11 @@ void processInput(GLFWwindow* window) {
     // Exit on ESC
     if (keyPressed(window, EXIT)) glfwSetWindowShouldClose(window, true);
 
-    // Debug wireframe mode (on with F5, off with F6)
+    // Debug wireframe mode (on with F5, off with F6) (Only enabled in debug builds)
+#ifdef DEBUG
     if (keyPressed(window, DEBUG_WIREFRAME_ON)) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (keyPressed(window, DEBUG_WIREFRAME_OFF)) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+#endif
 
     // Move the view with WASD keys
     if (keyPressed(window, MOVE_UP)) offset.y += scale * 0.001f;
