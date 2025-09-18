@@ -23,14 +23,12 @@ void Line::generateMesh(const std::vector<vec2f> &points) {
   const size_t n = points.size();
   for (size_t i = 0; i < n - 1; i++) {
     const vec2f& p0 = i == 0 ? points[i] + (points[i] - points[i + 1]).normalized() : points[i - 1];
-    const vec2f& p1 = points[i];
-    const vec2f& p2 = points[i + 1];
     const vec2f& p3 = i + 2 < n ? points[i + 2] : points[i + 1] - (points[i] - points[i + 1]).normalized();
     for (int j = 0; j < CURVE_SEGMENTS; j++) {
       const float t = static_cast<float>(j) * CURVE_STEP;
-      vec2f pointA = catmullRom(p0, p1, p2, p3, t) * 2.0f; // Scale up because we're in NDC
-      vec2f pointB = catmullRom(p0, p1, p2, p3, t + CURVE_STEP) * 2.0f;
-      addSegment(pointA, pointB, j == CURVE_SEGMENTS - 1 && i == n - 2);
+      addSegment(catmullRom(p0, points[i], points[i + 1], p3, t) * 2.0f, // Scale up because we're in NDC,
+             catmullRom(p0, points[i], points[i + 1], p3, t + CURVE_STEP) * 2.0f,
+             j == CURVE_SEGMENTS - 1 && i == n - 2);
     }
   }
 }
