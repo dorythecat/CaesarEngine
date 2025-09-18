@@ -45,9 +45,9 @@ static std::unordered_map<MOUSE_KEYBINDS_ENUM, int> mouseKeybinds = {
 
 
 #ifdef DEBUG
-    ErrorHandler::LogLevel logLevel = ErrorHandler::LOG_ALL;
+    constexpr auto logLevel = ErrorHandler::LOG_ALL;
 #else
-    auto logLevel = static_cast<ErrorHandler::LogLevel>(ErrorHandler::LOG_WARNING | ErrorHandler::LOG_ERROR);
+    constexpr auto logLevel = static_cast<ErrorHandler::LogLevel>(ErrorHandler::LOG_WARNING | ErrorHandler::LOG_ERROR);
 #endif
 ErrorHandler errorHandler(logLevel); // Global error handler
 
@@ -56,8 +56,9 @@ vec2f offset;
 
 // Keybind utilities
 bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
-    for (const int k : keybinds[key]) if (glfwGetKey(window, k) == GLFW_PRESS) return true;
-    return false;
+    return std::ranges::any_of(keybinds[key], [&](const int k) {
+        return glfwGetKey(window, k) == GLFW_PRESS;
+    });
 }
 
 void processInput(GLFWwindow* window) {
@@ -85,8 +86,6 @@ void mouse_click_callback(GLFWwindow* window,
     glfwGetCursorPos(window, &position.x, &position.y);
     vec2i dimensions;
     glfwGetWindowSize(window, &dimensions.x, &dimensions.y);
-    // At some point we could change the system to work with double-precision floats,
-    // which would be more accurate but use more memory
     vec2f f = static_cast<vec2f>(position) * 2.0f * scale / static_cast<vec2f>(dimensions);
     f = (f - scale).negateY() + offset;
     const auto *sm = static_cast<StateManager *>(glfwGetWindowUserPointer(window));
@@ -109,8 +108,8 @@ void mouse_click_callback(GLFWwindow* window,
         }
 
         auto [steps, pathProvs] = sm->pm->findPath(selectedProv, provinceName);
-#ifdef DEBUG
         errorHandler.logDebug(selectedProv + " is connected to " + provinceName + " in: " + std::to_string(steps) + " steps.");
+#ifdef DEBUG
         if (steps <= 0) return; // Not connected or same province
         std::string path = " - Path: ";
         for (const auto &provName: pathProvs | std::views::keys)

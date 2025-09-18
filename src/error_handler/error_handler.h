@@ -67,9 +67,8 @@ public:
   void logError(const std::string &message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
     if (logLevel & LOG_ERROR) log("[ERROR]", message, errorCode, true);
   }
-  void logDebug(const std::string &message = "", const ErrorCode errorCode = DEBUG_MESSAGE) const {
-    if (errorCode != DEBUG_MESSAGE) std::cout << "Note: Debug logging function used incorrectly. Proceeding anyways." << std::endl;
-    if (logLevel & LOG_DEBUG) log("[DEBUG]", message, errorCode);
+  void logDebug(const std::string &message = "") const {
+    if (logLevel & LOG_DEBUG) log("[DEBUG]", message, DEBUG_MESSAGE);
   }
 
 private:
