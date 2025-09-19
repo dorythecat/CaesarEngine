@@ -39,7 +39,6 @@ void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color
     const int xy = i / n;
     const float p = static_cast<float>(xy % x) * x1 - 1.0f;
     const float q = static_cast<float>(xy / x) * y1 + 1.0f;
-    area++;
 
     // Start of rectangle adjacency
     if (i % (n * x) > 0) {
