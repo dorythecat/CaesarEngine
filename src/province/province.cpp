@@ -82,7 +82,18 @@ void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color
 
     center += vec2f(p + p0, q + q + y1);
 
-    addQuad(p, q, p0, q + y1, color);
+    // Add quad
+    const auto index = static_cast<unsigned int>(vertices.size());
+
+    vertices.emplace_back(p, q, color);
+    vertices.emplace_back(p, q + y1, color);
+    vertices.emplace_back(p0, q, color);
+    vertices.emplace_back(p0, q + y1, color);
+
+    indices.insert(indices.end(), {
+        index, index + 1, index + 2,
+        index + 3, index + 2, index + 1
+    });
   } stbi_image_free(data);
 
   adjacentColors.erase(color); // Remove the color of the province itself
@@ -134,23 +145,6 @@ void Province::generateMeshData() {
   glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
-}
-
-void Province::addQuad(const float x0, const float y0, const float x1, const float y1, const Color c) {
-  const auto index = static_cast<unsigned int>(vertices.size());
-
-  vertices.emplace_back(x0, y0, c);
-  vertices.emplace_back(x0, y1, c);
-  vertices.emplace_back(x1, y0, c);
-  vertices.emplace_back(x1, y1, c);
-
-  indices.push_back(index);
-  indices.push_back(index + 1);
-  indices.push_back(index + 2);
-
-  indices.push_back(index + 3);
-  indices.push_back(index + 2);
-  indices.push_back(index + 1);
 }
 
 void Province::render() const {

@@ -204,7 +204,6 @@ private:
 
   void generateMesh(const char* mapPath, std::unordered_set<Color, Color::HashFunction> usedColors);
   void generateMeshData();
-  void addQuad(float x0, float y0, float x1, float y1, Color c);
 };
 
 #endif // PROVINCE_HPP
