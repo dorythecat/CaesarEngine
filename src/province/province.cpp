@@ -157,7 +157,7 @@ void Province::render() const {
 }
 
 bool Province::clickedOn(const float x, const float y) const {
-  for (unsigned int i = 0; i < vertices.size(); i += 4)
-    if (x >= vertices[i].x && x <= vertices[i + 3].x && y >= vertices[i + 3].y && y <= vertices[i].y) return true;
-  return false;
+  return std::ranges::any_of(vertices | std::ranges::views::chunk(4),[&](auto&& rect) {
+    return x >= rect[0].x && x <= rect[3].x && y >= rect[3].y && y <= rect[0].y;
+  });
 }

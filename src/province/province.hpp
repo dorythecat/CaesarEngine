@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 #include <unordered_set>
+#include <algorithm>
+#include <ranges>
 
 #include <stb_image.h>
 
