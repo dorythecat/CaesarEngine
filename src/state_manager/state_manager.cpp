@@ -16,7 +16,8 @@ StateManager::StateManager(ErrorHandler* errorHandler,
 
   std::ifstream stateFile("res/states.txt");
   if (!stateFile.is_open()) {
-    errorHandler->logFatal("Could not open file \"" + statePath + "\"", ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
+    errorHandler->logFatal("Could not open file \"" + statePath + "\"",
+      ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
   }
 
   for (std::string line; std::getline(stateFile, line);) {
@@ -31,7 +32,6 @@ StateManager::StateManager(ErrorHandler* errorHandler,
     bool provinceSearch = false;
     std::vector<std::string> provinceIds;
     for (std::string cur; std::getline(stateFile, cur);) {
-
       if (cur.empty()) continue;
       cur = cur.substr(cur.find_first_not_of(' '));
       std::string first = cur.substr(0, 1);
@@ -59,9 +59,7 @@ StateManager::StateManager(ErrorHandler* errorHandler,
         name = name.substr(name.find_first_not_of(' '));
         name = name.substr(name.find_first_not_of('"'));
         name = name.substr(0, name.find_last_not_of('"') + 1);
-      } else if (first == "provinces:") {
-        provinceSearch = true;
-      }
+      } else if (first == "provinces:") provinceSearch = true;
     }
 
     if (name.empty()) {
@@ -77,8 +75,7 @@ StateManager::StateManager(ErrorHandler* errorHandler,
     State state(name);
     for (const auto &provinceId: provinceIds) state.addProvince(pm->getProvince(provinceId));
     states.emplace(id, state);
-  }
-  stateFile.close();
+  } stateFile.close();
 
   if (states.empty()) {
     errorHandler->logFatal("No states found in \"" + statePath + "\"", ErrorHandler::FORMAT_ERROR);
