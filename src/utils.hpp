@@ -46,6 +46,14 @@ struct vec2 {
         if (scalar == 0) throw std::runtime_error("Division by zero in vec2 division");
         return vec2(x / scalar, y / scalar);
     }
+    [[nodiscard]] vec2 operator%(const vec2& other) const {
+        if (other.x == 0 || other.y == 0) throw std::runtime_error("Modulo by zero in vec2 modulo");
+        return vec2(std::fmod(x, other.x), std::fmod(y, other.y));
+    }
+    [[nodiscard]] vec2 operator%(const T& scalar) const {
+        if (scalar == 0) throw std::runtime_error("Modulo by zero in vec2 modulo");
+        return vec2(std::fmod(x, scalar), std::fmod(y, scalar));
+    }
 
     // In-place basic arithmetic
     vec2& operator+=(const vec2& other) {
@@ -88,6 +96,18 @@ struct vec2 {
         if (scalar == 0) throw std::runtime_error("Division by zero in vec2 division");
         x /= scalar;
         y /= scalar;
+        return *this;
+    }
+    vec2& operator%=(const vec2& other) {
+        if (other.x == 0 || other.y == 0) throw std::runtime_error("Modulo by zero in vec2 modulo");
+        x = std::fmod(x, other.x);
+        y = std::fmod(y, other.y);
+        return *this;
+    }
+    vec2& operator%=(const T& scalar) {
+        if (scalar == 0) throw std::runtime_error("Modulo by zero in vec2 modulo");
+        x = std::fmod(x, scalar);
+        y = std::fmod(y, scalar);
         return *this;
     }
 
