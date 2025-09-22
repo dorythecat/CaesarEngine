@@ -29,6 +29,7 @@ public:
 
   struct Connection { // Connections in between provinces
     int steps = -1; // -1 if not connected, 0 if same province, >0 if connected
+    int area = 0;  // Total area of all provinces in the path
 
     // What provinces to traverse
     std::list<std::pair<std::string, Province>> provinces; // Should be ordered for consistency
