@@ -39,7 +39,6 @@ void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color
     const int xy = i / n;
     const float p = static_cast<float>(xy % x) * x1 - 1.0f;
     const float q = static_cast<float>(xy / x) * y1 + 1.0f;
-    area++;
 
     // Start of rectangle adjacency
     if (i % (n * x) > 0) {
@@ -83,7 +82,18 @@ void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color
 
     center += vec2f(p + p0, q + q + y1);
 
-    addQuad(p, q, p0, q + y1, color);
+    // Add quad
+    const auto index = static_cast<unsigned int>(vertices.size());
+
+    vertices.emplace_back(p, q, color);
+    vertices.emplace_back(p, q + y1, color);
+    vertices.emplace_back(p0, q, color);
+    vertices.emplace_back(p0, q + y1, color);
+
+    indices.insert(indices.end(), {
+        index, index + 1, index + 2,
+        index + 3, index + 2, index + 1
+    });
   } stbi_image_free(data);
 
   adjacentColors.erase(color); // Remove the color of the province itself
@@ -137,23 +147,6 @@ void Province::generateMeshData() {
   glBindVertexArray(0);
 }
 
-void Province::addQuad(const float x0, const float y0, const float x1, const float y1, const Color c) {
-  const auto index = static_cast<unsigned int>(vertices.size());
-
-  vertices.emplace_back(x0, y0, c);
-  vertices.emplace_back(x0, y1, c);
-  vertices.emplace_back(x1, y0, c);
-  vertices.emplace_back(x1, y1, c);
-
-  indices.push_back(index);
-  indices.push_back(index + 1);
-  indices.push_back(index + 2);
-
-  indices.push_back(index + 3);
-  indices.push_back(index + 2);
-  indices.push_back(index + 1);
-}
-
 void Province::render() const {
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES,
@@ -164,7 +157,7 @@ void Province::render() const {
 }
 
 bool Province::clickedOn(const float x, const float y) const {
-  for (unsigned int i = 0; i < vertices.size(); i += 4)
-    if (x >= vertices[i].x && x <= vertices[i + 3].x && y >= vertices[i + 3].y && y <= vertices[i].y) return true;
-  return false;
+  return std::ranges::any_of(vertices | std::ranges::views::chunk(4),[&](auto&& rect) {
+    return x >= rect[0].x && x <= rect[3].x && y >= rect[3].y && y <= rect[0].y;
+  });
 }

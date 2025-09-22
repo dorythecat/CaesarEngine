@@ -3,12 +3,9 @@
 Text::Text(ErrorHandler* errorHandler, const std::string &atlasPath, const std::string &indexPath) :
 errorHandler(errorHandler) {
   stbi_set_flip_vertically_on_load(true);
-  int width, height, nrChannels;
-  unsigned char *data = stbi_load(atlasPath.c_str(),
-                                  &width,
-                                  &height,
-                                  &nrChannels,
-                                  0);
+  vec2i dimensions;
+  int nc;
+  unsigned char *data = stbi_load(atlasPath.c_str(), &dimensions.x,&dimensions.y, &nc, 0);
 
   if (!data) {
     errorHandler->logError("Failed to load texture atlas from " + atlasPath, ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
@@ -24,8 +21,8 @@ errorHandler(errorHandler) {
   glTexImage2D(GL_TEXTURE_2D,
                0,
                GL_RGB,
-               width,
-               height,
+               dimensions.x,
+               dimensions.y,
                0,
                GL_RGB,
                GL_UNSIGNED_BYTE,
@@ -42,6 +39,7 @@ errorHandler(errorHandler) {
   }
 
   std::string line;
+  auto dimensionsf = static_cast<vec2f>(dimensions);
   while (std::getline(index, line)) {
     std::istringstream iss(line);
     std::vector<float> characterData;
@@ -53,10 +51,10 @@ errorHandler(errorHandler) {
       characterData[3],
       characterData[4],
       characterData[5],
-      characterData[6] / static_cast<float>(width),
-      characterData[7] / static_cast<float>(height),
-      characterData[8] / static_cast<float>(width),
-      characterData[9] / static_cast<float>(height)
+      characterData[6] / dimensionsf.x,
+      characterData[7] / dimensionsf.y,
+      characterData[8] / dimensionsf.x,
+      characterData[9] / dimensionsf.y
     });
   } index.close();
 
@@ -77,11 +75,8 @@ void Text::setText(const std::string &text,
                    const vec2f &offset) {
   size = 0;
   std::vector<float> vertices;
-
   position = (position + 0.5f) * windowDimensions - vec2f(scale, 0.0f);
-
   vec2f textOffset = position;
-
   for (unsigned int i = 0; i < text.size(); i++) {
     const char c = text.c_str()[i];
     switch (c) {
@@ -99,8 +94,7 @@ void Text::setText(const std::string &text,
       case 13: // Carriage return (\r)
         textOffset.x = position.x;
         continue;
-      default:
-        break;
+      default: break;
     }
 
     // Null/Unsupported characters
