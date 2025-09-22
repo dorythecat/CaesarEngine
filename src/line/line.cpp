@@ -52,6 +52,8 @@ void Line::generateMeshData() {
 }
 
 void Line::addSegment(const vec2f &start, const vec2f &end, const bool final) {
+  length += (end - start).length(); // Measure length, in a fairly precise manner
+
   const vec2f direction = (end - start).normalized();
   const vec2f perpendicular = direction.perpendicular() * 0.002f;
 

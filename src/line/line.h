@@ -15,6 +15,8 @@ constexpr float CURVE_STEP = 1.0f / CURVE_SEGMENTS; // Precomputed inverse for e
 
 class Line {
 public:
+  float length = 0.0f; // Total length of the line
+
   explicit Line(ErrorHandler* errorHandler) : errorHandler(errorHandler) {}
   Line(ErrorHandler* errorHandler, const std::vector<vec2f> &points);
   ~Line() noexcept {
