@@ -7,6 +7,7 @@ constexpr float CURVE_STEP = 1.0f / CURVE_SEGMENTS; // Precomputed inverse for e
 
 #include <glad/glad.h>
 
+#include <algorithm>
 #include <vector>
 
 #include "../utils.hpp"
