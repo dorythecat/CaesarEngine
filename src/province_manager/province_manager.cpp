@@ -160,5 +160,7 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
   for (const auto &prov: path | std::views::values) linePoints.push_back(prov.getCenter());
   line.setPoints(linePoints);
 
+  connection.length = line.length;
+
   return connection;
 }
