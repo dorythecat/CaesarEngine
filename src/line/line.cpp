@@ -19,6 +19,8 @@ void Line::generateMesh(const std::vector<vec2f> &points) {
     return;
   }
 
+  length = 0.0f; // Reset length
+
   // Catmull-Rom spline for smooth lines
   const size_t n = points.size();
   for (size_t i = 0; i < n - 1; i++) {
