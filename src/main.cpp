@@ -110,8 +110,8 @@ void mouse_click_callback(GLFWwindow* window,
         }
 
         auto [steps, area, pathProvs] = sm->pm->findPath(selectedProv, provinceName);
-        errorHandler.logDebug(selectedProv + " is connected to " + provinceName +
-            " in: " + std::to_string(steps) + " steps, which amounts to an area of " + std::to_string(area) + " pixels.");
+        errorHandler.logDebug(selectedProv + " is connected to " + provinceName + " in: " + std::to_string(steps) + " steps.");
+        errorHandler.logDebug("This amounts to " + std::to_string(area) + " total area.");
 #ifdef DEBUG
         if (steps <= 0) return; // Not connected or same province
         std::string path = " - Path: ";
