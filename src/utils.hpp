@@ -9,10 +9,11 @@ struct vec2 {
     // Make sure we don't use vec2 with non-arithmetic types
     static_assert(std::is_arithmetic_v<T>, "vec2 can only be used with arithmetic types");
 
-    T x, y;
+    T x = static_cast<T>(0), y = static_cast<T>(0);
 
     // Definition
-    vec2() : x(0), y(0) {}
+    vec2() = default;
+    explicit vec2(T value) : x(value), y(value) {}
     vec2(T x, T y) : x(x), y(y) {}
     vec2(const vec2& other) : x(other.x), y(other.y) {}
     vec2& operator=(const vec2& other) {
