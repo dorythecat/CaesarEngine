@@ -125,11 +125,10 @@ struct vec2 {
 
     // Special vector functions
     [[nodiscard]] T length() const {
-        const T absx = static_cast<T>(std::abs(x)), absy = static_cast<T>(std::abs(y));
-
-        if (absx == 0) return absy;
-        if (absy == 0) return absx;
-        if (absx == absy) return static_cast<T>(std::sqrt(2)) * absx;
+        const vec2 abs = this->abs();
+        if (abs.x == 0) return abs.y;
+        if (abs.y == 0) return abs.x;
+        if (abs.x == abs.y) return static_cast<T>(std::sqrt(2)) * abs.x;
         return static_cast<T>(std::sqrt(x * x + y * y));
     }
     [[nodiscard]] T dot(const vec2& other) const { return x * other.x + y * other.y; }
