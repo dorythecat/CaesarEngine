@@ -129,11 +129,12 @@ struct vec2 {
         if (len == 0) throw std::runtime_error("Normalization of zero-length vector");
         return vec2(x / len, y / len);
     }
-    [[nodiscard]] vec2 perpendicular() const { return vec2(-y, x); } // 90 degree rotation
+    [[nodiscard]] vec2 perpendicular() const { return vec2(-y, x); } // 90 degree rotation (negateY + invert)
 
     // Other useful functions
     [[nodiscard]] vec2 negateX() { return vec2(-x, y); }
     [[nodiscard]] vec2 negateY() { return vec2(x, -y); }
+    [[nodiscard]] vec2 invert() { return vec2(y, x); }
     [[nodiscard]] bool zero() const { return std::fpclassify(x) == FP_ZERO && std::fpclassify(y) == FP_ZERO; }
   
     // Output
