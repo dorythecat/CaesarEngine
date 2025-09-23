@@ -114,6 +114,15 @@ struct vec2 {
     // Unary negation
     vec2 operator-() const { return vec2(-x, -y); }
 
+    // Math utility functions
+    [[nodiscard]] vec2 floor() const { return vec2(std::floor(x), std::floor(y)); }
+    [[nodiscard]] vec2 ceil() const { return vec2(std::ceil(x), std::ceil(y)); }
+    [[nodiscard]] vec2 round() const { return vec2(std::round(x), std::round(y)); }
+    [[nodiscard]] vec2 abs() const { return vec2(std::abs(x), std::abs(y)); }
+    [[nodiscard]] vec2 clamp(const vec2& min, const vec2& max) const {
+        return vec2(std::clamp(x, min.x, max.x), std::clamp(y, min.y, max.y));
+    }
+
     // Special vector functions
     [[nodiscard]] T length() const {
         const T absx = static_cast<T>(std::abs(x)), absy = static_cast<T>(std::abs(y));
