@@ -118,9 +118,8 @@ struct vec2 {
     [[nodiscard]] T length() const {
         const T absx = static_cast<T>(std::abs(x)), absy = static_cast<T>(std::abs(y));
 
-        if (x == 0 && y == 0) return 0;
-        if (x == 0) return absy;
-        if (y == 0) return absx;
+        if (absx == 0) return absy;
+        if (absy == 0) return absx;
         if (absx == absy) return static_cast<T>(std::sqrt(2)) * absx;
         return static_cast<T>(std::sqrt(x * x + y * y));
     }
