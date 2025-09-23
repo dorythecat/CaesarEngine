@@ -19,8 +19,7 @@ struct vec2 {
         if (this != &other) {
             x = other.x;
             y = other.y;
-        }
-        return *this;
+        } return *this;
     }
   
     // Comparison
@@ -39,7 +38,7 @@ struct vec2 {
     [[nodiscard]] vec2 operator*(const vec2& other) const { return vec2(x * other.x, y * other.y); }
     [[nodiscard]] vec2 operator*(const T& scalar) const { return vec2(x * scalar, y * scalar); }
     [[nodiscard]] vec2 operator/(const vec2& other) const {
-        if (other.x == 0 || other.y == 0) throw std::runtime_error("Division by zero in vec2 division");
+        if (other.zero()) throw std::runtime_error("Division by zero in vec2 division");
         return vec2(x / other.x, y / other.y);
     }
     [[nodiscard]] vec2 operator/(const T& scalar) const {
@@ -47,7 +46,7 @@ struct vec2 {
         return vec2(x / scalar, y / scalar);
     }
     [[nodiscard]] vec2 operator%(const vec2& other) const {
-        if (other.x == 0 || other.y == 0) throw std::runtime_error("Modulo by zero in vec2 modulo");
+        if (other.zero()) throw std::runtime_error("Modulo by zero in vec2 modulo");
         return vec2(std::fmod(x, other.x), std::fmod(y, other.y));
     }
     [[nodiscard]] vec2 operator%(const T& scalar) const {
@@ -87,7 +86,7 @@ struct vec2 {
         return *this;
     }
     vec2& operator/=(const vec2& other) {
-        if (other.x == 0 || other.y == 0) throw std::runtime_error("Division by zero in vec2 division");
+        if (other.zero()) throw std::runtime_error("Division by zero in vec2 division");
         x /= other.x;
         y /= other.y;
         return *this;
@@ -99,7 +98,7 @@ struct vec2 {
         return *this;
     }
     vec2& operator%=(const vec2& other) {
-        if (other.x == 0 || other.y == 0) throw std::runtime_error("Modulo by zero in vec2 modulo");
+        if (other.zero()) throw std::runtime_error("Modulo by zero in vec2 modulo");
         x = std::fmod(x, other.x);
         y = std::fmod(y, other.y);
         return *this;
