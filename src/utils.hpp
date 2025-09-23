@@ -138,8 +138,7 @@ struct vec2 {
   
     // Output
     friend std::ostream& operator<<(std::ostream& os, const vec2& v) {
-        os << "vec2(" << v.x << ", " << v.y << ")";
-        return os;
+        return os << "vec2(" << v.x << ", " << v.y << ")";
     }
 
     // Casting
