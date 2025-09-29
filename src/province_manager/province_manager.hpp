@@ -68,6 +68,8 @@ public:
 
   [[nodiscard]] Connection findPath(const std::string& provinceA, const std::string& provinceB);
 
+  void tick() { for (auto& province : provinces | std::views::values) province.tick(); }
+
 private:
   std::map<std::string, Province> provinces;
   Text text;
