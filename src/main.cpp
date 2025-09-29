@@ -70,10 +70,16 @@ void processInput(GLFWwindow* window) {
     // Exit on ESC
     if (keyPressed(window, EXIT)) glfwSetWindowShouldClose(window, true);
 
-    // Debug wireframe mode (on with F5, off with F6) (Only enabled in debug builds)
+    // Debug keybinds
 #ifdef DEBUG
     if (keyPressed(window, DEBUG_WIREFRAME_ON)) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (keyPressed(window, DEBUG_WIREFRAME_OFF)) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    // Debounce the key, so we only do one tick
+    if (keyPressed(window, DEBUG_TICK) && lastTick != ticker.getTick()) {
+        ticker.tick();
+        lastTick = ticker.getTick();
+    } else if (!keyPressed(window, DEBUG_TICK)) lastTick = ticker.getTick() + 1;
 #endif
 
     // Move the view with WASD keys
@@ -81,14 +87,6 @@ void processInput(GLFWwindow* window) {
     if (keyPressed(window, MOVE_DOWN)) offset.y -= scale * 0.001f;
     if (keyPressed(window, MOVE_LEFT)) offset.x -= scale * 0.001f;
     if (keyPressed(window, MOVE_RIGHT)) offset.x += scale * 0.001f;
-
-#ifdef DEBUG
-    // Debounce the key, so we only do one tick
-    if (keyPressed(window, DEBUG_TICK) && lastTick != ticker.getTick()) {
-        ticker.tick();
-        lastTick = ticker.getTick();
-    } else if (!keyPressed(window, DEBUG_TICK)) lastTick = ticker.getTick() + 1;
-#endif
 }
 
 std::string selectedProv; // Currently selected province
