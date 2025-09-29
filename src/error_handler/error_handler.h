@@ -54,9 +54,8 @@ public:
   ErrorHandler& operator=(ErrorHandler&&) = delete;
 
   void logFatal(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    // Every fatal error should be logged
-    log("[FATAL]", std::move(message), errorCode, true);
-    std::exit(EXIT_FAILURE);
+    log("[FATAL]", std::move(message), errorCode, true); // Every fatal error should be logged
+    std::exit(EXIT_FAILURE); // Exit the program after fatal errors
   }
   void logInfo(const std::string &message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
     if (logLevel & LOG_INFO) log("[INFO]", message, errorCode);
