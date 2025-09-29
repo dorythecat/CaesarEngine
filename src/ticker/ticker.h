@@ -8,9 +8,15 @@ public:
     explicit Ticker(ErrorHandler* errorHandler) : errorHandler(errorHandler) {}
     ~Ticker() = default;
 
+    void tick() {
+        tickCounter++;
+        errorHandler->logInfo("Tick");
+    }
+    [[nodiscard]] unsigned long getTick() const { return tickCounter; }
+
 private:
     ErrorHandler* errorHandler;
-    unsigned long tick = 0; // Current tick
+    unsigned long tickCounter = 0; // Current tick
 };
 
 #endif //TICKER_H
