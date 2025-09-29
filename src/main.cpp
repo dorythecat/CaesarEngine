@@ -61,9 +61,8 @@ unsigned long lastTick = 1;
 
 // Keybind utilities
 bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
-    return std::ranges::any_of(keybinds[key], [&](const int k) {
-        return glfwGetKey(window, k) == GLFW_PRESS;
-    });
+    return std::ranges::any_of(keybinds[key],
+        [&](const int k) { return glfwGetKey(window, k) == GLFW_PRESS; });
 }
 
 void processInput(GLFWwindow* window) {
