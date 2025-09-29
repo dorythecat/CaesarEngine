@@ -45,6 +45,8 @@ public:
   }
   [[nodiscard]] std::map<std::string, State> getAllStatesMap() const { return states; }
 
+  void tick() { pm->tick(); }
+
 private:
   std::map<std::string, State> states;
   Text text;
