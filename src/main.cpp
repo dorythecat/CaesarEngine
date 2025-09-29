@@ -126,15 +126,14 @@ void mouse_click_callback(GLFWwindow* window,
         errorHandler.logDebug(selectedProv + " is connected to " + provinceName + " in: " + std::to_string(steps) + " steps.");
         errorHandler.logDebug("This amounts to " + std::to_string(area) + " total area.");
         errorHandler.logDebug("The length of this path is " + std::to_string(length));
-        if (steps <= 0) return; // Not connected or same province
+        selectedProv = ""; // Reset selected province
 #ifdef DEBUG
+        if (steps <= 0) return; // Not connected or same province
         std::string path = " - Path: ";
         for (const auto &provName: pathProvs | std::views::keys)
             path += provName + (provName != provinceName ? " -> " : "");
         errorHandler.logDebug(path);
 #endif
-
-        selectedProv = ""; // Reset selected province
     }
 }
 
