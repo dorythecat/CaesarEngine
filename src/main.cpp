@@ -57,6 +57,7 @@ ErrorHandler errorHandler(logLevel); // Global error handler
 float scale = 1.0f;
 vec2f offset;
 Ticker ticker(&errorHandler);
+unsigned long lastTick = 1;
 
 // Keybind utilities
 bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
@@ -82,7 +83,11 @@ void processInput(GLFWwindow* window) {
     if (keyPressed(window, MOVE_RIGHT)) offset.x += scale * 0.001f;
 
 #ifdef DEBUG
-    if (keyPressed(window, DEBUG_TICK)) ticker.tick();
+    // Debounce the key, so we only do one tick
+    if (keyPressed(window, DEBUG_TICK) && lastTick != ticker.getTick()) {
+        ticker.tick();
+        lastTick = ticker.getTick();
+    } else if (!keyPressed(window, DEBUG_TICK)) lastTick = ticker.getTick() + 1;
 #endif
 }
 
