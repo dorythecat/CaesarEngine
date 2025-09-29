@@ -37,9 +37,7 @@ if(MSVC)
 endif()
 
 file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/src/*.cpp) # Get all the source files
-add_executable(${PROJECT_NAME} ${SOURCES} ${PROJECT_SOURCE_DIR}/libs/glad/src/glad.c
-        src/line/line.cpp
-        src/line/line.h) # Create the executable
+add_executable(${PROJECT_NAME} ${SOURCES} ${PROJECT_SOURCE_DIR}/libs/glad/src/glad.c) # Create the executable
 target_link_libraries(${PROJECT_NAME} glfw) # Link the executable with the libraries
 
 # Copy all resource files to the build directory
