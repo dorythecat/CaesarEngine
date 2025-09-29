@@ -74,8 +74,8 @@ public:
 private:
   LogLevel logLevel;
 
-  void log(const std::string &prefix, std::string message, const ErrorCode errorCode, bool error = false) const {
-    if (!message.empty()) message = ": " + message;
+  void log(const std::string &prefix, std::string message, const ErrorCode errorCode, const bool error = false) const {
+    message = (message.empty() ? "" : ": ") + message;
     if (error) std::cerr << prefix << " (" << errorMessages[errorCode] << ")" << message << std::endl;
     else std::cout << prefix << " (" << errorMessages[errorCode] << ")" << message << std::endl;
   }
