@@ -9,7 +9,7 @@ struct vec2 {
     // Make sure we don't use vec2 with non-arithmetic types
     static_assert(std::is_arithmetic_v<T>, "vec2 can only be used with arithmetic types");
 
-    T x = T(), y = T();
+    T x = static_cast<T>(0), y = static_cast<T>(0);
 
     // Definition
     vec2() = default;
@@ -43,7 +43,7 @@ struct vec2 {
         return vec2(x / other.x, y / other.y);
     }
     [[nodiscard]] vec2 operator/(const T& scalar) const {
-        if (scalar == T()) throw std::runtime_error("Division by zero in vec2 division");
+        if (scalar == 0) throw std::runtime_error("Division by zero in vec2 division");
         return vec2(x / scalar, y / scalar);
     }
     [[nodiscard]] vec2 operator%(const vec2& other) const {
@@ -51,7 +51,7 @@ struct vec2 {
         return vec2(std::fmod(x, other.x), std::fmod(y, other.y));
     }
     [[nodiscard]] vec2 operator%(const T& scalar) const {
-        if (scalar == T()) throw std::runtime_error("Modulo by zero in vec2 modulo");
+        if (scalar == 0) throw std::runtime_error("Modulo by zero in vec2 modulo");
         return vec2(std::fmod(x, scalar), std::fmod(y, scalar));
     }
 
@@ -93,7 +93,7 @@ struct vec2 {
         return *this;
     }
     vec2& operator/=(const T& scalar) {
-        if (scalar == T()) throw std::runtime_error("Division by zero in vec2 division");
+        if (scalar == 0) throw std::runtime_error("Division by zero in vec2 division");
         x /= scalar;
         y /= scalar;
         return *this;
@@ -105,7 +105,7 @@ struct vec2 {
         return *this;
     }
     vec2& operator%=(const T& scalar) {
-        if (scalar == T()) throw std::runtime_error("Modulo by zero in vec2 modulo");
+        if (scalar == 0) throw std::runtime_error("Modulo by zero in vec2 modulo");
         x = std::fmod(x, scalar);
         y = std::fmod(y, scalar);
         return *this;
@@ -126,15 +126,15 @@ struct vec2 {
     // Special vector functions
     [[nodiscard]] T length() const {
         const vec2 abs = this->abs();
-        if (abs.x == T()) return abs.y;
-        if (abs.y == T()) return abs.x;
+        if (abs.x == 0) return abs.y;
+        if (abs.y == 0) return abs.x;
         if (abs.x == abs.y) return static_cast<T>(std::sqrt(2)) * abs.x;
         return static_cast<T>(std::sqrt(x * x + y * y));
     }
     [[nodiscard]] T dot(const vec2& other) const { return x * other.x + y * other.y; }
     [[nodiscard]] vec2 normalized() const {
         T len = length();
-        if (len == T()) throw std::runtime_error("Normalization of zero-length vector");
+        if (len == 0) throw std::runtime_error("Normalization of zero-length vector");
         return vec2(x / len, y / len);
     }
     [[nodiscard]] vec2 perpendicular() const { return vec2(-y, x); } // 90 degree rotation (negateY + invert)
