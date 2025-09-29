@@ -15,30 +15,30 @@
 #include "ticker/ticker.h"
 
 enum KEYBINDS_ENUM {
-    EXIT = 0,
-    DEBUG_WIREFRAME_ON = 1,
-    DEBUG_WIREFRAME_OFF = 2,
-    MOVE_UP = 3,
-    MOVE_DOWN = 4,
-    MOVE_LEFT = 5,
-    MOVE_RIGHT = 6,
-    DEBUG_TICK = 7
+    EXIT,
+    DEBUG_WIREFRAME_ON,
+    DEBUG_WIREFRAME_OFF,
+    DEBUG_TICK,
+    MOVE_UP,
+    MOVE_DOWN,
+    MOVE_LEFT,
+    MOVE_RIGHT
 };
 
 enum MOUSE_KEYBINDS_ENUM {
-    CLICK_KEY = 0,
-    DRAG_KEY = 1
+    CLICK_KEY,
+    DRAG_KEY
 };
 
 static std::unordered_map<KEYBINDS_ENUM, std::vector<int>> keybinds = {
     {EXIT, {GLFW_KEY_ESCAPE}},
     {DEBUG_WIREFRAME_ON, {GLFW_KEY_F5}},
     {DEBUG_WIREFRAME_OFF, {GLFW_KEY_F6}},
+    {DEBUG_TICK, {GLFW_KEY_T}},
     {MOVE_UP, {GLFW_KEY_W, GLFW_KEY_UP}},
     {MOVE_DOWN, {GLFW_KEY_S, GLFW_KEY_DOWN}},
     {MOVE_LEFT, {GLFW_KEY_A, GLFW_KEY_LEFT}},
-    {MOVE_RIGHT, {GLFW_KEY_D, GLFW_KEY_RIGHT}},
-    {DEBUG_TICK, {GLFW_KEY_T}}
+    {MOVE_RIGHT, {GLFW_KEY_D, GLFW_KEY_RIGHT}}
 };
 
 static std::unordered_map<MOUSE_KEYBINDS_ENUM, int> mouseKeybinds = {
