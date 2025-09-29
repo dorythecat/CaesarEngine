@@ -33,7 +33,7 @@ public:
 
   const std::array<std::string, 10> errorMessages = {
     "CODE 0 | Unknown error",
-    "CODE 1 | Debug message",
+    "CODE 1 | Debug message", // This shouldn't really happen tbh
     "CODE 2 | Window creation error",
     "CODE 3 | Could not open file error",
     "CODE 4 | Format error",
