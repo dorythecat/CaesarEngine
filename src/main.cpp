@@ -162,6 +162,7 @@ int main() {
     const Window window(800, 600, "Caesar Engine", &errorHandler);
 
     StateManager sm(&errorHandler);
+    ticker.registerTickCallback([&sm] { sm.tick(); });
 
     glfwSwapInterval(0); // Disable VSync
 
