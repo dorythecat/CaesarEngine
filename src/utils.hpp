@@ -151,12 +151,8 @@ struct vec2 {
     }
 
     // Casting
-    template <typename U>
-    explicit operator vec2<U>() const {
-        // Make sure we don't use vec2 with non-arithmetic types
-        static_assert(std::is_arithmetic_v<U>, "vec2 can only be used with arithmetic types");
-        return vec2<U>(static_cast<U>(x), static_cast<U>(y));
-    }
+    template <typename U, typename = std::enable_if_t<std::is_convertible_v<U, T>>>
+    explicit operator vec2<U>() const { return vec2<U>(static_cast<U>(x), static_cast<U>(y)); }
 };
 
 // 2D vector types
