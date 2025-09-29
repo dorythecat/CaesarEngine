@@ -12,6 +12,7 @@
 #include "window/window.hpp"
 #include "state_manager/state_manager.hpp"
 #include "error_handler/error_handler.h"
+#include "ticker/ticker.h"
 
 enum KEYBINDS_ENUM {
     EXIT = 0,
@@ -20,7 +21,8 @@ enum KEYBINDS_ENUM {
     MOVE_UP = 3,
     MOVE_DOWN = 4,
     MOVE_LEFT = 5,
-    MOVE_RIGHT = 6
+    MOVE_RIGHT = 6,
+    DEBUG_TICK = 7
 };
 
 enum MOUSE_KEYBINDS_ENUM {
@@ -35,7 +37,8 @@ static std::unordered_map<KEYBINDS_ENUM, std::vector<int>> keybinds = {
     {MOVE_UP, {GLFW_KEY_W, GLFW_KEY_UP}},
     {MOVE_DOWN, {GLFW_KEY_S, GLFW_KEY_DOWN}},
     {MOVE_LEFT, {GLFW_KEY_A, GLFW_KEY_LEFT}},
-    {MOVE_RIGHT, {GLFW_KEY_D, GLFW_KEY_RIGHT}}
+    {MOVE_RIGHT, {GLFW_KEY_D, GLFW_KEY_RIGHT}},
+    {DEBUG_TICK, {GLFW_KEY_T}}
 };
 
 static std::unordered_map<MOUSE_KEYBINDS_ENUM, int> mouseKeybinds = {
@@ -53,6 +56,7 @@ ErrorHandler errorHandler(logLevel); // Global error handler
 
 float scale = 1.0f;
 vec2f offset;
+Ticker ticker(&errorHandler);
 
 // Keybind utilities
 bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
@@ -76,6 +80,10 @@ void processInput(GLFWwindow* window) {
     if (keyPressed(window, MOVE_DOWN)) offset.y -= scale * 0.001f;
     if (keyPressed(window, MOVE_LEFT)) offset.x -= scale * 0.001f;
     if (keyPressed(window, MOVE_RIGHT)) offset.x += scale * 0.001f;
+
+#ifdef DEBUG
+    if (keyPressed(window, DEBUG_TICK)) ticker.tick();
+#endif
 }
 
 std::string selectedProv; // Currently selected province
