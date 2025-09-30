@@ -80,8 +80,7 @@ StateManager::StateManager(ErrorHandler* errorHandler,
       continue;
     }
 
-    State state(name);
-    state.color = color;
+    State state(name, color);
     for (const auto &provinceId: provinceIds) state.addProvince(pm->getProvince(provinceId));
     states.emplace(id, state);
   } stateFile.close();

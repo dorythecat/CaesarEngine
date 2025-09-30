@@ -13,6 +13,7 @@ public:
   Province::Color color;
 
   explicit State(std::string name) : name(std::move(name)) {}
+  State(std::string name, const Province::Color color) : color(color), name(std::move(name)) {}
   ~State() = default;
 
   State(const State& other) {
