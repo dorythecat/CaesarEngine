@@ -10,6 +10,8 @@
 
 class State {
 public:
+  Province::Color color;
+
   explicit State(std::string name) : name(std::move(name)) {}
   ~State() = default;
 
@@ -17,6 +19,7 @@ public:
     name = other.name;
     provinces = other.provinces;
     center = other.center;
+    color = other.color;
   }
 
   void addProvince(const Province& province) {
