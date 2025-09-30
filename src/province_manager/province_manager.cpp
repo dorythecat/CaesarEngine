@@ -1,7 +1,5 @@
 #include "province_manager.hpp"
 
-#include "../province/province.hpp"
-
 ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
                                  const std::string& provShaderPath,
                                  const std::string& textShaderPath,
