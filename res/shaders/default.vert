@@ -1,6 +1,5 @@
 #version 460 core
 layout (location = 0) in vec2 aPos;
-layout (location = 1) in vec3 aColor;
 
 out vec3 ourColor;
 
@@ -9,5 +8,5 @@ uniform vec2 offset;
 
 void main() {
   gl_Position = vec4(aPos - offset, 0.0, scale);
-  ourColor = aColor / 255.0;
+  ourColor = vec3(0.7, 0.3, 0.2);
 }

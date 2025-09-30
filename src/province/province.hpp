@@ -43,13 +43,10 @@ public:
   };
   struct Vertex {
     float x, y;
-    Color color;
 
     Vertex() : x(0.0f), y(0.0f) {}
     Vertex(const float x, const float y) : x(x), y(y) {}
-    Vertex(const float x, const float y, const Color color) : x(x), y(y), color(color) {}
 
-    // We don't need to compare the color, really (in fact, it benefits us not to)
     bool operator==(const Vertex& other) const { return x == other.x && y == other.y; }
   };
 
@@ -225,7 +222,7 @@ private:
 
   ErrorHandler* errorHandler;
 
-  void generateMesh(const char* mapPath, std::unordered_set<Color, Color::HashFunction> usedColors);
+  void generateMesh(const char* mapPath, const std::unordered_set<Color, Color::HashFunction>& usedColors);
   void generateMeshData();
 };
 

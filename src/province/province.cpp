@@ -11,7 +11,7 @@ city(city), color(color), name(std::move(name)), errorHandler(errorHandler)  {
   generateMeshData();
 }
 
-void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color::HashFunction> usedColors) {
+void Province::generateMesh(const char* mapPath, const std::unordered_set<Color, Color::HashFunction>& usedColors) {
   // If we don't do this, we'll get vertically flipped provinces
   stbi_set_flip_vertically_on_load(false);
 
@@ -85,10 +85,10 @@ void Province::generateMesh(const char* mapPath, std::unordered_set<Color, Color
     // Add quad
     const auto index = static_cast<unsigned int>(vertices.size());
 
-    vertices.emplace_back(p, q, color);
-    vertices.emplace_back(p, q + y1, color);
-    vertices.emplace_back(p0, q, color);
-    vertices.emplace_back(p0, q + y1, color);
+    vertices.emplace_back(p, q);
+    vertices.emplace_back(p, q + y1);
+    vertices.emplace_back(p0, q);
+    vertices.emplace_back(p0, q + y1);
 
     indices.insert(indices.end(), {
         index, index + 1, index + 2,
@@ -135,14 +135,6 @@ void Province::generateMeshData() {
                         sizeof(Vertex),
                         nullptr);
   glEnableVertexAttribArray(0);
-
-  glVertexAttribPointer(1,
-                        3,
-                        GL_UNSIGNED_BYTE,
-                        GL_FALSE,
-                        sizeof(Vertex),
-                        reinterpret_cast<void *>(offsetof(Vertex, color)));
-  glEnableVertexAttribArray(1);
 
   glBindVertexArray(0);
 }
