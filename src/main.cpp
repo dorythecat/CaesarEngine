@@ -16,9 +16,11 @@
 
 enum KEYBINDS_ENUM {
     EXIT,
+#ifdef DEBUG
     DEBUG_WIREFRAME_ON,
     DEBUG_WIREFRAME_OFF,
     DEBUG_TICK,
+#endif
     MOVE_UP,
     MOVE_DOWN,
     MOVE_LEFT,
@@ -32,9 +34,11 @@ enum MOUSE_KEYBINDS_ENUM {
 
 static std::unordered_map<KEYBINDS_ENUM, std::vector<int>> keybinds = {
     {EXIT, {GLFW_KEY_ESCAPE}},
+#ifdef DEBUG
     {DEBUG_WIREFRAME_ON, {GLFW_KEY_F5}},
     {DEBUG_WIREFRAME_OFF, {GLFW_KEY_F6}},
     {DEBUG_TICK, {GLFW_KEY_T}},
+#endif
     {MOVE_UP, {GLFW_KEY_W, GLFW_KEY_UP}},
     {MOVE_DOWN, {GLFW_KEY_S, GLFW_KEY_DOWN}},
     {MOVE_LEFT, {GLFW_KEY_A, GLFW_KEY_LEFT}},
