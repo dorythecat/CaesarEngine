@@ -15,11 +15,10 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
   if (!province_file.is_open())
     errorHandler->logFatal("Could not open file \"" + provPath + "\"", ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
 
-  unsigned int i = 0; // Line number
+  size_t i = 0; // Line number
   std::vector<QueuedProvince> queuedProvinces; // Read the provinces, queue them, and then generate them
   std::unordered_set<Province::Color, Province::Color::HashFunction> usedColors; // For adjacency optimizations
-  for (std::string fileLine; std::getline(province_file, fileLine);) {
-    i++;
+  for (std::string fileLine; std::getline(province_file, fileLine); i++) {
     if (fileLine.empty()) continue;
     fileLine = fileLine.substr(fileLine.find_first_not_of(' '));
     if (fileLine.substr(0, 1) == "#") continue; // Check for comments
