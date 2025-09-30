@@ -26,7 +26,6 @@ StateManager::StateManager(ErrorHandler* errorHandler,
 
     std::string id = line.substr(0, line.find_first_of(' '));
 
-    std::istringstream lineStream(line);
     std::string name;
     bool provinceSearch = false;
     std::vector<std::string> provinceIds;
@@ -40,18 +39,14 @@ StateManager::StateManager(ErrorHandler* errorHandler,
           provinceSearch = false;
           continue;
         }
-        std::istringstream curStream(cur);
-        for (std::string provinceId;
-             std::getline(curStream, provinceId, ',');) {
+        for (std::string provinceId; std::getline(std::istringstream(cur), provinceId, ',');) {
           provinceId = provinceId.substr(provinceId.find_first_not_of(' '));
           if (provinceId == "}") {
             provinceSearch = false;
             break;
-          }
-          provinceIds.push_back(provinceId);
+          } provinceIds.push_back(provinceId);
         }
-      }
-      if (first == "}") break;
+      } if (first == "}") break;
       first = cur.substr(0, cur.find_first_of(' '));
       if (first == "name:") {
         name = cur.substr(cur.find(first) + first.length());
