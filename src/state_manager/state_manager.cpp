@@ -86,7 +86,7 @@ StateManager::StateManager(ErrorHandler* errorHandler,
 
     State state(name, color);
     for (const auto &provinceId: provinceIds) {
-      stateColors[provinceId] = color; // Set the color of the province to the color of the state
+      stateColors[provinceId] = state.getColor(); // Set the color of the province to the color of the state
       state.addProvince(pm->getProvince(provinceId));
     } states.emplace(id, state);
   } stateFile.close();

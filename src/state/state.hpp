@@ -10,10 +10,8 @@
 
 class State {
 public:
-  Province::Color color;
-
-  explicit State(std::string name) : name(std::move(name)) {}
-  State(std::string name, const Province::Color color) : color(color), name(std::move(name)) {}
+  explicit State(std::string name) : name(std::move(name)) { checkColor(); }
+  State(std::string name, const Province::Color color) : name(std::move(name)), color(color) { checkColor(); }
   ~State() = default;
 
   State(const State& other) {
@@ -41,6 +39,7 @@ public:
   [[nodiscard]] float getCenterY() const { return center.y / static_cast<float>(provinces.size()); }
 
   [[nodiscard]] std::string getName() const { return name; }
+  [[nodiscard]] Province::Color getColor() const { return color; }
 
   [[nodiscard]] bool hasProvince(const std::string &provinceName) const {
     return std::ranges::any_of(provinces, [&provinceName](const Province& province) {
@@ -54,6 +53,16 @@ private:
   std::string name;
   std::vector<Province> provinces;
   vec2f center;
+
+  Province::Color color;
+
+  void checkColor() {
+    if (this->color != Province::Color()) return;
+    // If no color is given, generate one based on the name
+    unsigned int hash = 15423465; // Random, but constant starting value
+    for (const char &c: this->name) hash = (hash << 3) + (hash >> 1) + static_cast<unsigned int>(c) * hash;
+    this->color = Province::Color((hash & 0xFF0000) >> 16, (hash & 0x00FF00) >> 8, hash & 0x0000FF);
+  }
 };
 
 #endif // STATE_HPP
