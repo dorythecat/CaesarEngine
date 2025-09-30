@@ -32,17 +32,21 @@ enum MOUSE_KEYBINDS_ENUM {
     DRAG_KEY
 };
 
-static std::unordered_map<KEYBINDS_ENUM, std::vector<int>> keybinds = {
+// Keybinds
+// Each action can have multiple keybinds, and each keybind can contain multiple keys
+// A keybind will only trigger if all the keys in it are pressed at the same time
+// An action will trigger if any of its keybinds are triggered
+static std::unordered_map<KEYBINDS_ENUM, std::vector<std::vector<int>>> keybinds = {
 #ifdef DEBUG
-    {DEBUG_WIREFRAME_ON, {GLFW_KEY_F5}},
-    {DEBUG_WIREFRAME_OFF, {GLFW_KEY_F6}},
-    {DEBUG_TICK, {GLFW_KEY_T}},
+    {DEBUG_WIREFRAME_ON, {{GLFW_KEY_F5}}},
+    {DEBUG_WIREFRAME_OFF, {{GLFW_KEY_F6}}},
+    {DEBUG_TICK, {{GLFW_KEY_T}}},
 #endif
-    {EXIT, {GLFW_KEY_ESCAPE}},
-    {MOVE_UP, {GLFW_KEY_W, GLFW_KEY_UP}},
-    {MOVE_DOWN, {GLFW_KEY_S, GLFW_KEY_DOWN}},
-    {MOVE_LEFT, {GLFW_KEY_A, GLFW_KEY_LEFT}},
-    {MOVE_RIGHT, {GLFW_KEY_D, GLFW_KEY_RIGHT}}
+    {EXIT, {{GLFW_KEY_ESCAPE}}},
+    {MOVE_UP, {{GLFW_KEY_W}, {GLFW_KEY_UP}}},
+    {MOVE_DOWN, {{GLFW_KEY_S}, {GLFW_KEY_DOWN}}},
+    {MOVE_LEFT, {{GLFW_KEY_A}, {GLFW_KEY_LEFT}}},
+    {MOVE_RIGHT, {{GLFW_KEY_D}, {GLFW_KEY_RIGHT}}}
 };
 
 static std::unordered_map<MOUSE_KEYBINDS_ENUM, int> mouseKeybinds = {
@@ -65,8 +69,9 @@ unsigned long lastTick = 1;
 
 // Keybind utilities
 bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
-    return std::ranges::any_of(keybinds[key],
-        [&](const int k) { return glfwGetKey(window, k) == GLFW_PRESS; });
+    return std::ranges::any_of(keybinds[key], [&](const std::vector<int>& keybind) {
+        return std::ranges::all_of(keybind, [&](const int k) { return glfwGetKey(window, k) == GLFW_PRESS; });
+    });
 }
 
 void processInput(GLFWwindow* window) {
