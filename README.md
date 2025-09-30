@@ -9,10 +9,12 @@ To compile the engine (in linux), execute the command `bash compile.sh`. This sc
 
 # Usage
 The following keys can be used to interact with the engine:
-- `F5`: Activate wireframe mode
-- `F6`: Deactivate wireframe mode
+(These keybinds can be easily edited in the code, this is just the defaults)
+- `F5`: Activate wireframe mode (Debug build only)
+- `F6`: Deactivate wireframe mode (Debug build only)
+- `T`: Tick the engine (Debug build only)
 - `Scroll Wheel`: Zoom in and out
-- `WASD`: Move the camera
+- `WASD` or Arrow Keys: Move the camera
 
 
 # Acknowledgements
