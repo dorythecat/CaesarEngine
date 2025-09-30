@@ -68,10 +68,11 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
 
   // Generate adjacency map
   for (const auto& [name, prov] : provinces) {
+    if (prov.city.category == Province::City::WASTELAND) continue; // Wastelands aren't connected to anything
     std::unordered_set<std::string> adjProvs;
     for (const auto& color : prov.getAdjacentColors()) {
       for (const auto& [otherName, otherProv] : provinces) {
-        if (otherProv.getColor() != color) continue;
+        if (otherProv.getColor() != color || otherProv.city.category == Province::City::WASTELAND) continue;
         adjProvs.emplace(otherName);
         break;
       }
@@ -104,7 +105,9 @@ std::string ProvinceManager::clickedOnProvince(const float x, const float y) {
 
 ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinceA, const std::string& provinceB) {
   Connection connection;
-  if (!provinces.contains(provinceA) || !provinces.contains(provinceB)) return connection;
+  if (!provinces.contains(provinceA) || !provinces.contains(provinceB) ||
+      provinces.at(provinceA).city.category == Province::City::WASTELAND ||
+      provinces.at(provinceB).city.category == Province::City::WASTELAND) return connection;
   if (provinceA == provinceB) {
     connection.steps = 0;
     return connection;

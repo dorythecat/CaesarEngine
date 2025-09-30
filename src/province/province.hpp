@@ -191,6 +191,27 @@ public:
   }
   [[nodiscard]] std::unordered_set<Color, Color::HashFunction> getAdjacentColorsSet() const { return adjacentColors; }
 
+  void tick() {
+    if (city.food < 0) {
+      city.population -= city.population / 10; // If we have no food, we lose population
+      city.food = 0;
+    } else if (city.food > city.population / 2) {
+      city.population += city.food / 20; // If we have excess food, we gain population
+      city.food -= city.population / 10; // But we still consume food
+    }
+
+    city.wealth += city.production / 10; // Gain wealth from production
+    city.production += city.population / 100; // Gain production from population
+    city.food += city.population / 50; // Gain food from population
+
+    // Clamp values to reasonable limits
+    city.population = std::clamp(city.population, 0, 1000000);
+    city.wealth = std::clamp(city.wealth, 0, 1000000);
+    city.food = std::clamp(city.food, 0, 1000000);
+    city.production = std::clamp(city.production, 0, 1000000);
+    city.strength = std::clamp(city.strength, 0, 1000000);
+  }
+
 private:
   unsigned int VAO{}, VBO{}, EBO{};
   std::vector<Vertex> vertices;

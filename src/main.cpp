@@ -61,19 +61,24 @@ unsigned long lastTick = 1;
 
 // Keybind utilities
 bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
-    return std::ranges::any_of(keybinds[key], [&](const int k) {
-        return glfwGetKey(window, k) == GLFW_PRESS;
-    });
+    return std::ranges::any_of(keybinds[key],
+        [&](const int k) { return glfwGetKey(window, k) == GLFW_PRESS; });
 }
 
 void processInput(GLFWwindow* window) {
     // Exit on ESC
     if (keyPressed(window, EXIT)) glfwSetWindowShouldClose(window, true);
 
-    // Debug wireframe mode (on with F5, off with F6) (Only enabled in debug builds)
+    // Debug keybinds
 #ifdef DEBUG
     if (keyPressed(window, DEBUG_WIREFRAME_ON)) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (keyPressed(window, DEBUG_WIREFRAME_OFF)) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    // Debounce the key, so we only do one tick
+    if (keyPressed(window, DEBUG_TICK) && lastTick != ticker.getTick()) {
+        ticker.tick();
+        lastTick = ticker.getTick();
+    } else if (!keyPressed(window, DEBUG_TICK)) lastTick = ticker.getTick() + 1;
 #endif
 
     // Move the view with WASD keys
@@ -81,14 +86,6 @@ void processInput(GLFWwindow* window) {
     if (keyPressed(window, MOVE_DOWN)) offset.y -= scale * 0.001f;
     if (keyPressed(window, MOVE_LEFT)) offset.x -= scale * 0.001f;
     if (keyPressed(window, MOVE_RIGHT)) offset.x += scale * 0.001f;
-
-#ifdef DEBUG
-    // Debounce the key, so we only do one tick
-    if (keyPressed(window, DEBUG_TICK) && lastTick != ticker.getTick()) {
-        ticker.tick();
-        lastTick = ticker.getTick();
-    } else if (!keyPressed(window, DEBUG_TICK)) lastTick = ticker.getTick() + 1;
-#endif
 }
 
 std::string selectedProv; // Currently selected province
@@ -126,15 +123,14 @@ void mouse_click_callback(GLFWwindow* window,
         errorHandler.logDebug(selectedProv + " is connected to " + provinceName + " in: " + std::to_string(steps) + " steps.");
         errorHandler.logDebug("This amounts to " + std::to_string(area) + " total area.");
         errorHandler.logDebug("The length of this path is " + std::to_string(length));
+        selectedProv = ""; // Reset selected province
 #ifdef DEBUG
         if (steps <= 0) return; // Not connected or same province
         std::string path = " - Path: ";
         for (const auto &provName: pathProvs | std::views::keys)
-            path += provName + (provName != provinceName ? " -> " : "\n");
+            path += provName + (provName != provinceName ? " -> " : "");
         errorHandler.logDebug(path);
 #endif
-
-        selectedProv = ""; // Reset selected province
     }
 }
 
@@ -163,6 +159,7 @@ int main() {
     const Window window(800, 600, "Caesar Engine", &errorHandler);
 
     StateManager sm(&errorHandler);
+    ticker.registerTickCallback([&sm] { sm.tick(); });
 
     glfwSwapInterval(0); // Disable VSync
 
