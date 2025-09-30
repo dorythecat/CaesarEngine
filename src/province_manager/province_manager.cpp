@@ -25,6 +25,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
 
     std::istringstream fileLineStream(fileLine);
     std::vector<std::string> curProv;
+    curProv.reserve(9); // Max 9 parameters
     for (std::string cur; std::getline(fileLineStream, cur, ',');) {
       cur = cur.substr(cur.find_first_not_of(' '));
       curProv.push_back(cur);
