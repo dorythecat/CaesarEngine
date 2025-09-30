@@ -29,7 +29,6 @@ public:
 
   struct Connection { // Connections in between provinces
     int steps = -1; // -1 if not connected, 0 if same province, >0 if connected
-    int area = 0;  // Total area of all provinces in the path (TODO: is this useful or should it be removed?)
     float length = 0.0f; // Total length of the path
 
     // What provinces to traverse

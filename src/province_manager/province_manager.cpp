@@ -154,7 +154,6 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
 
   // Generate connection
   connection.steps = static_cast<int>(path.size()) - 1;
-  for (const auto &prov: path | std::views::values) connection.area += prov.getArea();
   connection.provinces = path;
 
   std::vector<vec2f> linePoints;
