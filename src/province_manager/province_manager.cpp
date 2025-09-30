@@ -20,15 +20,15 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
   unsigned int i = 0; // Line number
   std::vector<QueuedProvince> queuedProvinces; // Read the provinces, queue them, and then generate them
   std::unordered_set<Province::Color, Province::Color::HashFunction> usedColors; // For adjacency optimizations
-  for (std::string line; std::getline(province_file, line);) {
+  for (std::string fileLine; std::getline(province_file, fileLine);) {
     i++;
-    if (line.empty()) continue;
-    line = line.substr(line.find_first_not_of(' '));
-    if (line.substr(0, 1) == "#") continue; // Check for comments
+    if (fileLine.empty()) continue;
+    fileLine = fileLine.substr(fileLine.find_first_not_of(' '));
+    if (fileLine.substr(0, 1) == "#") continue; // Check for comments
 
-    std::istringstream lineStream(line);
+    std::istringstream fileLineStream(fileLine);
     std::vector<std::string> curProv;
-    for (std::string cur; std::getline(lineStream, cur, ',');) {
+    for (std::string cur; std::getline(fileLineStream, cur, ',');) {
       cur = cur.substr(cur.find_first_not_of(' '));
       curProv.push_back(cur);
     }
@@ -42,7 +42,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
     if (curProv.size() > 9) {
       errorHandler->logWarning("Province defined at line " + std::to_string(i) + " has too many parameters.",
         ErrorHandler::FORMAT_ERROR);
-      return;
+      continue;
     }
 
     auto city = Province::City(errorHandler, static_cast<Province::City::CityCategory>(std::stoi(curProv[3])));
