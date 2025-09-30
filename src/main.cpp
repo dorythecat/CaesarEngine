@@ -15,12 +15,12 @@
 #include "ticker/ticker.h"
 
 enum KEYBINDS_ENUM {
-    EXIT,
 #ifdef DEBUG
     DEBUG_WIREFRAME_ON,
     DEBUG_WIREFRAME_OFF,
     DEBUG_TICK,
 #endif
+    EXIT,
     MOVE_UP,
     MOVE_DOWN,
     MOVE_LEFT,
@@ -33,12 +33,12 @@ enum MOUSE_KEYBINDS_ENUM {
 };
 
 static std::unordered_map<KEYBINDS_ENUM, std::vector<int>> keybinds = {
-    {EXIT, {GLFW_KEY_ESCAPE}},
 #ifdef DEBUG
     {DEBUG_WIREFRAME_ON, {GLFW_KEY_F5}},
     {DEBUG_WIREFRAME_OFF, {GLFW_KEY_F6}},
     {DEBUG_TICK, {GLFW_KEY_T}},
 #endif
+    {EXIT, {GLFW_KEY_ESCAPE}},
     {MOVE_UP, {GLFW_KEY_W, GLFW_KEY_UP}},
     {MOVE_DOWN, {GLFW_KEY_S, GLFW_KEY_DOWN}},
     {MOVE_LEFT, {GLFW_KEY_A, GLFW_KEY_LEFT}},
@@ -70,11 +70,7 @@ bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
 }
 
 void processInput(GLFWwindow* window) {
-    // Exit on ESC
-    if (keyPressed(window, EXIT)) glfwSetWindowShouldClose(window, true);
-
-    // Debug keybinds
-#ifdef DEBUG
+#ifdef DEBUG // Debug keybinds
     if (keyPressed(window, DEBUG_WIREFRAME_ON)) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (keyPressed(window, DEBUG_WIREFRAME_OFF)) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -84,6 +80,9 @@ void processInput(GLFWwindow* window) {
         lastTick = ticker.getTick();
     } else if (!keyPressed(window, DEBUG_TICK)) lastTick = ticker.getTick() + 1;
 #endif
+
+    // Exit on ESC
+    if (keyPressed(window, EXIT)) glfwSetWindowShouldClose(window, true);
 
     // Move the view with WASD keys
     if (keyPressed(window, MOVE_UP)) offset.y += scale * 0.001f;
