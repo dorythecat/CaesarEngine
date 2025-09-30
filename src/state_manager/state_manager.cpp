@@ -14,7 +14,7 @@ StateManager::StateManager(ErrorHandler* errorHandler,
                                                mapPath,
                                                provPath);
 
-  std::ifstream stateFile("res/states.txt");
+  std::ifstream stateFile(statePath);
   if (!stateFile.is_open())
     errorHandler->logFatal("Could not open file \"" + statePath + "\"",
       ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
