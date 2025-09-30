@@ -15,10 +15,9 @@ StateManager::StateManager(ErrorHandler* errorHandler,
                                                provPath);
 
   std::ifstream stateFile("res/states.txt");
-  if (!stateFile.is_open()) {
+  if (!stateFile.is_open())
     errorHandler->logFatal("Could not open file \"" + statePath + "\"",
       ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
-  }
 
   for (std::string line; std::getline(stateFile, line);) {
     if (line.empty()) continue;
@@ -77,9 +76,8 @@ StateManager::StateManager(ErrorHandler* errorHandler,
     states.emplace(id, state);
   } stateFile.close();
 
-  if (states.empty()) {
+  if (states.empty())
     errorHandler->logFatal("No states found in \"" + statePath + "\"", ErrorHandler::FORMAT_ERROR);
-  }
 }
 
 void StateManager::render(const Window &window, const float scale, const vec2f &offset) {
