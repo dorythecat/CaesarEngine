@@ -131,7 +131,7 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
       return provinces.at(a).getArea() < provinces.at(b).getArea();
     });
 
-    for (const auto& adj : adjProvs) {
+    for (const std::string& adj : adjProvs) {
       if (visited.contains(adj)) continue;
       parent.emplace_back(adj, cur);
       toVisit.push(adj);
