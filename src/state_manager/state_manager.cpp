@@ -66,13 +66,7 @@ StateManager::StateManager(ErrorHandler* errorHandler,
       else if (first == "color:") {
         std::string hex = cur.substr(cur.find(first) + first.length());
         hex = hex.substr(hex.find_first_not_of(' '));
-        hex = hex.substr(hex.find_first_not_of('#'));
-        if (hex.length() == 6) {
-          color = Province::Color(hex);
-          continue;
-        }
-        errorHandler->logWarning("State " + id + " has an invalid color \"" + hex + "\"",
-          ErrorHandler::FORMAT_ERROR);
+        color = Province::Color(hex.substr(hex.find_first_not_of('#'))); // Remove leading #
       } else if (std::ranges::find(provinceIds,
         first.substr(0, first.find_first_of(','))) == provinceIds.end()) {
         errorHandler->logWarning("State " + id + " has an unknown parameter \"" + first + "\"",

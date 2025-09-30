@@ -24,6 +24,7 @@ public:
     explicit Color(const unsigned char grey) : r(grey), g(grey), b(grey) {}
     Color(const unsigned char r, const unsigned char g, const unsigned char b) : r(r), g(g), b(b) {}
     explicit Color(const std::string &hex) {
+      if (hex.length() != 6) throw std::invalid_argument("Hex color must be 6 characters long");
       r = static_cast<unsigned char>(std::stoi(hex.substr(0, 2), nullptr, 16));
       g = static_cast<unsigned char>(std::stoi(hex.substr(2, 2), nullptr, 16));
       b = static_cast<unsigned char>(std::stoi(hex.substr(4, 2), nullptr, 16));
