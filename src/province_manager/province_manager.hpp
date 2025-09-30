@@ -8,6 +8,7 @@
 #include <ranges>
 #include <list>
 #include <vector>
+#include <queue>
 
 #include "../utils.hpp"
 #include "../window/window.hpp"
