@@ -51,7 +51,8 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
     if (curProv.size() == 9) city.strength = std::stoi(curProv[8]);
 
     auto color = Province::Color(curProv[1]);
-    usedColors.emplace(color); // Remember this color so we can check adjacency later
+    // Remember this color so we can check adjacency later, but only if it's not a wasteland
+    if (city.category != Province::City::WASTELAND) usedColors.emplace(color);
     queuedProvinces.push_back({ // Queue this province so we can render all of them at once
       curProv[0],
       color,
@@ -70,7 +71,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
     std::unordered_set<std::string> adjProvs;
     for (const auto& color : prov.getAdjacentColors()) {
       for (const auto& [otherName, otherProv] : provinces) {
-        if (otherProv.getColor() != color || otherProv.city.category == Province::City::WASTELAND) continue;
+        if (otherProv.getColor() != color) continue;
         adjProvs.emplace(otherName);
         break;
       }
