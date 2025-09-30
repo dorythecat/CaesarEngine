@@ -1,5 +1,6 @@
 001 {
   name: "Test State 1"
+  color: #00ff00
   provinces: {
     PR1, PR2,
     PR3
@@ -8,6 +9,7 @@
 
 002 {
   name: "Test State 2"
+  color: #ff0000
   provinces: {
     PR4, PR5,
     PR6
