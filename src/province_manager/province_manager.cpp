@@ -126,9 +126,8 @@ ProvinceManager::Connection ProvinceManager::findPath(const std::string& provinc
     toVisit.pop();
 
     // Sort for optimization
-    std::unordered_set<std::string> adjSet = adjacencyMap.at(cur);
-    std::vector<std::string> adjProvs(adjSet.begin(), adjSet.end());
-    std::ranges::sort(adjProvs, [&provinces = this->provinces](const std::string &a, const std::string &b) {
+    std::vector adjProvs(adjacencyMap.at(cur).begin(), adjacencyMap.at(cur).end());
+    std::ranges::sort(adjProvs, [&provinces = this->provinces](const std::string& a, const std::string& b) {
       return provinces.at(a).getArea() < provinces.at(b).getArea();
     });
 
