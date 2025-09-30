@@ -62,6 +62,13 @@ StateManager::StateManager(ErrorHandler* errorHandler,
         name = name.substr(name.find_first_not_of('"'));
         name = name.substr(0, name.find_last_not_of('"') + 1);
       } else if (first == "provinces:") provinceSearch = true;
+      else if (first == "color:") { // Ignore color for now
+        errorHandler->logWarning("State " + id + " has a color, but state colors are not supported (yet)",
+          ErrorHandler::FORMAT_ERROR);
+      } else {
+        errorHandler->logWarning("State " + id + " has an unknown parameter \"" + first + "\"",
+          ErrorHandler::FORMAT_ERROR);
+      }
     }
 
     if (name.empty()) {
