@@ -79,9 +79,19 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
   }
 }
 
-void ProvinceManager::render(const Window& window, const float scale, const vec2f& offset) {
+void ProvinceManager::render(const Window& window,
+                             const float scale,
+                             const vec2f& offset,
+                             const std::unordered_map<std::string, Province::Color>& provColors) {
   provShader.use();
-  for (auto &province: provinces | std::views::values) province.render();
+  for (auto &[id, province]: provinces) {
+    const auto color = provColors.at(id);
+    provShader.setVec3f("color",
+    static_cast<float>(color.r) / 255.0f,
+    static_cast<float>(color.g) / 255.0f,
+    static_cast<float>(color.b) / 255.0f);
+    province.render();
+  }
 
   lineShader.use();
   line.render();

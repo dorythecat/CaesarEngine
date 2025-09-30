@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include <unordered_set>
+#include <unordered_map>
 #include <ranges>
 #include <list>
 #include <vector>
@@ -50,7 +51,10 @@ public:
   ProvinceManager(const ProvinceManager&) = delete;
   ProvinceManager& operator=(const ProvinceManager&) = delete;
 
-  void render(const Window& window, float scale, const vec2f& offset);
+  void render(const Window &window,
+              float scale,
+              const vec2f &offset,
+              const std::unordered_map<std::string, Province::Color> &provColors);
   [[nodiscard]] std::string clickedOnProvince(float x, float y);
   [[nodiscard]] std::string clickedOnProvince(const vec2f& pos) { return clickedOnProvince(pos.x, pos.y); }
 
