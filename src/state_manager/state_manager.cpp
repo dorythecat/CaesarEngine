@@ -63,7 +63,16 @@ StateManager::StateManager(ErrorHandler* errorHandler,
         name = name.substr(name.find_first_not_of('"'));
         name = name.substr(0, name.find_last_not_of('"') + 1);
       } else if (first == "provinces:") provinceSearch = true;
-      else if (first == "color:") color = Province::Color(cur.substr(cur.find(first) + first.length()));
+      else if (first == "color:") {
+        std::string hex = cur.substr(cur.find(first) + first.length());
+        hex = hex.substr(hex.find_first_not_of(' '));
+        hex = hex.substr(hex.find_first_not_of('#'));
+        if (hex.length() != 6) {
+          errorHandler->logWarning("State " + id + " has an invalid color \"" +hex + "\"",
+            ErrorHandler::FORMAT_ERROR);
+          continue;
+        } color = Province::Color(hex);
+      }
       else if (std::ranges::find(provinceIds, first.substr(0, first.find_first_of(','))) == provinceIds.end()) {
         errorHandler->logWarning("State " + id + " has an unknown parameter \"" + first + "\"",
           ErrorHandler::FORMAT_ERROR);
