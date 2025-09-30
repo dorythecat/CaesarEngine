@@ -25,7 +25,14 @@ StateManager::StateManager(ErrorHandler* errorHandler,
     if (line.substr(0, 1) == "#" || line.substr(line.find_last_not_of(' ')) != "{") continue;
 
     std::string id = line.substr(0, line.find_first_of(' '));
-
+    if (id.empty()) {
+      errorHandler->logWarning("State with no ID found", ErrorHandler::FORMAT_ERROR);
+      continue;
+    }
+    if (states.contains(id)) {
+      errorHandler->logWarning("State with ID " + id + " already exists", ErrorHandler::FORMAT_ERROR);
+      continue;
+    }
     std::string name;
     bool provinceSearch = false;
     std::vector<std::string> provinceIds;
@@ -39,7 +46,8 @@ StateManager::StateManager(ErrorHandler* errorHandler,
           provinceSearch = false;
           continue;
         }
-        for (std::string provinceId; std::getline(std::istringstream(cur), provinceId, ',');) {
+        std::istringstream curStream(cur);
+        for (std::string provinceId; std::getline(curStream, provinceId, ',');) {
           provinceId = provinceId.substr(provinceId.find_first_not_of(' '));
           if (provinceId == "}") {
             provinceSearch = false;
