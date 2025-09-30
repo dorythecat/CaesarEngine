@@ -34,6 +34,7 @@ StateManager::StateManager(ErrorHandler* errorHandler,
       continue;
     }
     std::string name;
+    Province::Color color;
     bool provinceSearch = false;
     std::vector<std::string> provinceIds;
     for (std::string cur; std::getline(stateFile, cur);) {
@@ -62,10 +63,8 @@ StateManager::StateManager(ErrorHandler* errorHandler,
         name = name.substr(name.find_first_not_of('"'));
         name = name.substr(0, name.find_last_not_of('"') + 1);
       } else if (first == "provinces:") provinceSearch = true;
-      else if (first == "color:") { // Ignore color for now
-        errorHandler->logWarning("State " + id + " has a color, but state colors are not supported (yet)",
-          ErrorHandler::FORMAT_ERROR);
-      } else {
+      else if (first == "color:") color = Province::Color(cur.substr(cur.find(first) + first.length()));
+      else {
         errorHandler->logWarning("State " + id + " has an unknown parameter \"" + first + "\"",
           ErrorHandler::FORMAT_ERROR);
       }
@@ -82,6 +81,7 @@ StateManager::StateManager(ErrorHandler* errorHandler,
     }
 
     State state(name);
+    state.color = color;
     for (const auto &provinceId: provinceIds) state.addProvince(pm->getProvince(provinceId));
     states.emplace(id, state);
   } stateFile.close();
