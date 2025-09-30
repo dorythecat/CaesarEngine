@@ -51,6 +51,8 @@ private:
   std::map<std::string, State> states;
   Text text;
   ErrorHandler* errorHandler;
+
+  std::unordered_map<std::string, Province::Color> stateColors;
 };
 
 #endif // STATE_MANAGER_HPP

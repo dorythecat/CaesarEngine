@@ -81,8 +81,10 @@ StateManager::StateManager(ErrorHandler* errorHandler,
     }
 
     State state(name, color);
-    for (const auto &provinceId: provinceIds) state.addProvince(pm->getProvince(provinceId));
-    states.emplace(id, state);
+    for (const auto &provinceId: provinceIds) {
+      stateColors[provinceId] = color; // Set the color of the province to the color of the state
+      state.addProvince(pm->getProvince(provinceId));
+    } states.emplace(id, state);
   } stateFile.close();
 
   if (states.empty())
@@ -90,15 +92,7 @@ StateManager::StateManager(ErrorHandler* errorHandler,
 }
 
 void StateManager::render(const Window &window, const float scale, const vec2f &offset) {
-  pm->render(window, scale, offset,
-{
-    { "PR1", Province::Color(255, 0, 0) },
-    { "PR2", Province::Color(0, 255, 0) },
-    { "PR3", Province::Color(0, 0, 255) },
-    { "PR4", Province::Color(255, 0, 255) },
-    { "PR5", Province::Color(255, 255, 0) },
-    { "PR6", Province::Color(0, 255, 255) }
-    });
+  pm->render(window, scale, offset, stateColors);
 
   pm->textShader.use();
   if (scale < 0.15f || scale > 2.0f) return; // Don't render text if zoomed in too close or too far
