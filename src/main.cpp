@@ -65,7 +65,6 @@ ErrorHandler errorHandler(logLevel); // Global error handler
 float scale = 1.0f;
 vec2f offset;
 Ticker ticker(&errorHandler);
-unsigned long lastTick = 1;
 
 // Keybind utilities
 bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
@@ -74,16 +73,17 @@ bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
     });
 }
 
+#ifdef DEBUG
+bool tickButtonPressed = false;
+#endif
 void processInput(GLFWwindow* window) {
 #ifdef DEBUG // Debug keybinds
     if (keyPressed(window, DEBUG_WIREFRAME_ON)) glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     if (keyPressed(window, DEBUG_WIREFRAME_OFF)) glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     // Debounce the key, so we only do one tick
-    if (keyPressed(window, DEBUG_TICK) && lastTick != ticker.getTick()) {
-        ticker.tick();
-        lastTick = ticker.getTick();
-    } else if (!keyPressed(window, DEBUG_TICK)) lastTick = ticker.getTick() + 1;
+    if (keyPressed(window, DEBUG_TICK) && !tickButtonPressed) ticker.tick();
+    tickButtonPressed = keyPressed(window, DEBUG_TICK);
 #endif
 
     // Exit on ESC
