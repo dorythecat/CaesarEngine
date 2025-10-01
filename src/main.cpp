@@ -73,6 +73,10 @@ bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
     });
 }
 
+bool mouseButtonPressed(GLFWwindow* window, const MOUSE_KEYBINDS_ENUM button) {
+    return glfwGetMouseButton(window, mouseKeybinds[button]) == GLFW_PRESS;
+}
+
 #ifdef DEBUG
 bool tickButtonPressed = false;
 #endif
@@ -101,7 +105,7 @@ void mouse_click_callback(GLFWwindow* window,
                           const int button,
                           const int action,
                           int mods) {
-    if (button != mouseKeybinds[CLICK_KEY] || action != GLFW_PRESS) return;
+    if (!mouseButtonPressed(window, CLICK_KEY)) return;
     vec2d position;
     glfwGetCursorPos(window, &position.x, &position.y);
     vec2i dimensions;
