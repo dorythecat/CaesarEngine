@@ -3,6 +3,7 @@ layout (location = 0) in vec2 aPos;
 
 uniform float scale;
 uniform vec2 offset;
+uniform vec3 color;
 
 void main() {
   gl_Position = vec4(aPos - offset, 0.0, scale);
