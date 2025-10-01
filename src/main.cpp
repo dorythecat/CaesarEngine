@@ -73,6 +73,12 @@ bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
     });
 }
 
+bool keyReleased(GLFWwindow* window, const KEYBINDS_ENUM key) {
+    return std::ranges::all_of(keybinds[key], [&](const std::vector<int>& keybind) {
+        return std::ranges::any_of(keybind, [&](const int k) { return glfwGetKey(window, k) == GLFW_RELEASE; });
+    });
+}
+
 bool mouseButtonPressed(GLFWwindow* window, const MOUSE_KEYBINDS_ENUM button) {
     return std::ranges::any_of(mouseKeybinds[button], [&](const std::vector<int>& mouseKeybind) {
         return std::ranges::all_of(mouseKeybind, [&](const int k) {
