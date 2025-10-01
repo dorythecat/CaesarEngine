@@ -97,8 +97,8 @@ void ProvinceManager::render(const Window& window,
   lineShader.use();
   line.render();
 
-  if (scale > 0.5f) return; // Don't render text if zoomed out too far
-  // TODO(Dory): Don't render text if it's offscreen
+  // Don't render text if zoomed out too far or offscreen
+  if (scale > 0.5f || offset > vec2f(1.0f) || offset < vec2f(-1.0f)) return;
 
   // TODO(Dory): Find a better way to do province name text
   textShader.use();
