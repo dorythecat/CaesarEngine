@@ -74,7 +74,7 @@ StateManager::StateManager(ErrorHandler* errorHandler,
     }
 
     if (name.empty()) {
-      errorHandler->logWarning("State " + id + " has no name", ErrorHandler::FORMAT_ERROR);
+      errorHandler->logError("State " + id + " has no name", ErrorHandler::FORMAT_ERROR);
       continue;
     }
 
