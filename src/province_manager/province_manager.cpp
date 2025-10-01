@@ -40,7 +40,6 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
     if (curProv.size() > 9) {
       errorHandler->logWarning("Province defined at line " + std::to_string(i) + " has too many parameters.",
         ErrorHandler::FORMAT_ERROR);
-      continue;
     }
 
     auto city = Province::City(errorHandler, static_cast<Province::City::CityCategory>(std::stoi(curProv[3])));
@@ -48,7 +47,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
     if (curProv.size() >= 6) city.wealth = std::stoi(curProv[5]);
     if (curProv.size() >= 7) city.food = std::stoi(curProv[6]);
     if (curProv.size() >= 8) city.production = std::stoi(curProv[7]);
-    if (curProv.size() == 9) city.strength = std::stoi(curProv[8]);
+    if (curProv.size() >= 9) city.strength = std::stoi(curProv[8]);
 
     auto color = Province::Color(curProv[1]);
     // Remember this color so we can check adjacency later, but only if it's not a wasteland
