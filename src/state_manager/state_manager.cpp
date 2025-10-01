@@ -15,9 +15,8 @@ StateManager::StateManager(ErrorHandler* errorHandler,
                                                provPath);
 
   std::ifstream stateFile(statePath);
-  if (!stateFile.is_open())
-    errorHandler->logFatal("Could not open file \"" + statePath + "\"",
-      ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
+  if (!stateFile.is_open()) errorHandler->logFatal("Could not open file \"" + statePath + "\"",
+    ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
 
   for (std::string line; std::getline(stateFile, line);) {
     if (line.empty()) continue;

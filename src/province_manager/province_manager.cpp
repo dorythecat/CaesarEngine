@@ -12,8 +12,8 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
                                                                 errorHandler(errorHandler),
                                                                 line(errorHandler) {
   std::ifstream province_file(provPath);
-  if (!province_file.is_open())
-    errorHandler->logFatal("Could not open file \"" + provPath + "\"", ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
+  if (!province_file.is_open()) errorHandler->logFatal("Could not open file \"" + provPath + "\"",
+    ErrorHandler::COULD_NOT_OPEN_FILE_ERROR);
 
   size_t i = 0; // Line number
   std::vector<QueuedProvince> queuedProvinces; // Read the provinces, queue them, and then generate them
