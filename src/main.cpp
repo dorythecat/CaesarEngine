@@ -77,6 +77,10 @@ bool mouseButtonPressed(GLFWwindow* window, const MOUSE_KEYBINDS_ENUM button) {
     return glfwGetMouseButton(window, mouseKeybinds[button]) == GLFW_PRESS;
 }
 
+bool mouseButtonReleased(GLFWwindow* window, const MOUSE_KEYBINDS_ENUM button) {
+    return glfwGetMouseButton(window, mouseKeybinds[button]) == GLFW_RELEASE;
+}
+
 #ifdef DEBUG
 bool tickButtonPressed = false;
 #endif
@@ -153,7 +157,7 @@ void scroll_callback(GLFWwindow* window, const double xoffset, const double yoff
 vec2f lastMousePos;
 void mouse_cursor_callback(GLFWwindow* window, const double xpos, const double ypos) {
     const auto mousePos = static_cast<vec2f>(vec2d(xpos, ypos));
-    if (glfwGetMouseButton(window, mouseKeybinds[DRAG_KEY]) == GLFW_RELEASE) {
+    if (mouseButtonReleased(window, DRAG_KEY)) {
         lastMousePos = mousePos;
         return;
     }
