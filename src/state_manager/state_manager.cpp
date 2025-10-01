@@ -102,6 +102,7 @@ void StateManager::render(const Window &window, const float scale, const vec2f &
   if (scale < 0.15f || scale > 2.0f) return; // Don't render text if zoomed in too close or too far
   for (auto &[name, state]: states) {
     text.setText(name, 10.0f, state.getCenter(), static_cast<vec2f>(window.getDimensions()), offset);
+    pm->textShader.setVec2f("center", state.getCenter());
     text.render();
   }
 }
