@@ -1,6 +1,6 @@
 #include "line.h"
 
-Line::Line(ErrorHandler* errorHandler, const std::vector<vec2f> &points) : errorHandler(errorHandler) {
+Line::Line(ErrorHandler* errorHandler, const std::vector<vec2f>& points) : errorHandler(errorHandler) {
   generateMesh(points);
   generateMeshData();
 }
@@ -12,7 +12,7 @@ void Line::render() const {
   glBindVertexArray(0);
 }
 
-void Line::generateMesh(const std::vector<vec2f> &points) {
+void Line::generateMesh(const std::vector<vec2f>& points) {
   if (points.size() < 2) {
     errorHandler->logError("Line must have at least 2 points",
       ErrorHandler::ErrorCode::NOT_ENOUGH_LINE_ELEMENTS);
@@ -53,7 +53,7 @@ void Line::generateMeshData() {
   glBindVertexArray(0);
 }
 
-void Line::addSegment(const vec2f &start, const vec2f &end, const bool final) {
+void Line::addSegment(const vec2f& start, const vec2f& end, const bool final) {
   length += (end - start).length(); // Measure length, in a fairly precise manner
 
   const vec2f direction = (end - start).normalized();
@@ -75,7 +75,7 @@ void Line::addSegment(const vec2f &start, const vec2f &end, const bool final) {
   vertices.push_back(end - direction * 0.01f - perpendicular * 2.0f);
 }
 
-vec2f Line::catmullRom(const vec2f &p0, const vec2f &p1, const vec2f &p2, const vec2f &p3, float t) {
+vec2f Line::catmullRom(const vec2f& p0, const vec2f& p1, const vec2f& p2, const vec2f& p3, float t) {
   // See https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
 
   // Knot parameters
