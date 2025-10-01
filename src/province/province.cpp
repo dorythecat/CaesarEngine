@@ -21,6 +21,10 @@ void Province::generateMesh(const char* mapPath, const std::unordered_set<Color,
     errorHandler->logError("Failed to load map texture", ErrorHandler::FILE_NOT_SUCCESSFULLY_READ_ERROR);
     return;
   }
+  if (x * y * n > std::numeric_limits<int>::max()) {
+    errorHandler->logFatal("Map dimensions too big to handle. Maximum 715827882 pixels allowed!");
+    return;
+  }
 
   // Even though the theoretical maximum size is more than this, it should NEVER
   // reach that point, so we can safely use this. Could probably reduce further, but, eh.
