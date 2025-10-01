@@ -104,6 +104,7 @@ void ProvinceManager::render(const Window& window,
   textShader.use();
   for (auto &[name, province] : provinces) {
     text.setText(name, 5.0f, province.getCenter(), static_cast<vec2f>(window.getDimensions()), offset);
+    textShader.setVec2f("center", province.getCenter());
     text.render();
   }
 }

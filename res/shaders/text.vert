@@ -6,8 +6,9 @@ out vec2 TexCoords;
 
 uniform vec2 offset;
 uniform float scale;
+uniform vec2 center;
 
 void main() {
-  gl_Position = vec4(vertex - offset, 0.0, scale);
+  gl_Position = vec4((vertex - center) * 0.9 + center - offset, 0.0, scale);
   TexCoords = texCoords;
 }  
