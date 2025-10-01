@@ -51,7 +51,7 @@ static std::unordered_map<KEYBINDS_ENUM, std::vector<std::vector<int>>> keybinds
 
 static std::unordered_map<MOUSE_KEYBINDS_ENUM, int> mouseKeybinds = {
     {CLICK_KEY, GLFW_MOUSE_BUTTON_LEFT},
-    {DRAG_KEY, GLFW_MOUSE_BUTTON_RIGHT}
+    {DRAG_KEY, GLFW_MOUSE_BUTTON_MIDDLE}
 };
 
 
@@ -116,7 +116,7 @@ void mouse_click_callback(GLFWwindow* window,
 
 #ifdef DEBUG
         for (auto adjacencyMap = sm->pm->getAdjacencyMap();
-            const auto& adjProvName : adjacencyMap[provinceName]) {
+             const auto& adjProvName : adjacencyMap[provinceName]) {
             errorHandler.logDebug(" - Adjacent province: " + sm->pm->getProvince(adjProvName).getName());
         }
 #endif
