@@ -53,14 +53,11 @@ void Province::generateMesh(const char* mapPath, const std::unordered_set<Color,
     // Actual quad generation
     const int i0 = i;
     float p0 = p;
-    while (data[i] == color.r &&
-           data[i + 1] == color.g &&
-           data[i + 2] == color.b &&
-           i % (n * x) != 0) {
+    do {
       p0 += x1;
       i += n;
       area++;
-    }
+    } while (data[i] == color.r && data[i + 1] == color.g && data[i + 2] == color.b && i % (n * x) != 0);
 
     // End of rectangle adjacency
     if (i % (n * x) < n * (x - 1)) {
