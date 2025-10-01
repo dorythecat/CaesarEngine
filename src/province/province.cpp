@@ -42,8 +42,8 @@ void Province::generateMesh(const char* mapPath, const std::unordered_set<Color,
 
     // Start of rectangle adjacency
     if (i % (n * x) > 0) {
-      auto c = Color(data[i - n], data[i - n + 1], data[i - n + 2]);
-      if (usedColors.contains(c)) adjacentColors.insert(c);
+      if (auto c = Color(data[i - n], data[i - n + 1], data[i - n + 2]);
+          usedColors.contains(c)) adjacentColors.insert(c);
     }
 
     // Actual quad generation
@@ -60,23 +60,23 @@ void Province::generateMesh(const char* mapPath, const std::unordered_set<Color,
 
     // End of rectangle adjacency
     if (i % (n * x) < n * (x - 1)) {
-      auto c = Color(data[i + n], data[i + n + 1], data[i + n + 2]);
-      if (usedColors.contains(c)) adjacentColors.insert(c);
+      if (auto c = Color(data[i + n], data[i + n + 1], data[i + n + 2]);
+          usedColors.contains(c)) adjacentColors.insert(c);
     }
 
     // Above rectangle adjacency
     if (i >= n * x) {
       for (int j = i0 - n * x; j < i - n * x; j += n) {
-        auto c = Color(data[j], data[j + 1], data[j + 2]);
-        if (usedColors.contains(c)) adjacentColors.insert(c);
+        if (auto c = Color(data[j], data[j + 1], data[j + 2]);
+            usedColors.contains(c)) adjacentColors.insert(c);
       }
     }
 
     // Below rectangle adjacency
     if (i <= n * x * (y - 1)) {
       for (int j = i0 + n * x; j < i + n * x; j += n) {
-        auto c = Color(data[j], data[j + 1], data[j + 2]);
-        if (usedColors.contains(c)) adjacentColors.insert(c);
+        if (auto c = Color(data[j], data[j + 1], data[j + 2]);
+            usedColors.contains(c)) adjacentColors.insert(c);
       }
     }
 
