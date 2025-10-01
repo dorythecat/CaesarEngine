@@ -8,6 +8,8 @@
 
 #include "../province/province.hpp"
 
+#define COLOR_HASH_SEED 196458761 // Random but constant seed for color generation
+
 class State {
 public:
   explicit State(std::string name) : name(std::move(name)) { checkColor(); }
@@ -59,7 +61,7 @@ private:
   void checkColor() {
     if (this->color != Province::Color()) return;
     // If no color is given, generate one based on the name
-    unsigned int hash = 196458761; // Random, but constant starting value
+    unsigned int hash = COLOR_HASH_SEED; // Random, but constant starting value
     for (const char &c: this->name) hash = (hash << 3) + (hash >> 3) + static_cast<unsigned int>(c) * hash;
     this->color = Province::Color((hash & 0xFF0000) >> 16, (hash & 0x00FF00) >> 8, hash & 0x0000FF);
   }
