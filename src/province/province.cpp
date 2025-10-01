@@ -18,7 +18,7 @@ void Province::generateMesh(const char* mapPath, const std::unordered_set<Color,
   int x, y, n;
   unsigned char* data = stbi_load(mapPath, &x, &y, &n, 0);
   if (!data) {
-    errorHandler->logError("Failed to load map texture", ErrorHandler::FILE_NOT_SUCCESSFULLY_READ_ERROR);
+    errorHandler->logFatal("Failed to load map texture", ErrorHandler::FILE_NOT_SUCCESSFULLY_READ_ERROR);
     return;
   }
   if (x * y * n > std::numeric_limits<int>::max()) {
