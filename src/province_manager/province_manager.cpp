@@ -41,11 +41,14 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
     }
 
     auto city = Province::City(errorHandler, static_cast<Province::City::CityCategory>(std::stoi(curProv[3])));
-    if (elements >= 5) city.population = std::stoi(curProv[4]);
-    if (elements >= 6) city.wealth = std::stoi(curProv[5]);
-    if (elements >= 7) city.food = std::stoi(curProv[6]);
-    if (elements >= 8) city.production = std::stoi(curProv[7]);
-    if (elements == 9) city.strength = std::stoi(curProv[8]);
+    switch (elements) {
+      case 9: city.strength = std::stoi(curProv[8]); [[fallthrough]];
+      case 8: city.production = std::stoi(curProv[7]); [[fallthrough]];
+      case 7: city.food = std::stoi(curProv[6]); [[fallthrough]];
+      case 6: city.wealth = std::stoi(curProv[5]); [[fallthrough]];
+      case 5: city.population = std::stoi(curProv[4]); [[fallthrough]];
+      default: break; // Use defaults
+    }
 
     auto color = Province::Color(curProv[1]);
     // Remember this color so we can check adjacency later, but only if it's not a wasteland
