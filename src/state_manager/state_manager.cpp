@@ -100,7 +100,8 @@ void StateManager::render(const Window &window, const float scale, const vec2f &
 
   pm->textShader.use();
   // Don't render text if zoomed in too close or too far or offscreen
-  if (scale < 0.15f || scale > 2.0f || offset > vec2f(1.0f) ||offset < vec2f(-1.0f)) return;
+  if (const auto outscreen = vec2f(scale > 1.0f ? scale : 1.0f);
+      scale < 0.15f || scale > 2.0f || offset > outscreen ||offset < -outscreen) return;
   for (auto &[name, state]: states) {
     text.setText(name, 10.0f, state.getCenter(), static_cast<vec2f>(window.getDimensions()), offset);
     pm->textShader.setVec2f("center", state.getCenter());
