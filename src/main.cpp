@@ -107,7 +107,7 @@ void mouse_click_callback(GLFWwindow* window,
     vec2i dimensions;
     glfwGetWindowSize(window, &dimensions.x, &dimensions.y);
     vec2f f = static_cast<vec2f>(position) * 2.0f * scale / static_cast<vec2f>(dimensions);
-    f = (f - scale).negateY() + offset;
+    f = ((f - scale).negateY() + offset) / 0.95f;
     const auto *sm = static_cast<StateManager *>(glfwGetWindowUserPointer(window));
     if (const std::string state = sm->clickedOnState(f); !state.empty()) {
         const std::string provinceName = sm->pm->clickedOnProvince(f);
