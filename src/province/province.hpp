@@ -179,7 +179,7 @@ public:
   [[nodiscard]] float getCenterX() const { return center.x; }
   [[nodiscard]] float getCenterY() const { return center.y; }
 
-  [[nodiscard]] int getArea() const { return area; }
+  [[nodiscard]] size_t getArea() const { return area; }
 
   [[nodiscard]] bool isAdjacent(const Color c) const { return adjacentColors.contains(c); }
   [[nodiscard]] bool isAdjacent(Province* p) const { return isAdjacent(p->getColor()); }
@@ -217,7 +217,7 @@ private:
   Color color;
   std::string name;
   vec2f center;
-  int area = 0; // The area of this province, in number of pixels
+  size_t area = 0; // The area of this province, in number of pixels
 
   std::unordered_set<Color, Color::HashFunction> adjacentColors;
 
