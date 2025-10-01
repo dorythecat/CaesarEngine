@@ -74,12 +74,12 @@ StateManager::StateManager(ErrorHandler* errorHandler,
     }
 
     if (name.empty()) {
-      errorHandler->logError("State " + id + " has no name", ErrorHandler::FORMAT_ERROR);
+      errorHandler->logError("State " + id + " has no name, skipping", ErrorHandler::FORMAT_ERROR);
       continue;
     }
 
     if (provinceIds.empty()) {
-      errorHandler->logError("State " + id + " has no provinces", ErrorHandler::FORMAT_ERROR);
+      errorHandler->logError("State " + id + " has no provinces, skipping", ErrorHandler::FORMAT_ERROR);
       continue;
     }
 
@@ -90,8 +90,8 @@ StateManager::StateManager(ErrorHandler* errorHandler,
     } states.emplace(id, state);
   } stateFile.close();
 
-  if (states.empty())
-    errorHandler->logFatal("No states found in \"" + statePath + "\"", ErrorHandler::FORMAT_ERROR);
+  if (states.empty()) errorHandler->logFatal("No states found in \"" + statePath + "\"",
+    ErrorHandler::FORMAT_ERROR);
 }
 
 void StateManager::render(const Window &window, const float scale, const vec2f &offset) {
