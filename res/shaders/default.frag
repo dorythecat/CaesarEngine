@@ -4,6 +4,7 @@ out vec4 fragColor;
 uniform float scale;
 uniform vec2 offset;
 uniform vec3 color;
+uniform vec2 center;
 
 void main() {
   fragColor = vec4(color, 1.0);
