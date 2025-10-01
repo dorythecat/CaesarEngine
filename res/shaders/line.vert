@@ -5,5 +5,5 @@ uniform float scale;
 uniform vec2 offset;
 
 void main() {
-    gl_Position = vec4(aPos - offset, 0.0, scale);
+    gl_Position = vec4(aPos * 0.95 - offset, 0.0, scale);
 }
