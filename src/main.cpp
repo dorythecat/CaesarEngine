@@ -49,9 +49,9 @@ static std::unordered_map<KEYBINDS_ENUM, std::vector<std::vector<int>>> keybinds
     {MOVE_RIGHT, {{GLFW_KEY_D}, {GLFW_KEY_RIGHT}}}
 };
 
-static std::unordered_map<MOUSE_KEYBINDS_ENUM, int> mouseKeybinds = {
-    {CLICK_KEY, GLFW_MOUSE_BUTTON_LEFT},
-    {DRAG_KEY, GLFW_MOUSE_BUTTON_MIDDLE}
+static std::unordered_map<MOUSE_KEYBINDS_ENUM, std::vector<std::vector<int>>> mouseKeybinds = {
+    {CLICK_KEY, {{GLFW_MOUSE_BUTTON_LEFT}}},
+    {DRAG_KEY, {{GLFW_MOUSE_BUTTON_MIDDLE}, {GLFW_MOUSE_BUTTON_RIGHT}}}
 };
 
 
@@ -74,11 +74,19 @@ bool keyPressed(GLFWwindow* window, const KEYBINDS_ENUM key) {
 }
 
 bool mouseButtonPressed(GLFWwindow* window, const MOUSE_KEYBINDS_ENUM button) {
-    return glfwGetMouseButton(window, mouseKeybinds[button]) == GLFW_PRESS;
+    return std::ranges::any_of(mouseKeybinds[button], [&](const std::vector<int>& mouseKeybind) {
+        return std::ranges::all_of(mouseKeybind, [&](const int k) {
+            return glfwGetMouseButton(window, k) == GLFW_PRESS;
+        });
+    });
 }
 
 bool mouseButtonReleased(GLFWwindow* window, const MOUSE_KEYBINDS_ENUM button) {
-    return glfwGetMouseButton(window, mouseKeybinds[button]) == GLFW_RELEASE;
+    return std::ranges::all_of(mouseKeybinds[button], [&](const std::vector<int>& mouseKeybind) {
+        return std::ranges::any_of(mouseKeybind, [&](const int k) {
+            return glfwGetMouseButton(window, k) == GLFW_RELEASE;
+        });
+    });
 }
 
 #ifdef DEBUG
