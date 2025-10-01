@@ -47,7 +47,7 @@ ProvinceManager::ProvinceManager(ErrorHandler* errorHandler,
       case 7: city.food = std::stoi(curProv[6]); [[fallthrough]];
       case 6: city.wealth = std::stoi(curProv[5]); [[fallthrough]];
       case 5: city.population = std::stoi(curProv[4]); [[fallthrough]];
-      default: break; // Use defaults
+      default: break;
     }
 
     auto color = Province::Color(curProv[1]);
