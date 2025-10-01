@@ -27,10 +27,10 @@ struct vec2 {
     // Comparison
     [[nodiscard]] bool operator==(const vec2& other) const { return x == other.x && y == other.y; }
     [[nodiscard]] bool operator!=(const vec2& other) const { return x != other.x || y != other.y; }
-    [[nodiscard]] bool operator<(const vec2& other) const { return (x < other.x) || (x == other.x && y < other.y); }
-    [[nodiscard]] bool operator<=(const vec2& other) const { return (x < other.x) || (x == other.x && y <= other.y); }
-    [[nodiscard]] bool operator>(const vec2& other) const { return (x > other.x) || (x == other.x && y > other.y); }
-    [[nodiscard]] bool operator>=(const vec2& other) const { return (x > other.x) || (x == other.x && y >= other.y); }
+    [[nodiscard]] bool operator<(const vec2& other) const { return x < other.x || y < other.y; }
+    [[nodiscard]] bool operator<=(const vec2& other) const { return x < other.x || y <= other.y; }
+    [[nodiscard]] bool operator>(const vec2& other) const { return x > other.x || y > other.y; }
+    [[nodiscard]] bool operator>=(const vec2& other) const { return x > other.x || y >= other.y; }
 
     // Basic arithmetic
     [[nodiscard]] vec2 operator+(const vec2& other) const { return vec2(x + other.x, y + other.y); }
