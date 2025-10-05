@@ -1,7 +1,6 @@
 #ifndef PROVINCE_MANAGER_HPP
 #define PROVINCE_MANAGER_HPP
 
-#include <algorithm>
 #include <string>
 #include <map>
 #include <unordered_set>
