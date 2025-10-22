@@ -22,3 +22,6 @@ The following keys can be used to interact with the engine:
 - [GLAD](https://glad.dav1d.de/) - OpenGL function
 - [MSDFGen](https://github.com/Chlumsky/msdfgen) - Font generation
 - [stb_image](https://github.com/nothings/stb) - Image loading
+
+# Demo Video
+![Demo Video](demo.mp4)
