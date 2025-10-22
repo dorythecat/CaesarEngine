@@ -156,7 +156,7 @@ void mouse_click_callback(GLFWwindow* window,
 #ifdef DEBUG
         if (steps <= 0) return; // Not connected or same province
         std::string path = " - Path: ";
-        for (const auto &provName: pathProvs | std::views::keys)
+        for (const auto& provName: pathProvs | std::views::keys)
             path += provName + (provName != provinceName ? " -> " : "");
         errorHandler.logDebug(path);
 #endif

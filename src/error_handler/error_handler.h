@@ -53,30 +53,29 @@ public:
   ErrorHandler(ErrorHandler&&) = default;
   ErrorHandler& operator=(ErrorHandler&&) = delete;
 
-  void logFatal(std::string message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    log("[FATAL]", std::move(message), errorCode, true); // Every fatal error should be logged
+  void logFatal(const std::string& message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
+    log("[FATAL]", message, errorCode, true); // Every fatal error should be logged
     std::exit(errorCode + 1000); // Exit the program after fatal errors
   }
-  void logInfo(const std::string &message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
+  void logInfo(const std::string& message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
     if (logLevel & LOG_INFO) log("[INFO]", message, errorCode);
   }
-  void logWarning(const std::string &message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
-    if (logLevel & LOG_WARNING) std::cerr << "[WARNING] (" << errorMessages[errorCode] << ")" << message << std::endl;
+  void logWarning(const std::string& message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
+    if (logLevel & LOG_WARNING) log("[WARNING]", message, errorCode, true);
   }
-  void logError(const std::string &message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
+  void logError(const std::string& message = "", const ErrorCode errorCode = UNKNOWN_ERROR) const {
     if (logLevel & LOG_ERROR) log("[ERROR]", message, errorCode, true);
   }
-  void logDebug(const std::string &message = "") const {
+  void logDebug(const std::string& message = "") const {
     if (logLevel & LOG_DEBUG) log("[DEBUG]", message, DEBUG_MESSAGE);
   }
 
 private:
   LogLevel logLevel;
 
-  void log(const std::string &prefix, std::string message, const ErrorCode errorCode, const bool error = false) const {
-    message = (message.empty() ? "" : ": ") + message;
-    if (error) std::cerr << prefix << " (" << errorMessages[errorCode] << ")" << message << std::endl;
-    else std::cout << prefix << " (" << errorMessages[errorCode] << ")" << message << std::endl;
+  void log(const std::string& prefix, const std::string& message, const ErrorCode errorCode, const bool error = false) const {
+    if (error) std::cerr << prefix << " (" << errorMessages[errorCode] << ")" << (message.empty() ? "" : ": ") + message << std::endl;
+    else std::cout << prefix << " (" << errorMessages[errorCode] << ")" << (message.empty() ? "" : ": ") + message << std::endl;
   }
 };
 

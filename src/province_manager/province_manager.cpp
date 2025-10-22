@@ -87,9 +87,9 @@ void ProvinceManager::render(const Window& window,
   for (auto &[id, province]: provinces) {
     const auto color = provColors.at(id);
     provShader.setVec3f("color",
-    static_cast<float>(color.r) / 255.0f,
-    static_cast<float>(color.g) / 255.0f,
-    static_cast<float>(color.b) / 255.0f);
+      static_cast<float>(color.r) / 255.0f,
+      static_cast<float>(color.g) / 255.0f,
+      static_cast<float>(color.b) / 255.0f);
     provShader.setVec2f("center", province.getCenter());
     province.render();
   }

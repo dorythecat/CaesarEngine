@@ -1,7 +1,6 @@
 #ifndef PROVINCE_MANAGER_HPP
 #define PROVINCE_MANAGER_HPP
 
-#include <algorithm>
 #include <string>
 #include <map>
 #include <unordered_set>
@@ -35,7 +34,7 @@ public:
     // What provinces to traverse
     std::list<std::pair<std::string, Province>> provinces; // Should be ordered for consistency
 
-    bool operator==(const Connection &other) const { return steps == other.steps && provinces == other.provinces; }
+    bool operator==(const Connection& other) const { return steps == other.steps && provinces == other.provinces; }
   };
 
   Shader provShader, textShader, lineShader;
@@ -51,10 +50,10 @@ public:
   ProvinceManager(const ProvinceManager&) = delete;
   ProvinceManager& operator=(const ProvinceManager&) = delete;
 
-  void render(const Window &window,
+  void render(const Window& window,
               float scale,
-              const vec2f &offset,
-              const std::unordered_map<std::string, Province::Color> &provColors);
+              const vec2f& offset,
+              const std::unordered_map<std::string, Province::Color>& provColors);
   [[nodiscard]] std::string clickedOnProvince(float x, float y);
   [[nodiscard]] std::string clickedOnProvince(const vec2f& pos) { return clickedOnProvince(pos.x, pos.y); }
 
