@@ -23,5 +23,4 @@ The following keys can be used to interact with the engine:
 - [MSDFGen](https://github.com/Chlumsky/msdfgen) - Font generation
 - [stb_image](https://github.com/nothings/stb) - Image loading
 
-# Demo Video
-![Demo Video](demo.mp4)
+# [Demo Video](https://github.com/dorythecat/CaesarEngine/raw/refs/heads/main/demo.mp4)
